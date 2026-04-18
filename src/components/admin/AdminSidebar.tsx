@@ -18,6 +18,9 @@ import {
   Image,
   Bell,
   FileCode,
+  Link2,
+  Send,
+  Timer,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
@@ -32,6 +35,9 @@ const navItems = [
   { href: "/admin/announcements", label: "Announcements", icon: Bell },
   { href: "/admin/pages", label: "Pages", icon: FileCode },
   { href: "/admin/ads", label: "Ad Slots", icon: Megaphone },
+  { href: "/admin/affiliate-links", label: "Affiliate Links", icon: Link2 },
+  { href: "/admin/notifications", label: "Notifications", icon: Send },
+  { href: "/admin/interstitial", label: "Interstitial", icon: Timer },
   { href: "/admin/subscribers", label: "Subscribers", icon: Users },
   { href: "/admin/contact-inbox", label: "Contact Inbox", icon: Mail },
   { href: "/admin/site-settings", label: "Settings", icon: Settings },

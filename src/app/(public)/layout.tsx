@@ -1,5 +1,6 @@
 import Header from "@/components/public/Header";
 import Footer from "@/components/public/Footer";
+import NewsletterPopup from "@/components/public/NewsletterPopup";
 import { getSiteSettings } from "@/lib/settings";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -10,6 +11,7 @@ export default async function PublicLayout({ children }: { children: React.React
       <Header settings={settings} />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} />
+      <NewsletterPopup />
     </>
   );
 }
