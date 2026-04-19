@@ -34,7 +34,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       post.metaDesc ||
       post.excerptEn ||
       `${post.titleEn} - Complete details, eligibility, dates, and apply link.`,
+    alternates: {
+      canonical: `/post/${post.slug}`,
+      languages: { "en-IN": `/post/${post.slug}`, "hi-IN": `/post/${post.slug}` },
+    },
     openGraph: {
+      title: post.metaTitle || post.titleEn,
+      description: post.metaDesc || post.excerptEn || undefined,
+      images: post.ogImage ? [post.ogImage] : undefined,
+      type: "article",
+      publishedTime: post.createdAt.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+    },
+    twitter: {
+      card: "summary_large_image",
       title: post.metaTitle || post.titleEn,
       description: post.metaDesc || post.excerptEn || undefined,
       images: post.ogImage ? [post.ogImage] : undefined,
