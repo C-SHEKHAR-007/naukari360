@@ -3,6 +3,8 @@ import {
   generateJobPostingSchema,
   generateFAQSchema,
   generateBreadcrumbSchema,
+  generateWebSiteSchema,
+  generateOrganizationSchema,
 } from "@/lib/seo";
 
 describe("generateJobPostingSchema", () => {
@@ -139,5 +141,31 @@ describe("generateBreadcrumbSchema", () => {
   it("handles single item", () => {
     const schema = generateBreadcrumbSchema([{ name: "Home", url: "/" }]);
     expect(schema.itemListElement).toHaveLength(1);
+  });
+});
+
+describe("generateWebSiteSchema", () => {
+  it("generates valid WebSite schema", () => {
+    const schema = generateWebSiteSchema();
+    expect(schema["@context"]).toBe("https://schema.org");
+    expect(schema["@type"]).toBe("WebSite");
+    expect(schema.name).toBe("Naukari360");
+    expect(schema.url).toBe("https://naukari360.in");
+  });
+
+  it("includes SearchAction", () => {
+    const schema = generateWebSiteSchema();
+    expect(schema.potentialAction["@type"]).toBe("SearchAction");
+    expect(schema.potentialAction.target.urlTemplate).toContain("/search?q=");
+  });
+});
+
+describe("generateOrganizationSchema", () => {
+  it("generates valid Organization schema", () => {
+    const schema = generateOrganizationSchema();
+    expect(schema["@context"]).toBe("https://schema.org");
+    expect(schema["@type"]).toBe("Organization");
+    expect(schema.name).toBe("Naukari360");
+    expect(schema.logo).toContain("icon-512x512");
   });
 });

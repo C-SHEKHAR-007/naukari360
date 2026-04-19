@@ -15,6 +15,7 @@ import PostCard from "@/components/public/PostCard";
 import AdSlot from "@/components/public/AdSlot";
 import BilingualText from "@/components/public/BilingualText";
 import { getPostsByCategory, getClosingSoonPosts, getTrendingPosts } from "@/lib/db";
+import { generateWebSiteSchema, generateOrganizationSchema } from "@/lib/seo";
 import type { PostCardData } from "@/lib/db";
 
 const categories = [
@@ -88,6 +89,16 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8 lg:py-12">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebSiteSchema()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(generateOrganizationSchema()) }}
+      />
+
       {/* Hero Section */}
       <section className="mb-12 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 px-6 py-12 text-center dark:from-primary/10 dark:to-blue-500/10">
         <div className="mx-auto max-w-2xl">

@@ -1,5 +1,34 @@
 import type { Post } from "@prisma/client";
 
+const SITE_URL = "https://naukari360.in";
+const SITE_NAME = "Naukari360";
+
+export function generateWebSiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: "Latest government jobs, exam results, admit cards, answer keys, and more.",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/search?q={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+export function generateOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/icons/icon-512x512.png`,
+    sameAs: [],
+  };
+}
+
 interface JobPostingSchemaParams {
   post: Post;
   url: string;
