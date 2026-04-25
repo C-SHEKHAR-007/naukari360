@@ -18,6 +18,13 @@ import AdSlot from "@/components/public/AdSlot";
 import PostCard from "@/components/public/PostCard";
 import ShareButtons from "@/components/public/ShareButtons";
 import PostTitle from "@/components/public/PostTitle";
+import ReadingProgressBar from "@/components/public/ReadingProgressBar";
+import CopyJobDetails from "@/components/public/CopyJobDetails";
+import PrintButton from "@/components/public/PrintButton";
+import ReadingTime from "@/components/public/ReadingTime";
+import AddToCalendar from "@/components/public/AddToCalendar";
+import AskOnWhatsApp from "@/components/public/AskOnWhatsApp";
+import InlineNewsletterForm from "@/components/public/InlineNewsletterForm";
 import type { PostCardData } from "@/lib/db";
 
 interface Props {
@@ -79,6 +86,7 @@ export default async function PostDetailPage({ params }: Props) {
 
   return (
     <>
+      <ReadingProgressBar />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -311,8 +319,30 @@ export default async function PostDetailPage({ params }: Props) {
           </section>
         )}
 
-        {/* Share */}
-        <ShareButtons title={post.titleEn} slug={post.slug} />
+        {/* Share & Actions */}
+        <div className="my-6 flex flex-wrap items-center gap-3">
+          <ShareButtons title={post.titleEn} slug={post.slug} />
+          <CopyJobDetails
+            title={post.titleEn}
+            organization={post.organization}
+            qualification={post.qualification}
+            lastDate={post.lastDate ? formatDate(post.lastDate) : null}
+            salary={post.salary}
+            applyLink={post.applyLink}
+            url={`https://naukari360.in/post/${post.slug}`}
+          />
+          <PrintButton />
+          {post.readingTime && <ReadingTime minutes={post.readingTime} />}
+          {post.lastDate && (
+            <AddToCalendar
+              title={`${post.titleEn} - Last Date`}
+              date={new Date(post.lastDate)}
+              description={`Last date to apply for ${post.titleEn}`}
+              url={`https://naukari360.in/post/${post.slug}`}
+            />
+          )}
+          <AskOnWhatsApp jobTitle={post.titleEn} />
+        </div>
 
         {/* Affiliate Recommendations */}
         {affiliateLinks.length > 0 && (
@@ -348,6 +378,8 @@ export default async function PostDetailPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        <InlineNewsletterForm />
       </article>
     </>
   );
