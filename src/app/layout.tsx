@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   description:
     "Latest government jobs, exam results, admit cards, answer keys, and more. सरकारी नौकरी की पूरी जानकारी।",
   metadataBase: new URL("https://naukari360.in"),
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/icons/icon-192x192.svg",
+  },
   alternates: {
     canonical: "/",
     languages: {
@@ -40,7 +44,7 @@ export const metadata: Metadata = {
     url: "https://naukari360.in",
     images: [
       {
-        url: "/og-default.png",
+        url: "/banner-social-og.svg",
         width: 1200,
         height: 630,
         alt: "Naukari360 — Government Jobs Portal",
@@ -51,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Naukari360 — सरकारी नौकरी अपडेट 360°",
     description: "Latest government jobs, exam results, admit cards, answer keys.",
-    images: ["/og-default.png"],
+    images: ["/banner-social-og.svg"],
   },
   robots: {
     index: true,
@@ -85,7 +89,6 @@ export default function RootLayout({
     >
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <script

@@ -100,19 +100,28 @@ export default async function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="mb-12 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 px-6 py-12 text-center dark:from-primary/10 dark:to-blue-500/10">
-        <div className="mx-auto max-w-2xl">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-            <span className="text-primary">Naukari</span>
-            <span className="text-secondary dark:text-blue-400">360</span>
-          </h1>
-          <p className="mt-4 text-lg font-semibold text-foreground/90">सरकारी नौकरी अपडेट 360°</p>
-          <BilingualText
-            en="Your one-stop destination for latest government jobs, exam results, admit cards & notifications"
-            hi="सरकारी नौकरी, परीक्षा परिणाम, एडमिट कार्ड और सूचनाओं के लिए आपका एकमात्र ठिकाना"
-            as="p"
-            className="mt-2 text-sm text-muted sm:text-base"
-          />
+      <section className="relative mb-12 overflow-hidden rounded-2xl">
+        <img
+          src="/banner-hero.svg"
+          alt="Naukari360 — सरकारी नौकरी अपडेट 360°"
+          width={1200}
+          height={400}
+          className="hidden w-full dark:block"
+        />
+        <div className="block dark:hidden rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 px-6 py-12 text-center">
+          <div className="mx-auto max-w-2xl">
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+              <span className="text-primary">Naukari</span>
+              <span className="text-secondary dark:text-blue-400">360</span>
+            </h1>
+            <p className="mt-4 text-lg font-semibold text-foreground/90">सरकारी नौकरी अपडेट 360°</p>
+            <BilingualText
+              en="Your one-stop destination for latest government jobs, exam results, admit cards & notifications"
+              hi="सरकारी नौकरी, परीक्षा परिणाम, एडमिट कार्ड और सूचनाओं के लिए आपका एकमात्र ठिकाना"
+              as="p"
+              className="mt-2 text-sm text-muted sm:text-base"
+            />
+          </div>
         </div>
       </section>
 
