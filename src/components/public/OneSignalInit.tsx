@@ -10,8 +10,9 @@ export default function OneSignalInit() {
     if (!ONESIGNAL_APP_ID) return;
 
     window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function (OneSignal) {
-      await OneSignal.init({
+    window.OneSignalDeferred.push(async function (OneSignal: unknown) {
+      const os = OneSignal as { init: (config: Record<string, unknown>) => Promise<void> };
+      await os.init({
         appId: ONESIGNAL_APP_ID,
         notifyButton: { enable: true },
         allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
