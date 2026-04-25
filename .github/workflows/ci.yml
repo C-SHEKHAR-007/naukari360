@@ -28,7 +28,7 @@ jobs:
       - name: TypeScript type check
         run: pnpm exec tsc --noEmit
       - name: ESLint
-        run: pnpm exec next lint
+        run: pnpm lint
 
   unit-tests:
     name: Unit & Component Tests
