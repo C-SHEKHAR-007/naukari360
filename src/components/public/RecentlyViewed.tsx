@@ -26,7 +26,7 @@ export function trackPageView(slug: string, title: string) {
 }
 
 export default function RecentlyViewed({ currentSlug }: { currentSlug?: string }) {
-  const [posts, setPosts] = useState<RecentPost[]>(() => {
+  const [posts] = useState<RecentPost[]>(() => {
     if (typeof window === "undefined") return [];
     try {
       const stored: RecentPost[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");

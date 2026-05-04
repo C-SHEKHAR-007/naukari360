@@ -101,6 +101,7 @@ export default async function HomePage() {
 
       {/* Hero Section */}
       <section className="relative mb-12 overflow-hidden rounded-2xl">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/banner-hero.svg"
           alt="Naukari360 — सरकारी नौकरी अपडेट 360°"

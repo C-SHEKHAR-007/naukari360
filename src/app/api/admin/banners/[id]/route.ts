@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     });
 
     return NextResponse.json(banner);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update banner" }, { status: 500 });
   }
 }
@@ -38,7 +38,7 @@ export async function DELETE(
   try {
     await prisma.banner.delete({ where: { id } });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete banner" }, { status: 500 });
   }
 }

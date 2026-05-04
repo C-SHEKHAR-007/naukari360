@@ -35,7 +35,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     });
 
     return NextResponse.json(page);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update page" }, { status: 500 });
   }
 }
@@ -51,7 +51,7 @@ export async function DELETE(
   try {
     await prisma.page.delete({ where: { id } });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete page" }, { status: 500 });
   }
 }

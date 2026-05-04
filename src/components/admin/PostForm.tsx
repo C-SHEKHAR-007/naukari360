@@ -178,7 +178,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
         throw new Error(data.error || "Failed to save");
       }
 
-      const data = await res.json();
+      await res.json();
       router.push("/admin/posts");
       router.refresh();
     } catch (err: unknown) {

@@ -43,8 +43,6 @@ import {
   getCategories,
   getCategoryBySlug,
   getStates,
-  getStateBySlug,
-  getAdSlots,
   getAdSlot,
   getPageBySlug,
 } from "@/lib/db";

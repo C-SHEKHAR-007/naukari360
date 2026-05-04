@@ -23,7 +23,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     });
 
     return NextResponse.json(menu);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update menu item" }, { status: 500 });
   }
 }
@@ -40,7 +40,7 @@ export async function DELETE(
     await prisma.navMenu.deleteMany({ where: { parentId: id } });
     await prisma.navMenu.delete({ where: { id } });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete menu item" }, { status: 500 });
   }
 }

@@ -1,5 +1,6 @@
 // Run with: node public/icons/generate-icons.js
 // Generates placeholder PWA icons. Replace with actual branding icons later.
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 

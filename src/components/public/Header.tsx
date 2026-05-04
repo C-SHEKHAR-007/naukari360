@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Moon, Sun, Search } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useLanguage } from "@/components/providers/LanguageProvider";
 import LanguageToggle from "./LanguageToggle";
 import type { SiteSettings } from "@/lib/settings";
 
@@ -20,7 +19,6 @@ const navLinks = [
 export default function Header({ settings }: { settings: SiteSettings }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const { t } = useLanguage();
 
   const siteName = settings.site_name || "Naukari360";
   const announcementActive = settings.announcement_active === "true";

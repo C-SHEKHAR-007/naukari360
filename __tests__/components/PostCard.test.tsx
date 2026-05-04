@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 
 // Mock language provider
 vi.mock("@/components/providers/LanguageProvider", () => ({
@@ -13,7 +13,9 @@ vi.mock("@/components/providers/LanguageProvider", () => ({
 // Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
@@ -44,7 +46,13 @@ const mockPost = {
   views: 1500,
   createdAt: new Date(),
   updatedAt: new Date(),
-  category: { id: "cat-1", name: "Latest Jobs", nameHi: "नवीनतम नौकरी", slug: "latest-jobs", color: "#FF6B00" },
+  category: {
+    id: "cat-1",
+    name: "Latest Jobs",
+    nameHi: "नवीनतम नौकरी",
+    slug: "latest-jobs",
+    color: "#FF6B00",
+  },
   state: { id: "state-1", name: "All India", nameHi: "अखिल भारतीय", slug: "all-india" },
 };
 
