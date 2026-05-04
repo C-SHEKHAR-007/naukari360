@@ -11,7 +11,7 @@ import {
   Clock,
   Eye,
 } from "lucide-react";
-import { getPostBySlug, getRelatedPosts, incrementPostViews, getAffiliateLinks } from "@/lib/db";
+import { getPostBySlug, getRelatedPosts, getAffiliateLinks } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 import { generateJobPostingSchema, generateFAQSchema, generateBreadcrumbSchema } from "@/lib/seo";
 import AdSlot from "@/components/public/AdSlot";
@@ -25,6 +25,7 @@ import ReadingTime from "@/components/public/ReadingTime";
 import AddToCalendar from "@/components/public/AddToCalendar";
 import AskOnWhatsApp from "@/components/public/AskOnWhatsApp";
 import InlineNewsletterForm from "@/components/public/InlineNewsletterForm";
+import ViewTracker from "@/components/public/ViewTracker";
 import type { PostCardData } from "@/lib/db";
 
 interface Props {
@@ -70,9 +71,6 @@ export default async function PostDetailPage({ params }: Props) {
   const post = await getPostBySlug(slug);
   if (!post || post.status !== "published") notFound();
 
-  // Increment views (fire and forget)
-  incrementPostViews(post.id);
-
   const [relatedPosts, affiliateLinks] = await Promise.all([
     getRelatedPosts(post.id, post.categoryId, 4),
     getAffiliateLinks(post.categoryId || undefined),
@@ -86,6 +84,7 @@ export default async function PostDetailPage({ params }: Props) {
 
   return (
     <>
+      <ViewTracker postId={post.id} />
       <ReadingProgressBar />
       <script
         type="application/ld+json"

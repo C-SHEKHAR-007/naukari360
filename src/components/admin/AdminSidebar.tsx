@@ -21,12 +21,15 @@ import {
   Link2,
   Send,
   Timer,
+  BarChart3,
+  DollarSign,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/posts", label: "Posts", icon: FileText },
   { href: "/admin/categories", label: "Categories", icon: FolderOpen },
   { href: "/admin/states", label: "States", icon: MapPin },
@@ -36,6 +39,7 @@ const navItems = [
   { href: "/admin/pages", label: "Pages", icon: FileCode },
   { href: "/admin/ads", label: "Ad Slots", icon: Megaphone },
   { href: "/admin/affiliate-links", label: "Affiliate Links", icon: Link2 },
+  { href: "/admin/monetization", label: "Monetization", icon: DollarSign },
   { href: "/admin/notifications", label: "Notifications", icon: Send },
   { href: "/admin/interstitial", label: "Interstitial", icon: Timer },
   { href: "/admin/subscribers", label: "Subscribers", icon: Users },

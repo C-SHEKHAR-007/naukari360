@@ -10,12 +10,13 @@ interface AdSlot {
   adCode: string | null;
   isActive: boolean;
   device: string;
+  notes: string | null;
 }
 
 export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdSlot[] }) {
   const [slots, setSlots] = useState(initialSlots);
   const [editing, setEditing] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", slotKey: "", adCode: "", device: "all" });
+  const [form, setForm] = useState({ name: "", slotKey: "", adCode: "", device: "all", notes: "" });
   const [adding, setAdding] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -42,7 +43,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
       if (res.ok) {
         const slot = await res.json();
         setSlots([...slots, slot]);
-        setForm({ name: "", slotKey: "", adCode: "", device: "all" });
+        setForm({ name: "", slotKey: "", adCode: "", device: "all", notes: "" });
         setAdding(false);
       }
     } finally {
@@ -83,6 +84,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
       slotKey: slot.slotKey,
       adCode: slot.adCode || "",
       device: slot.device,
+      notes: slot.notes || "",
     });
     setAdding(false);
   }
@@ -125,6 +127,13 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                 placeholder="Paste ad code HTML/JS here..."
                 className="w-full rounded-lg border border-border bg-card px-3 py-2 font-mono text-xs focus:border-primary focus:outline-none"
               />
+              <textarea
+                rows={2}
+                value={form.notes}
+                onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                placeholder="Performance notes (e.g., 'Best RPM on mobile header')..."
+                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs focus:border-primary focus:outline-none"
+              />
               <div className="flex gap-2">
                 <button
                   onClick={() => handleUpdate(slot.id)}
@@ -158,6 +167,11 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                 <p className="mt-1 text-xs text-muted">
                   {slot.adCode ? `${slot.adCode.length} chars of ad code` : "No ad code set"}
                 </p>
+                {slot.notes && (
+                  <p className="mt-0.5 text-xs italic text-amber-600 dark:text-amber-400">
+                    📝 {slot.notes}
+                  </p>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -222,6 +236,13 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
             placeholder="Paste ad code HTML/JS here..."
             className="w-full rounded-lg border border-border bg-card px-3 py-2 font-mono text-xs focus:border-primary focus:outline-none"
           />
+          <textarea
+            rows={2}
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            placeholder="Performance notes (e.g., 'Best RPM on mobile header')..."
+            className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs focus:border-primary focus:outline-none"
+          />
           <div className="flex gap-2">
             <button
               onClick={handleAdd}
@@ -234,7 +255,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
             <button
               onClick={() => {
                 setAdding(false);
-                setForm({ name: "", slotKey: "", adCode: "", device: "all" });
+                setForm({ name: "", slotKey: "", adCode: "", device: "all", notes: "" });
               }}
               className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:text-foreground"
             >
@@ -250,7 +271,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
           onClick={() => {
             setAdding(true);
             setEditing(null);
-            setForm({ name: "", slotKey: "", adCode: "", device: "all" });
+            setForm({ name: "", slotKey: "", adCode: "", device: "all", notes: "" });
           }}
           className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-primary hover:bg-primary/10"
         >

@@ -199,6 +199,7 @@ model AdSlot {
   popupDelay Int?     @map("popup_delay")
   startDate  DateTime? @map("start_date")
   endDate    DateTime? @map("end_date")
+  notes      String?
 
   @@map("ad_slots")
 }
@@ -321,4 +322,15 @@ model ContactSubmission {
   createdAt DateTime    @default(now()) @map("created_at")
 
   @@map("contact_submissions")
+}
+
+model PageView {
+  id     String   @id @default(uuid())
+  postId String   @map("post_id")
+  date   DateTime @default(now()) @db.Date
+  views  Int      @default(1)
+
+  @@unique([postId, date])
+  @@index([date])
+  @@map("page_views")
 }

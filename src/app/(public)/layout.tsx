@@ -5,6 +5,9 @@ import ScrollToTop from "@/components/public/ScrollToTop";
 import OneSignalInit from "@/components/public/OneSignalInit";
 import FloatingTelegramCTA from "@/components/public/FloatingTelegramCTA";
 import ExitIntentPopup from "@/components/public/ExitIntentPopup";
+import GoogleAnalytics from "@/components/public/GoogleAnalytics";
+import OfflineIndicator from "@/components/public/OfflineIndicator";
+import QuickCompare from "@/components/public/QuickCompare";
 import { getSiteSettings } from "@/lib/settings";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -12,6 +15,7 @@ export default async function PublicLayout({ children }: { children: React.React
 
   return (
     <>
+      {settings?.google_analytics_id && <GoogleAnalytics gaId={settings.google_analytics_id} />}
       <Header settings={settings} />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} />
@@ -20,6 +24,8 @@ export default async function PublicLayout({ children }: { children: React.React
       <OneSignalInit />
       <FloatingTelegramCTA telegramUrl={settings?.telegramUrl} />
       <ExitIntentPopup />
+      <QuickCompare />
+      <OfflineIndicator />
     </>
   );
 }
