@@ -92,4 +92,22 @@ describe("email.ts — sendContactNotification", () => {
     expect(call.html).toContain("jane@test.com");
     expect(call.html).toContain("Great website!");
   });
+
+  it("escapes HTML in user input to prevent XSS", async () => {
+    await sendContactNotification({
+      name: '<script>alert("xss")</script>',
+      email: "attacker@evil.com",
+      type: "general",
+      subject: '<img src=x onerror="steal()">',
+      message: "<b>bold</b> & 'quotes'",
+    });
+
+    const call = mockSend.mock.calls[0][0];
+    expect(call.html).not.toContain("<script>");
+    expect(call.html).not.toContain("<img");
+    expect(call.html).toContain("&lt;script&gt;");
+    expect(call.html).toContain("&lt;img");
+    expect(call.html).toContain("&amp;");
+    expect(call.html).toContain("&#039;quotes&#039;");
+  });
 });

@@ -12,6 +12,10 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
+vi.mock("@/lib/rate-limit", () => ({
+  rateLimit: vi.fn().mockReturnValue({ success: true, remaining: 29 }),
+}));
+
 import { POST } from "@/app/api/track-view/route";
 import { prisma } from "@/lib/prisma";
 

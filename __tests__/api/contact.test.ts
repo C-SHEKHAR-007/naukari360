@@ -14,6 +14,10 @@ vi.mock("@/lib/email", () => ({
   sendContactNotification: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock("@/lib/rate-limit", () => ({
+  rateLimit: vi.fn().mockReturnValue({ success: true, remaining: 4 }),
+}));
+
 import { prisma } from "@/lib/prisma";
 import { POST } from "@/app/api/contact/route";
 

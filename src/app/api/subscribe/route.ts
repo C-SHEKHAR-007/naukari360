@@ -1,8 +1,15 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const { success } = rateLimit(`subscribe:${ip}`, { limit: 5, windowMs: 60_000 });
+    if (!success) {
+      return Response.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const body = await request.json();
     const { email, name, source } = body;
 

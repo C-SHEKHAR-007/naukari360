@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendContactNotification } from "@/lib/email";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const { success } = rateLimit(`contact:${ip}`, { limit: 5, windowMs: 60_000 });
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const body = await request.json();
     const { name, email, type, subject, message } = body;
 
@@ -16,7 +23,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid name" }, { status: 400 });
     }
 
-    if (typeof email !== "string" || !email.includes("@") || email.length > 320) {
+    if (
+      typeof email !== "string" ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      email.length > 320
+    ) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
