@@ -99,6 +99,15 @@ model Post {
   faqs              Faq[]
   postTags          PostTag[]
 
+  @@index([status])
+  @@index([categoryId])
+  @@index([stateId])
+  @@index([lastDate])
+  @@index([examDate])
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([status, categoryId])
+  @@index([status, stateId])
   @@map("posts")
 }
 
@@ -282,6 +291,7 @@ model EmailSubscriber {
   source       String   @default("homepage")
   subscribedAt DateTime @default(now()) @map("subscribed_at")
 
+  @@index([isActive, subscribedAt])
   @@map("email_subscribers")
 }
 
@@ -321,6 +331,7 @@ model ContactSubmission {
   isRead    Boolean     @default(false) @map("is_read")
   createdAt DateTime    @default(now()) @map("created_at")
 
+  @@index([isRead, createdAt])
   @@map("contact_submissions")
 }
 
