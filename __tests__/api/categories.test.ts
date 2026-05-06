@@ -38,7 +38,9 @@ describe("POST /api/admin/categories", () => {
   });
 
   it("creates category when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.category.create as any).mockResolvedValue({
       id: "cat-1",
       name: "Latest Jobs",

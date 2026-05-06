@@ -32,7 +32,9 @@ describe("GET /api/admin/announcements", () => {
   });
 
   it("returns announcements when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.announcement.findMany as any).mockResolvedValue([
       { id: "1", text: "New recruitment drive!", isActive: true },
     ]);
@@ -65,7 +67,9 @@ describe("POST /api/admin/announcements", () => {
   });
 
   it("creates announcement when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.announcement.create as any).mockResolvedValue({
       id: "a-1",
       text: "SSC CGL notification released!",

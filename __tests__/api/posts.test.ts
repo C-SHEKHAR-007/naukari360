@@ -39,7 +39,9 @@ describe("POST /api/admin/posts", () => {
   });
 
   it("creates post when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.post.create as any).mockResolvedValue({ id: "post-1" });
 
     const req = new NextRequest("http://localhost:3000/api/admin/posts", {
@@ -62,7 +64,9 @@ describe("POST /api/admin/posts", () => {
   });
 
   it("handles tags during post creation", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.post.create as any).mockResolvedValue({ id: "post-2" });
     (prisma.tag.upsert as any).mockResolvedValue({ id: "tag-1" });
     (prisma.postTag.create as any).mockResolvedValue({});
@@ -86,7 +90,9 @@ describe("POST /api/admin/posts", () => {
   });
 
   it("creates important dates and FAQs with post", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.post.create as any).mockResolvedValue({ id: "post-3" });
 
     const req = new NextRequest("http://localhost:3000/api/admin/posts", {
@@ -98,9 +104,7 @@ describe("POST /api/admin/posts", () => {
           { label: "Apply Start", date: "01/01/2025" },
           { label: "Last Date", date: "31/01/2025" },
         ],
-        faqs: [
-          { question: "What is eligibility?", answer: "Graduate from any stream" },
-        ],
+        faqs: [{ question: "What is eligibility?", answer: "Graduate from any stream" }],
       }),
       headers: { "Content-Type": "application/json" },
     });
@@ -126,7 +130,9 @@ describe("POST /api/admin/posts", () => {
   });
 
   it("converts empty strings to null", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.post.create as any).mockResolvedValue({ id: "post-4" });
 
     const req = new NextRequest("http://localhost:3000/api/admin/posts", {
@@ -155,7 +161,9 @@ describe("POST /api/admin/posts", () => {
   });
 
   it("parses date strings into Date objects", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.post.create as any).mockResolvedValue({ id: "post-5" });
 
     const req = new NextRequest("http://localhost:3000/api/admin/posts", {
@@ -184,7 +192,9 @@ describe("POST /api/admin/posts", () => {
   });
 
   it("returns 500 on database error", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.post.create as any).mockRejectedValue(new Error("DB constraint error"));
 
     const req = new NextRequest("http://localhost:3000/api/admin/posts", {

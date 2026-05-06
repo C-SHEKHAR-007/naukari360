@@ -33,7 +33,9 @@ describe("GET /api/admin/pages", () => {
   });
 
   it("returns pages when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.page.findMany as any).mockResolvedValue([
       { id: "1", titleEn: "About Us", slug: "about-us", isPublished: true },
       { id: "2", titleEn: "Privacy Policy", slug: "privacy-policy", isPublished: true },
@@ -67,7 +69,9 @@ describe("POST /api/admin/pages", () => {
   });
 
   it("creates page when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.page.create as any).mockResolvedValue({
       id: "p-1",
       titleEn: "About Us",
@@ -99,7 +103,9 @@ describe("POST /api/admin/pages", () => {
   });
 
   it("returns 500 when creation fails", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.page.create as any).mockRejectedValue(new Error("DB error"));
 
     const req = new NextRequest("http://localhost:3000/api/admin/pages", {

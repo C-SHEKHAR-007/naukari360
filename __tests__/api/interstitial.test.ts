@@ -32,7 +32,9 @@ describe("GET /api/admin/interstitial", () => {
   });
 
   it("returns interstitial configs when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const mockConfigs = [
       {
         id: "int-1",
@@ -70,7 +72,9 @@ describe("POST /api/admin/interstitial", () => {
   });
 
   it("returns 400 when title is missing", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const req = new NextRequest("http://localhost:3000/api/admin/interstitial", {
       method: "POST",
       body: JSON.stringify({ adSlotKey: "test_slot" }),
@@ -81,7 +85,9 @@ describe("POST /api/admin/interstitial", () => {
   });
 
   it("returns 400 when adSlotKey is missing", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const req = new NextRequest("http://localhost:3000/api/admin/interstitial", {
       method: "POST",
       body: JSON.stringify({ title: "Test" }),
@@ -92,7 +98,9 @@ describe("POST /api/admin/interstitial", () => {
   });
 
   it("creates interstitial config with valid data", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const mockConfig = {
       id: "int-1",
       title: "Apply Link Page",
@@ -121,7 +129,9 @@ describe("POST /api/admin/interstitial", () => {
   });
 
   it("uses default delaySeconds when not provided", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.interstitialPage.create as any).mockResolvedValue({ id: "int-2" });
 
     const req = new NextRequest("http://localhost:3000/api/admin/interstitial", {

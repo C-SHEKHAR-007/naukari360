@@ -31,7 +31,9 @@ describe("GET /api/admin/notifications", () => {
   });
 
   it("returns notifications when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const mockNotifications = [
       {
         id: "n-1",
@@ -69,7 +71,9 @@ describe("POST /api/admin/notifications", () => {
   });
 
   it("returns 400 when title is missing", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const req = new NextRequest("http://localhost:3000/api/admin/notifications", {
       method: "POST",
       body: JSON.stringify({ message: "Hello" }),
@@ -83,7 +87,9 @@ describe("POST /api/admin/notifications", () => {
   });
 
   it("returns 400 when message is missing", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const req = new NextRequest("http://localhost:3000/api/admin/notifications", {
       method: "POST",
       body: JSON.stringify({ title: "Test" }),
@@ -94,7 +100,9 @@ describe("POST /api/admin/notifications", () => {
   });
 
   it("creates notification with valid data", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const mockNotification = {
       id: "n-1",
       title: "UPSC Prelims Date",
@@ -129,7 +137,9 @@ describe("POST /api/admin/notifications", () => {
   });
 
   it("creates notification without link", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.notification.create as any).mockResolvedValue({ id: "n-2" });
 
     const req = new NextRequest("http://localhost:3000/api/admin/notifications", {

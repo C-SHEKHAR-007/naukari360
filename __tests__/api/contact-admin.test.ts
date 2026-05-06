@@ -39,7 +39,9 @@ describe("PUT /api/admin/contact/[id]", () => {
   });
 
   it("marks contact submission as read", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.contactSubmission.update as any).mockResolvedValue({
       id: "c1",
       isRead: true,
@@ -77,7 +79,9 @@ describe("DELETE /api/admin/contact/[id]", () => {
   });
 
   it("deletes contact submission", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.contactSubmission.delete as any).mockResolvedValue({});
 
     const req = new NextRequest("http://localhost:3000/api/admin/contact/c1", {

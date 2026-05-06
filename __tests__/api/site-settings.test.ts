@@ -38,7 +38,9 @@ describe("PUT /api/admin/site-settings", () => {
   });
 
   it("updates settings when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
 
     const req = new NextRequest("http://localhost:3000/api/admin/site-settings", {
       method: "PUT",
@@ -58,7 +60,9 @@ describe("PUT /api/admin/site-settings", () => {
   });
 
   it("calls upsert for each setting key", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
 
     const req = new NextRequest("http://localhost:3000/api/admin/site-settings", {
       method: "PUT",

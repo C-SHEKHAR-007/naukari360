@@ -19,23 +19,35 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 import { prisma } from "@/lib/prisma";
-import { PUT as categoryPUT, DELETE as categoryDELETE } from "@/app/api/admin/categories/[id]/route";
+import {
+  PUT as categoryPUT,
+  DELETE as categoryDELETE,
+} from "@/app/api/admin/categories/[id]/route";
 import { PUT as statePUT, DELETE as stateDELETE } from "@/app/api/admin/states/[id]/route";
 import { PUT as adSlotPUT, DELETE as adSlotDELETE } from "@/app/api/admin/ad-slots/[id]/route";
 import { PUT as menuPUT, DELETE as menuDELETE } from "@/app/api/admin/menus/[id]/route";
 import { PUT as bannerPUT, DELETE as bannerDELETE } from "@/app/api/admin/banners/[id]/route";
-import { PUT as announcementPUT, DELETE as announcementDELETE } from "@/app/api/admin/announcements/[id]/route";
+import {
+  PUT as announcementPUT,
+  DELETE as announcementDELETE,
+} from "@/app/api/admin/announcements/[id]/route";
 
 const makeParams = (id: string) => ({ params: Promise.resolve({ id }) });
 
 describe("[id] routes — PUT (Update)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
   });
 
   it("PUT /api/admin/categories/[id] updates category", async () => {
-    (prisma.category.update as any).mockResolvedValue({ id: "c1", name: "Updated", slug: "updated" });
+    (prisma.category.update as any).mockResolvedValue({
+      id: "c1",
+      name: "Updated",
+      slug: "updated",
+    });
 
     const req = new NextRequest("http://localhost:3000/api/admin/categories/c1", {
       method: "PUT",
@@ -135,13 +147,17 @@ describe("[id] routes — PUT (Update)", () => {
 describe("[id] routes — DELETE", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
   });
 
   it("DELETE /api/admin/categories/[id] deletes category", async () => {
     (prisma.category.delete as any).mockResolvedValue({});
 
-    const req = new NextRequest("http://localhost:3000/api/admin/categories/c1", { method: "DELETE" });
+    const req = new NextRequest("http://localhost:3000/api/admin/categories/c1", {
+      method: "DELETE",
+    });
     const res = await categoryDELETE(req, makeParams("c1"));
     expect(res.status).toBe(200);
     expect(prisma.category.delete).toHaveBeenCalledWith({ where: { id: "c1" } });
@@ -158,7 +174,9 @@ describe("[id] routes — DELETE", () => {
   it("DELETE /api/admin/ad-slots/[id] deletes ad slot", async () => {
     (prisma.adSlot.delete as any).mockResolvedValue({});
 
-    const req = new NextRequest("http://localhost:3000/api/admin/ad-slots/a1", { method: "DELETE" });
+    const req = new NextRequest("http://localhost:3000/api/admin/ad-slots/a1", {
+      method: "DELETE",
+    });
     const res = await adSlotDELETE(req, makeParams("a1"));
     expect(res.status).toBe(200);
   });
@@ -183,7 +201,9 @@ describe("[id] routes — DELETE", () => {
   it("DELETE /api/admin/announcements/[id] deletes announcement", async () => {
     (prisma.announcement.delete as any).mockResolvedValue({});
 
-    const req = new NextRequest("http://localhost:3000/api/admin/announcements/an1", { method: "DELETE" });
+    const req = new NextRequest("http://localhost:3000/api/admin/announcements/an1", {
+      method: "DELETE",
+    });
     const res = await announcementDELETE(req, makeParams("an1"));
     expect(res.status).toBe(200);
   });

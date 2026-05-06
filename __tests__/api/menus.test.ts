@@ -33,7 +33,9 @@ describe("GET /api/admin/menus", () => {
   });
 
   it("returns menu items when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.navMenu.findMany as any).mockResolvedValue([
       { id: "1", label: "Home", url: "/", isActive: true, children: [] },
     ]);
@@ -66,7 +68,9 @@ describe("POST /api/admin/menus", () => {
   });
 
   it("creates menu item when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.navMenu.create as any).mockResolvedValue({
       id: "menu-1",
       label: "Latest Jobs",

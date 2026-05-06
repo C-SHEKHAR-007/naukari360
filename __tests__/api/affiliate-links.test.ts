@@ -32,7 +32,9 @@ describe("GET /api/admin/affiliate-links", () => {
   });
 
   it("returns all affiliate links when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const mockLinks = [
       {
         id: "link-1",
@@ -70,7 +72,9 @@ describe("POST /api/admin/affiliate-links", () => {
   });
 
   it("returns 400 when required fields are missing", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const req = new NextRequest("http://localhost:3000/api/admin/affiliate-links", {
       method: "POST",
       body: JSON.stringify({ name: "Test" }),
@@ -81,7 +85,9 @@ describe("POST /api/admin/affiliate-links", () => {
   });
 
   it("creates affiliate link when authenticated with valid data", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     const mockLink = {
       id: "link-1",
       name: "Best Book",
@@ -113,7 +119,9 @@ describe("POST /api/admin/affiliate-links", () => {
   });
 
   it("passes categoryId when provided", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.affiliateLink.create as any).mockResolvedValue({ id: "link-2" });
 
     const req = new NextRequest("http://localhost:3000/api/admin/affiliate-links", {

@@ -38,7 +38,9 @@ describe("POST /api/admin/states", () => {
   });
 
   it("creates state when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.state.create as any).mockResolvedValue({
       id: "state-1",
       name: "Uttar Pradesh",
@@ -64,7 +66,9 @@ describe("POST /api/admin/states", () => {
   });
 
   it("returns 400 when name or slug missing", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
 
     const req = new NextRequest("http://localhost:3000/api/admin/states", {
       method: "POST",
@@ -77,7 +81,9 @@ describe("POST /api/admin/states", () => {
   });
 
   it("handles nameHi as optional", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.state.create as any).mockResolvedValue({
       id: "state-2",
       name: "Delhi",

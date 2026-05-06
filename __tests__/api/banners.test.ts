@@ -32,7 +32,9 @@ describe("GET /api/admin/banners", () => {
   });
 
   it("returns banners when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.banner.findMany as any).mockResolvedValue([
       { id: "1", title: "Test Banner", imageUrl: "/banner.jpg", isActive: true },
     ]);
@@ -65,7 +67,9 @@ describe("POST /api/admin/banners", () => {
   });
 
   it("creates banner when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.banner.create as any).mockResolvedValue({
       id: "b-1",
       title: "New Banner",

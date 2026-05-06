@@ -28,7 +28,9 @@ describe("GET /api/admin/subscribers/export", () => {
   });
 
   it("returns CSV with subscriber data", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.emailSubscriber.findMany as any).mockResolvedValue([
       {
         email: "user@test.com",
@@ -64,7 +66,9 @@ describe("GET /api/admin/subscribers/export", () => {
   });
 
   it("returns empty CSV when no subscribers", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.emailSubscriber.findMany as any).mockResolvedValue([]);
 
     const res = await GET();

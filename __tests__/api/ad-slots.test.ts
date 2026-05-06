@@ -38,7 +38,9 @@ describe("POST /api/admin/ad-slots", () => {
   });
 
   it("creates ad slot when authenticated", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.adSlot.create as any).mockResolvedValue({
       id: "slot-1",
       name: "Header Banner",
@@ -65,7 +67,9 @@ describe("POST /api/admin/ad-slots", () => {
   });
 
   it("returns 400 when name or slotKey missing", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
 
     const req = new NextRequest("http://localhost:3000/api/admin/ad-slots", {
       method: "POST",
@@ -78,7 +82,9 @@ describe("POST /api/admin/ad-slots", () => {
   });
 
   it("defaults device to 'all' when not specified", async () => {
-    mockAuth.mockResolvedValue({ user: { email: "admin@naukari360.in" } });
+    mockAuth.mockResolvedValue({
+      user: { id: "1", email: "admin@naukari360.in", name: "Admin", role: "super_admin" },
+    });
     (prisma.adSlot.create as any).mockResolvedValue({
       id: "slot-2",
       name: "Sidebar",
