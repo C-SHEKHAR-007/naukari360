@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireSuperAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authResult = await requireSuperAdmin();
+  if (!authResult.authorized) return authResult.response;
 
   const subscribers = await prisma.emailSubscriber.findMany({
     orderBy: { subscribedAt: "desc" },

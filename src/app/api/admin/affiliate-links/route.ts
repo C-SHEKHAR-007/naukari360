@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireSuperAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authResult = await requireSuperAdmin();
+  if (!authResult.authorized) return authResult.response;
 
   const links = await prisma.affiliateLink.findMany({
     include: { category: true },
@@ -14,8 +14,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authResult = await requireSuperAdmin();
+  if (!authResult.authorized) return authResult.response;
 
   try {
     const { name, originalUrl, slug, isActive, displayInPosts, categoryId } = await request.json();
