@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
+import { ServiceWorkerRegistrar } from "@/components/providers/ServiceWorkerRegistrar";
 import "./globals.css";
 
 const inter = Inter({
@@ -91,21 +92,12 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var l=localStorage.getItem('lang');if(l==='hi'||l==='en')document.documentElement.setAttribute('data-lang',l);else document.documentElement.setAttribute('data-lang','en')}catch(e){document.documentElement.setAttribute('data-lang','en')}`,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js')})}`,
-          }}
-        />
       </head>
-      <body className="flex min-h-screen flex-col">
+      <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <LanguageProvider>{children}</LanguageProvider>
         </ThemeProvider>
+        <ServiceWorkerRegistrar />
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
 type Language = "en" | "hi";
 
@@ -17,13 +17,22 @@ const LanguageContext = createContext<LanguageContextType>({
 });
 
 function getInitialLang(): Language {
-  if (typeof document === "undefined") return "en";
-  const attr = document.documentElement.getAttribute("data-lang");
-  return attr === "hi" ? "hi" : "en";
+  if (typeof window === "undefined") return "en";
+  try {
+    const stored = localStorage.getItem("lang");
+    if (stored === "hi" || stored === "en") return stored;
+  } catch {
+    // localStorage unavailable
+  }
+  return "en";
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>(getInitialLang);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-lang", lang);
+  }, [lang]);
 
   function setLang(newLang: Language) {
     setLangState(newLang);
