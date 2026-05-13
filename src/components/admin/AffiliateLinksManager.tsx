@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Edit, Trash2, Check, X, ExternalLink, ToggleLeft, ToggleRight } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface Category {
   id: string;
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export default function AffiliateLinksManager({ links: initialLinks, categories }: Props) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [links, setLinks] = useState(initialLinks);
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
@@ -311,12 +313,14 @@ export default function AffiliateLinksManager({ links: initialLinks, categories 
                         >
                           <Edit className="h-4 w-4 text-muted" />
                         </button>
-                        <button
-                          onClick={() => handleDelete(link.id)}
-                          className="rounded p-1 hover:bg-red-50 dark:hover:bg-red-900/20"
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </button>
+                        {isSuperAdmin && (
+                          <button
+                            onClick={() => handleDelete(link.id)}
+                            className="rounded p-1 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </>

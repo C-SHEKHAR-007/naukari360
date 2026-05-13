@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { AdminRoleProvider } from "@/components/admin/AdminRoleProvider";
 
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
@@ -117,7 +118,9 @@ describe("AffiliateLinksManager", () => {
     vi.spyOn(window, "confirm").mockReturnValue(true);
 
     const { container } = render(
-      <AffiliateLinksManager links={mockLinks} categories={mockCategories} />
+      <AdminRoleProvider role="super_admin">
+        <AffiliateLinksManager links={mockLinks} categories={mockCategories} />
+      </AdminRoleProvider>
     );
 
     // Find the first row's delete button (last button in the actions cell)

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Pencil, Trash2, FileText } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface PageItem {
   id: string;
@@ -15,6 +16,7 @@ interface PageItem {
 }
 
 export default function PagesManager({ initialPages }: { initialPages: PageItem[] }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [pages, setPages] = useState<PageItem[]>(initialPages);
   const [editing, setEditing] = useState<PageItem | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -153,12 +155,14 @@ export default function PagesManager({ initialPages }: { initialPages: PageItem[
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
-                    <button
-                      onClick={() => handleDelete(page.id)}
-                      className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 ml-1"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    {isSuperAdmin && (
+                      <button
+                        onClick={() => handleDelete(page.id)}
+                        className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 ml-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

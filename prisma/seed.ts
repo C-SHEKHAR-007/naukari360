@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Seeding database...");
 
-  // --- Admin ---
+  // --- Admins ---
   const hashedPassword = await bcrypt.hash("admin123", 12);
   await prisma.admin.upsert({
     where: { email: "admin@naukari360.in" },
@@ -18,7 +18,19 @@ async function main() {
       role: "super_admin",
     },
   });
-  console.log("✅ Admin created");
+
+  const editorPassword = await bcrypt.hash("editor123", 12);
+  await prisma.admin.upsert({
+    where: { email: "editor@naukari360.in" },
+    update: {},
+    create: {
+      email: "editor@naukari360.in",
+      password: editorPassword,
+      name: "Editor User",
+      role: "editor",
+    },
+  });
+  console.log("✅ Admins created");
 
   // --- Categories ---
   const categories = [

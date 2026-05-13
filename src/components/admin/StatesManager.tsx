@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Edit, Trash2, Check, X } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface State {
   id: string;
@@ -13,6 +14,7 @@ interface State {
 }
 
 export default function StatesManager({ states: initialStates }: { states: State[] }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [states, setStates] = useState(initialStates);
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
@@ -156,12 +158,14 @@ export default function StatesManager({ states: initialStates }: { states: State
                     >
                       <Edit className="h-4 w-4" />
                     </button>
-                    <button
-                      onClick={() => handleDelete(state.id)}
-                      className="rounded p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    {isSuperAdmin && (
+                      <button
+                        onClick={() => handleDelete(state.id)}
+                        className="rounded p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
                   </td>
                 </>
               )}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, GripVertical, Pencil, Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface NavMenuItem {
   id: string;
@@ -15,6 +16,7 @@ interface NavMenuItem {
 }
 
 export default function MenuManager({ initialMenus }: { initialMenus: NavMenuItem[] }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [menus, setMenus] = useState<NavMenuItem[]>(initialMenus);
   const [editing, setEditing] = useState<NavMenuItem | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -186,12 +188,14 @@ export default function MenuManager({ initialMenus }: { initialMenus: NavMenuIte
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  {isSuperAdmin && (
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </div>
                 {/* Children */}
                 {expandedItems.has(item.id) && item.children && item.children.length > 0 && (
@@ -212,12 +216,14 @@ export default function MenuManager({ initialMenus }: { initialMenus: NavMenuIte
                         >
                           <Pencil className="h-3 w-3" />
                         </button>
-                        <button
-                          onClick={() => handleDelete(child.id)}
-                          className="rounded p-1 text-muted hover:text-red-600"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </button>
+                        {isSuperAdmin && (
+                          <button
+                            onClick={() => handleDelete(child.id)}
+                            className="rounded p-1 text-muted hover:text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>

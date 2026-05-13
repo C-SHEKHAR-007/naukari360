@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mail, MailOpen, Trash2 } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface Submission {
   id: string;
@@ -15,6 +16,7 @@ interface Submission {
 }
 
 export default function ContactInboxList({ submissions: initial }: { submissions: Submission[] }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [submissions, setSubmissions] = useState(initial);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -105,12 +107,14 @@ export default function ContactInboxList({ submissions: initial }: { submissions
                   </span>
                 </div>
               </div>
-              <button
-                onClick={() => handleDelete(selectedMsg.id)}
-                className="rounded p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+              {isSuperAdmin && (
+                <button
+                  onClick={() => handleDelete(selectedMsg.id)}
+                  className="rounded p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              )}
             </div>
             <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-relaxed text-foreground whitespace-pre-wrap">
               {selectedMsg.message}

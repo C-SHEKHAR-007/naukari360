@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Pencil, Trash2, Eye, EyeOff, Image as ImageIcon } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface Banner {
   id: string;
@@ -13,6 +14,7 @@ interface Banner {
 }
 
 export default function BannersManager({ initialBanners }: { initialBanners: Banner[] }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [banners, setBanners] = useState<Banner[]>(initialBanners);
   const [editing, setEditing] = useState<Banner | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -169,12 +171,14 @@ export default function BannersManager({ initialBanners }: { initialBanners: Ban
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
-                  <button
-                    onClick={() => handleDelete(banner.id)}
-                    className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  {isSuperAdmin && (
+                    <button
+                      onClick={() => handleDelete(banner.id)}
+                      className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

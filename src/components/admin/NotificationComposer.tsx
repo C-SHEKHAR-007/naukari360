@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Send, Trash2, ExternalLink } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface Notification {
   id: string;
@@ -16,6 +17,7 @@ export default function NotificationComposer({
 }: {
   notifications: Notification[];
 }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [notifications, setNotifications] = useState(initialNotifications);
   const [form, setForm] = useState({ title: "", message: "", link: "" });
   const [sending, setSending] = useState(false);
@@ -142,12 +144,14 @@ export default function NotificationComposer({
                   )}
                 </div>
               </div>
-              <button
-                onClick={() => handleDelete(n.id)}
-                className="rounded p-1.5 hover:bg-red-50 dark:hover:bg-red-900/20"
-              >
-                <Trash2 className="h-4 w-4 text-red-500" />
-              </button>
+              {isSuperAdmin && (
+                <button
+                  onClick={() => handleDelete(n.id)}
+                  className="rounded p-1.5 hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  <Trash2 className="h-4 w-4 text-red-500" />
+                </button>
+              )}
             </div>
           ))}
           {notifications.length === 0 && (

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { AdminRoleProvider } from "@/components/admin/AdminRoleProvider";
 
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
@@ -106,7 +107,11 @@ describe("NotificationComposer", () => {
     mockFetch.mockResolvedValue({ ok: true, json: async () => ({ success: true }) });
     vi.spyOn(window, "confirm").mockReturnValue(true);
 
-    render(<NotificationComposer notifications={mockNotifications} />);
+    render(
+      <AdminRoleProvider role="super_admin">
+        <NotificationComposer notifications={mockNotifications} />
+      </AdminRoleProvider>
+    );
 
     // Find delete button next to the first notification
     const buttons = screen.getAllByRole("button");

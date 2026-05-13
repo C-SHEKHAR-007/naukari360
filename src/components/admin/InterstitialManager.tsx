@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Edit, Trash2, Check, X, ToggleLeft, ToggleRight } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface InterstitialConfig {
   id: string;
@@ -16,6 +17,7 @@ export default function InterstitialManager({
 }: {
   configs: InterstitialConfig[];
 }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [configs, setConfigs] = useState(initialConfigs);
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
@@ -247,12 +249,14 @@ export default function InterstitialManager({
                   >
                     <Edit className="h-4 w-4 text-muted" />
                   </button>
-                  <button
-                    onClick={() => handleDelete(config.id)}
-                    className="rounded p-1 hover:bg-red-50 dark:hover:bg-red-900/20"
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </button>
+                  {isSuperAdmin && (
+                    <button
+                      onClick={() => handleDelete(config.id)}
+                      className="rounded p-1 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </button>
+                  )}
                 </div>
               </div>
             )}

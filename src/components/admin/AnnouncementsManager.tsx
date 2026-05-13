@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface Announcement {
   id: string;
@@ -16,6 +17,7 @@ export default function AnnouncementsManager({
 }: {
   initialAnnouncements: Announcement[];
 }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [announcements, setAnnouncements] = useState<Announcement[]>(initialAnnouncements);
   const [editing, setEditing] = useState<Announcement | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -143,12 +145,14 @@ export default function AnnouncementsManager({
                 >
                   <Pencil className="h-4 w-4" />
                 </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                {isSuperAdmin && (
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                )}
               </li>
             ))}
           </ul>

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { AdminRoleProvider } from "@/components/admin/AdminRoleProvider";
 
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
@@ -109,7 +110,11 @@ describe("InterstitialManager", () => {
     mockFetch.mockResolvedValue({ ok: true, json: async () => ({ success: true }) });
     vi.spyOn(window, "confirm").mockReturnValue(true);
 
-    const { container } = render(<InterstitialManager configs={mockConfigs} />);
+    const { container } = render(
+      <AdminRoleProvider role="super_admin">
+        <InterstitialManager configs={mockConfigs} />
+      </AdminRoleProvider>
+    );
     const configCards = container.querySelectorAll("div[class*='rounded-lg border']");
     const firstCardButtons = configCards[0]?.querySelectorAll("button");
     // Last button should be delete

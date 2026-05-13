@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MoreHorizontal, Edit, Trash2, ExternalLink } from "lucide-react";
 import { useState } from "react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface Post {
   id: string;
@@ -54,6 +55,7 @@ export default function PostsTable({ posts }: { posts: Post[] }) {
 }
 
 function PostRow({ post }: { post: Post }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const statusStyles: Record<string, string> = {
@@ -121,16 +123,18 @@ function PostRow({ post }: { post: Post }) {
                 >
                   <ExternalLink className="h-3.5 w-3.5" /> View
                 </Link>
-                <button
-                  onClick={async () => {
-                    if (!confirm("Delete this post?")) return;
-                    await fetch(`/api/admin/posts/${post.id}`, { method: "DELETE" });
-                    window.location.reload();
-                  }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                >
-                  <Trash2 className="h-3.5 w-3.5" /> Delete
-                </button>
+                {isSuperAdmin && (
+                  <button
+                    onClick={async () => {
+                      if (!confirm("Delete this post?")) return;
+                      await fetch(`/api/admin/posts/${post.id}`, { method: "DELETE" });
+                      window.location.reload();
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> Delete
+                  </button>
+                )}
               </div>
             </>
           )}

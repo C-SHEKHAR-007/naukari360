@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Edit, Trash2, Check, X, ToggleLeft, ToggleRight } from "lucide-react";
+import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
 
 interface AdSlot {
   id: string;
@@ -14,6 +15,7 @@ interface AdSlot {
 }
 
 export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdSlot[] }) {
+  const isSuperAdmin = useIsSuperAdmin();
   const [slots, setSlots] = useState(initialSlots);
   const [editing, setEditing] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", slotKey: "", adCode: "", device: "all", notes: "" });
@@ -190,12 +192,14 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                 >
                   <Edit className="h-4 w-4" />
                 </button>
-                <button
-                  onClick={() => handleDelete(slot.id)}
-                  className="rounded p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                {isSuperAdmin && (
+                  <button
+                    onClick={() => handleDelete(slot.id)}
+                    className="rounded p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                )}
               </div>
             </div>
           )}
