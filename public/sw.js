@@ -28,6 +28,7 @@ self.addEventListener("fetch", (event) => {
   // Skip non-GET and admin/api requests
   if (request.method !== "GET") return;
   if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/api")) return;
+  if (url.pathname.startsWith("/_next/")) return;
 
   // Static assets (JS, CSS, images) — Cache-first
   if (
