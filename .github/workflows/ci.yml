@@ -25,6 +25,8 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: pnpm exec prisma generate
       - name: TypeScript type check
         run: pnpm exec tsc --noEmit
       - name: ESLint
@@ -44,6 +46,8 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: pnpm exec prisma generate
       - name: Run unit tests
         run: pnpm test:unit
       - name: Run component tests
