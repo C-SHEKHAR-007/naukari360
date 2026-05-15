@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Header from "@/components/public/Header";
 
-// Mock next-themes
-vi.mock("next-themes", () => ({
-  useTheme: () => ({ theme: "light", setTheme: vi.fn() }),
+// Mock theme provider
+vi.mock("@/components/providers/ThemeProvider", () => ({
+  useTheme: () => ({ theme: "light", setTheme: vi.fn(), mounted: true }),
 }));
 
 // Mock language provider
@@ -24,7 +24,9 @@ vi.mock("@/components/public/LanguageToggle", () => ({
 // Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
