@@ -133,6 +133,7 @@ jobs:
       - name: Run E2E tests
         env:
           RESEND_API_KEY: re_placeholder
+          AUTH_TRUST_HOST: 'true'
         run: pnpm test:e2e
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
