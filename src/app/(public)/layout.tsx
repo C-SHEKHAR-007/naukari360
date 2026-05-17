@@ -10,6 +10,8 @@ import OfflineIndicator from "@/components/public/OfflineIndicator";
 import QuickCompare from "@/components/public/QuickCompare";
 import { getSiteSettings } from "@/lib/settings";
 
+export const dynamic = "force-dynamic";
+
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
 

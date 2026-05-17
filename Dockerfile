@@ -1,10 +1,11 @@
 FROM node:20-alpine AS base
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10 --activate
 WORKDIR /app
 
 # Install dependencies
 FROM base AS deps
 COPY package.json pnpm-lock.yaml ./
+COPY prisma ./prisma
 RUN pnpm install --frozen-lockfile
 
 # Development
@@ -20,6 +21,11 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN pnpm prisma generate
+# Dummy env vars needed at build time (not used at runtime)
+ARG RESEND_API_KEY=re_placeholder
+ARG DATABASE_URL=postgresql://x:x@localhost:5432/x
+ENV RESEND_API_KEY=$RESEND_API_KEY
+ENV DATABASE_URL=$DATABASE_URL
 RUN pnpm build
 
 # Production
