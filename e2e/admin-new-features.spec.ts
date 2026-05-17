@@ -12,20 +12,20 @@ test.describe("Admin Affiliate Links", () => {
 
   test("affiliate links page loads", async ({ page }) => {
     await page.goto("/admin/affiliate-links");
-    await expect(page.locator("text=Affiliate Links")).toBeVisible();
-    await expect(page.locator("text=Add Link")).toBeVisible();
+    await expect(page.locator("h1, h2").filter({ hasText: "Affiliate Links" })).toBeVisible();
+    await expect(page.locator("button:has-text('Add Link')")).toBeVisible();
   });
 
   test("can open add link form", async ({ page }) => {
     await page.goto("/admin/affiliate-links");
-    await page.click("text=Add Link");
+    await page.locator("button:has-text('Add Link')").click();
     await expect(page.locator('input[placeholder="Link name"]')).toBeVisible();
     await expect(page.locator('input[placeholder*="Original URL"]')).toBeVisible();
   });
 
   test("can create an affiliate link", async ({ page }) => {
     await page.goto("/admin/affiliate-links");
-    await page.click("text=Add Link");
+    await page.locator("button:has-text('Add Link')").click();
 
     const slug = `test-link-${Date.now()}`;
     await page.fill('input[placeholder="Link name"]', "E2E Test Link");
@@ -48,8 +48,8 @@ test.describe("Admin Notifications", () => {
 
   test("notifications page loads", async ({ page }) => {
     await page.goto("/admin/notifications");
-    await expect(page.locator("text=Push Notifications")).toBeVisible();
-    await expect(page.locator("text=Compose Notification")).toBeVisible();
+    await expect(page.locator("h1, h2").filter({ hasText: "Push Notifications" })).toBeVisible();
+    await expect(page.locator("h2, h3").filter({ hasText: "Compose Notification" })).toBeVisible();
   });
 
   test("can send a notification", async ({ page }) => {
@@ -77,13 +77,13 @@ test.describe("Admin Interstitial Settings", () => {
 
   test("interstitial page loads", async ({ page }) => {
     await page.goto("/admin/interstitial");
-    await expect(page.locator("text=Interstitial Settings")).toBeVisible();
-    await expect(page.locator("text=Add Config")).toBeVisible();
+    await expect(page.locator("h1, h2").filter({ hasText: "Interstitial" })).toBeVisible();
+    await expect(page.locator("button:has-text('Add Config')")).toBeVisible();
   });
 
   test("can create an interstitial config", async ({ page }) => {
     await page.goto("/admin/interstitial");
-    await page.click("text=Add Config");
+    await page.locator("button:has-text('Add Config')").click();
 
     await page.fill('input[placeholder*="Title"]', "E2E Test Config");
     await page.fill('input[placeholder*="Ad Slot Key"]', "e2e_test_slot");

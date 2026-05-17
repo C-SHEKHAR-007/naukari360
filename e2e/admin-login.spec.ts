@@ -22,7 +22,7 @@ test.describe("Admin Login", () => {
     // Should still be on login page or show error
     const errorMessage = page.locator('[role="alert"], .error, .text-red');
     const isStillOnLogin = page.url().includes("/admin/login");
-    expect(isStillOnLogin || await errorMessage.isVisible()).toBeTruthy();
+    expect(isStillOnLogin || (await errorMessage.isVisible())).toBeTruthy();
   });
 
   test("successful login redirects to admin dashboard", async ({ page }) => {
@@ -42,10 +42,10 @@ test.describe("Admin Login", () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(/\/admin(?!\/login)/);
 
-    // Check sidebar
-    await expect(page.locator("text=Posts")).toBeVisible();
-    await expect(page.locator("text=Categories")).toBeVisible();
-    await expect(page.locator("text=Site Settings")).toBeVisible();
+    // Check sidebar navigation links
+    await expect(page.locator('aside a[href="/admin/posts"]')).toBeVisible();
+    await expect(page.locator('aside a[href="/admin/categories"]')).toBeVisible();
+    await expect(page.locator('aside a[href="/admin/site-settings"]')).toBeVisible();
   });
 
   test("logout works", async ({ page }) => {
@@ -57,7 +57,9 @@ test.describe("Admin Login", () => {
     await page.waitForURL(/\/admin(?!\/login)/);
 
     // Find and click logout
-    const logoutBtn = page.locator('button:has-text("Logout"), a:has-text("Logout"), button:has-text("Sign Out")');
+    const logoutBtn = page.locator(
+      'button:has-text("Logout"), a:has-text("Logout"), button:has-text("Sign Out")'
+    );
     if (await logoutBtn.isVisible()) {
       await logoutBtn.click();
       await page.waitForURL(/\/admin\/login/);

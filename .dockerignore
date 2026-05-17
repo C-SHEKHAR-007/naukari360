@@ -7,3 +7,4 @@ docker-compose*
 playwright-report
 test-results
 coverage
+logs

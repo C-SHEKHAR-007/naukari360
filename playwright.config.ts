@@ -13,11 +13,12 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["Pixel 5"] } },
+    ...(process.env.CI ? [] : [{ name: "mobile", use: { ...devices["Pixel 5"] } }]),
   ],
   webServer: {
-    command: "pnpm dev",
+    command: process.env.CI ? "pnpm build && pnpm start" : "pnpm dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
+    timeout: 120000,
   },
 });

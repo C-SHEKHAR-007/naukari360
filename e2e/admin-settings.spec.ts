@@ -11,7 +11,7 @@ test.describe("Admin Settings", () => {
   });
 
   test("can navigate to site settings", async ({ page }) => {
-    await page.click("text=Site Settings");
+    await page.locator('aside a[href="/admin/site-settings"]').click();
     await page.waitForURL(/\/admin\/site-settings/);
     expect(page.url()).toContain("/admin/site-settings");
   });
@@ -48,9 +48,7 @@ test.describe("Admin Settings", () => {
 
     // Restore original
     await page.goto("/admin/site-settings");
-    const nameInput = page.locator(
-      'input[name="site_name"], input[placeholder*="site name" i]'
-    );
+    const nameInput = page.locator('input[name="site_name"], input[placeholder*="site name" i]');
     await nameInput.clear();
     await nameInput.fill("Naukari360");
     await page.locator('button[type="submit"], button:has-text("Save")').click();
