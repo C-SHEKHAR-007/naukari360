@@ -8,7 +8,7 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 vi.mock("@/lib/email", () => ({
-  sendContactNotification: vi.fn().mockResolvedValue(undefined),
+  sendContactNotification: vi.fn().mockResolvedValue({ data: "mock", error: null }),
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
@@ -31,6 +31,7 @@ describe("Security — Input Sanitization", () => {
         name: "John O'Brien-Smith",
         email: "john@test.com",
         subject: "general",
+        type: "general",
         message: "Hello there",
       }),
       headers: { "Content-Type": "application/json" },

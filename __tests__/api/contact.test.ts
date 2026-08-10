@@ -11,7 +11,7 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 vi.mock("@/lib/email", () => ({
-  sendContactNotification: vi.fn().mockResolvedValue(undefined),
+  sendContactNotification: vi.fn().mockResolvedValue({ data: "mock", error: null }),
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
