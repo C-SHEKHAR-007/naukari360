@@ -28,6 +28,7 @@ import AskOnWhatsApp from "@/components/public/AskOnWhatsApp";
 import InlineNewsletterForm from "@/components/public/InlineNewsletterForm";
 import ViewTracker from "@/components/public/ViewTracker";
 import SalaryCalculator from "@/components/public/SalaryCalculator";
+import CommentsSection from "@/components/public/CommentsSection";
 import type { PostCardData } from "@/lib/db";
 
 interface Props {

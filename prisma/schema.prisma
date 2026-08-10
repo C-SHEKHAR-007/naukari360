@@ -100,6 +100,7 @@ model Post {
   postTags          PostTag[]
   bookmarks         Bookmark[]
   applications      ApplicationTracker[]
+  comments          Comment[]
 
   @@index([status])
   @@index([categoryId])
@@ -365,6 +366,7 @@ model User {
   sessions      Session[]
   bookmarks     Bookmark[]
   applications  ApplicationTracker[]
+  comments      Comment[]
  
   @@map("users")
 }
@@ -435,4 +437,18 @@ model ApplicationTracker {
 
   @@unique([userId, postId])
   @@map("application_tracker")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  postId    String   @map("post_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt(sort: Desc)])
+  @@map("comments")
 }
