@@ -27,6 +27,7 @@ self.addEventListener("fetch", (event) => {
 
   // Skip non-GET and admin/api requests
   if (request.method !== "GET") return;
+  if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/api")) return;
   if (url.pathname.startsWith("/_next/")) return;
 

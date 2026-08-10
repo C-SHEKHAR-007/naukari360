@@ -17,7 +17,7 @@ interface CommentType {
 }
 
 export default function CommentsSection({ postId }: { postId: string }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [comments, setComments] = useState<CommentType[]>([]);
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
@@ -70,7 +70,14 @@ export default function CommentsSection({ postId }: { postId: string }) {
       </div>
 
       <div className="p-5">
-        {!session ? (
+        {status === "loading" ? (
+          <div className="mb-8 flex flex-col items-center justify-center rounded-lg border border-dashed border-border/40 bg-muted/20 p-6 text-center animate-pulse">
+            <div className="mb-2 h-8 w-8 rounded-md bg-muted/50"></div>
+            <div className="mb-2 h-5 w-48 rounded-md bg-muted/50"></div>
+            <div className="mb-4 h-4 w-64 rounded-md bg-muted/50"></div>
+            <div className="h-9 w-36 rounded-full bg-muted/50"></div>
+          </div>
+        ) : !session ? (
           <div className="mb-8 flex flex-col items-center justify-center rounded-lg border border-dashed border-border/80 bg-muted/30 p-6 text-center">
             <MessageSquare className="mb-2 h-8 w-8 text-muted-foreground/50" />
             <h3 className="mb-1 font-medium text-foreground">Join the conversation</h3>
@@ -93,7 +100,8 @@ export default function CommentsSection({ postId }: { postId: string }) {
                     width={40}
                     height={40}
                     unoptimized
-                    className="rounded-full border border-border object-cover"
+                    referrerPolicy="no-referrer"
+                    className="h-10 w-10 shrink-0 rounded-full border border-border object-cover"
                   />
                 ) : (
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
@@ -145,7 +153,8 @@ export default function CommentsSection({ postId }: { postId: string }) {
                       width={40}
                       height={40}
                       unoptimized
-                      className="rounded-full border border-border object-cover"
+                      referrerPolicy="no-referrer"
+                      className="h-10 w-10 shrink-0 rounded-full border border-border object-cover"
                     />
                   ) : (
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">

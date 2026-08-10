@@ -398,6 +398,9 @@ export default async function PostDetailPage({ params }: Props) {
         )}
 
         <InlineNewsletterForm />
+        
+        {/* Discussion Forum */}
+        <CommentsSection postId={post.id} />
       </article>
     </>
   );

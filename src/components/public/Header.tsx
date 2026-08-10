@@ -96,9 +96,7 @@ export default function Header({ settings }: { settings: SiteSettings }) {
               )}
             </button>
 
-            <div className="ml-1 pl-1 sm:ml-2 sm:pl-2 border-l border-border flex items-center">
-              <UserNav />
-            </div>
+            <UserNav />
 
             {/* Mobile menu button */}
             <button

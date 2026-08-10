@@ -29,10 +29,10 @@ export default function UserNav() {
     return (
       <button
         onClick={() => signIn("google")}
-        className="flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-dark hover:shadow-md"
+        title="Sign In / Register"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition-all hover:bg-primary hover:text-white"
       >
-        <LogIn className="h-4 w-4" />
-        <span className="hidden sm:inline">Sign In</span>
+        <User className="h-4 w-4" />
       </button>
     );
   }
