@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Clock, MapPin, Briefcase, Calendar, Bookmark, BookmarkCheck } from "lucide-react";
 import { formatDate, daysUntil, isClosingSoon } from "@/lib/utils";
 import type { PostCardData } from "@/lib/db";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 function Badge({ type }: { type: string }) {
@@ -27,6 +29,16 @@ function Badge({ type }: { type: string }) {
 }
 
 function CountdownTimer({ lastDate }: { lastDate: Date }) {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <span className="inline-block w-12 h-5 rounded-md bg-muted/20 animate-pulse"></span>;
+  }
+
   const days = daysUntil(lastDate);
   if (days < 0) return null;
   if (days === 0)
@@ -50,15 +62,21 @@ function CountdownTimer({ lastDate }: { lastDate: Date }) {
 
 export default function PostCard({ post }: { post: PostCardData }) {
   const { t } = useLanguage();
-  const [bookmarked, setBookmarked] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const saved = JSON.parse(localStorage.getItem("bookmarks") || "[]") as string[];
-    return saved.includes(post.id);
-  });
+  const { data: session } = useSession();
+  const [bookmarked, setBookmarked] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  function toggleBookmark(e: React.MouseEvent) {
+  useEffect(() => {
+    setMounted(true);
+    const saved = JSON.parse(localStorage.getItem("bookmarks") || "[]") as string[];
+    setBookmarked(saved.includes(post.id));
+  }, [post.id]);
+
+  async function toggleBookmark(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Optimistic update
     const saved = JSON.parse(localStorage.getItem("bookmarks") || "[]") as string[];
     let updated: string[];
     if (saved.includes(post.id)) {
@@ -68,6 +86,19 @@ export default function PostCard({ post }: { post: PostCardData }) {
     }
     localStorage.setItem("bookmarks", JSON.stringify(updated));
     setBookmarked(!bookmarked);
+
+    // Sync to database if logged in
+    if (session?.user) {
+      try {
+        await fetch("/api/bookmarks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postId: post.id }),
+        });
+      } catch (err) {
+        console.error("Failed to sync bookmark", err);
+      }
+    }
   }
 
   const badges: string[] = [];
@@ -78,11 +109,16 @@ export default function PostCard({ post }: { post: PostCardData }) {
   if (post.isTrending && !badges.includes("TRENDING")) badges.push("TRENDING");
 
   return (
-    <Link
-      href={`/post/${post.slug}`}
-      className="card-hover group relative flex flex-col rounded-xl border border-border bg-card p-4 shadow-sm hover:border-primary/40 hover:shadow-lg h-full"
+    <motion.div 
+      whileHover={{ y: -5, scale: 1.02 }} 
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="h-full"
     >
-      {/* Top row: badges + bookmark */}
+      <Link
+        href={`/post/${post.slug}`}
+        className="card-hover group relative flex flex-col rounded-xl border border-border bg-card/80 backdrop-blur-sm p-4 shadow-sm hover:border-primary/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] h-full transition-colors"
+      >
+        {/* Top row: badges + bookmark */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {badges.map((b) => (
@@ -99,7 +135,7 @@ export default function PostCard({ post }: { post: PostCardData }) {
           className="shrink-0 rounded-lg p-1.5 text-muted transition-all hover:bg-primary/10 hover:text-primary"
           aria-label={bookmarked ? "Remove bookmark" : "Bookmark"}
         >
-          {bookmarked ? (
+          {mounted && bookmarked ? (
             <BookmarkCheck className="h-4 w-4 text-primary" />
           ) : (
             <Bookmark className="h-4 w-4" />
@@ -153,6 +189,7 @@ export default function PostCard({ post }: { post: PostCardData }) {
         </div>
         {post.lastDate && <CountdownTimer lastDate={new Date(post.lastDate)} />}
       </div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 }
