@@ -6,6 +6,7 @@ import { Menu, X, Moon, Sun, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import LanguageToggle from "./LanguageToggle";
+import UserNav from "./UserNav";
 import type { SiteSettings } from "@/lib/settings";
 
 const navLinks = [
@@ -94,6 +95,10 @@ export default function Header({ settings }: { settings: SiteSettings }) {
                 <span className="inline-block h-[18px] w-[18px]" />
               )}
             </button>
+
+            <div className="ml-1 pl-1 sm:ml-2 sm:pl-2 border-l border-border flex items-center">
+              <UserNav />
+            </div>
 
             {/* Mobile menu button */}
             <button

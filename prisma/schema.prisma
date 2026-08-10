@@ -359,6 +359,8 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   role          String?   @default("user")
+  qualification String?
+  state         String?
   accounts      Account[]
   sessions      Session[]
   bookmarks     Bookmark[]

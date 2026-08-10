@@ -14,9 +14,11 @@ import CategorySection from "@/components/public/CategorySection";
 import PostCard from "@/components/public/PostCard";
 import AdSlot from "@/components/public/AdSlot";
 import BilingualText from "@/components/public/BilingualText";
-import { getPostsByCategory, getClosingSoonPosts, getTrendingPosts } from "@/lib/db";
+import { getPostsByCategory, getClosingSoonPosts, getTrendingPosts, getPersonalizedPosts } from "@/lib/db";
 import { generateWebSiteSchema, generateOrganizationSchema } from "@/lib/seo";
 import type { PostCardData } from "@/lib/db";
+import { auth } from "@/lib/auth";
+import { Star } from "lucide-react";
 
 const categories = [
   {
@@ -78,14 +80,20 @@ const categories = [
 export const revalidate = 300; // ISR: revalidate every 5 minutes
 
 export default async function HomePage() {
+  const session = await auth();
+  const qual = (session?.user as any)?.qualification || null;
+  const userState = (session?.user as any)?.state || null;
+
   const results = await Promise.all([
     getClosingSoonPosts(6),
     getTrendingPosts(6),
+    ...(qual || userState ? [getPersonalizedPosts(qual, userState, 6)] : [Promise.resolve([])]),
     ...categories.map((cat) => getPostsByCategory(cat.slug, 6)),
   ]);
   const closingSoon = results[0] as PostCardData[];
   const trending = results[1] as PostCardData[];
-  const categoryPosts = results.slice(2) as PostCardData[][];
+  const personalized = results[2] as PostCardData[];
+  const categoryPosts = results.slice(3) as PostCardData[][];
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8 lg:py-12">
@@ -142,6 +150,34 @@ export default async function HomePage() {
       </section>
 
       <AdSlot slotKey="header_banner" className="mb-10" />
+
+      {/* Personalized Feed */}
+      {session?.user && personalized.length > 0 && (
+        <section className="mb-12">
+          <div className="mb-5 flex items-center justify-between border-l-4 border-amber-500 pl-4">
+            <div className="flex items-center gap-2.5">
+              <div className="rounded-lg bg-amber-50 p-2 dark:bg-amber-900/20">
+                <Star className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-foreground sm:text-xl">Jobs For You</h2>
+                <p className="text-xs text-muted">Based on your saved profile preferences</p>
+              </div>
+            </div>
+            <Link
+              href="/profile"
+              className="hidden items-center gap-1 rounded-lg bg-background px-3 py-1.5 text-sm font-semibold text-primary border border-primary/20 transition-all hover:bg-primary/5 sm:flex"
+            >
+              Update Profile
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {personalized.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Closing Soon */}
       {closingSoon.length > 0 && (

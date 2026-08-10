@@ -82,6 +82,23 @@ export async function getPostsByQualification(level: string, limit = 20, offset 
   });
 }
 
+export async function getPersonalizedPosts(qualification: string | null, state: string | null, limit = 6) {
+  if (!qualification && !state) return [];
+  
+  return prisma.post.findMany({
+    where: {
+      status: "published" as PostStatus,
+      OR: [
+        ...(qualification ? [{ qualificationLevel: qualification as QualificationLevel }] : []),
+        ...(state ? [{ state: { slug: state } }] : []),
+      ],
+    },
+    select: postCardSelect,
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+}
+
 export async function getTrendingPosts(limit = 10) {
   return prisma.post.findMany({
     where: {

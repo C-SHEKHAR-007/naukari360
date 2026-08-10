@@ -7,16 +7,18 @@ services:
     ports:
       - '3000:3000'
     environment:
-      - DATABASE_URL=postgresql://sarkari:sarkari123@db:5432/naukari360
-      - NEXTAUTH_SECRET=dev-secret-change-in-production
-      - NEXTAUTH_URL=http://localhost:3000
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
       - RESEND_API_KEY=${RESEND_API_KEY}
       - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
       - ONESIGNAL_APP_ID=${ONESIGNAL_APP_ID}
-      - REVALIDATION_SECRET=dev-revalidation-secret
-      - ADMIN_EMAIL=${ADMIN_EMAIL:-naukari360.official@gmail.com}
+      - REVALIDATION_SECRET=${REVALIDATION_SECRET}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     depends_on:
       db:
         condition: service_healthy
@@ -64,7 +66,7 @@ services:
     ports:
       - '5555:5555'
     environment:
-      - DATABASE_URL=postgresql://sarkari:sarkari123@db:5432/naukari360
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       db:
         condition: service_healthy
