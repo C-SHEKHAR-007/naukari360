@@ -52,4 +52,4 @@ next-env.d.ts
 # plan/notes (personal)
 plan.md
 
-logs
+logs.pnpm-store/

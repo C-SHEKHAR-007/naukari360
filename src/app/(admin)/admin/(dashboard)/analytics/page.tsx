@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { BarChart3, Eye, TrendingUp, Users, MousePointerClick } from "lucide-react";
 import Link from "next/link";
+import AnalyticsChart from "@/components/admin/AnalyticsChart";
 
 async function getAnalyticsData() {
   const now = new Date();
@@ -89,36 +90,13 @@ export default async function AnalyticsPage() {
         />
       </div>
 
-      {/* Daily Views Chart (simple bar representation) */}
-      <div className="mt-8 rounded-xl border border-border bg-card p-6">
-        <div className="mb-4 flex items-center gap-2">
-          <BarChart3 className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold text-foreground">Daily Views (30 days)</h2>
+      {/* Daily Views Chart */}
+      <div className="mt-8 rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="mb-2 flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-primary" />
+          <h2 className="text-lg font-semibold text-foreground">Traffic Overview (30 Days)</h2>
         </div>
-        {data.dailyViews.length > 0 ? (
-          <div className="flex items-end gap-1" style={{ height: "160px" }}>
-            {data.dailyViews.map((d: { date: string; views: number }) => {
-              const max = Math.max(...data.dailyViews.map((v: { views: number }) => v.views));
-              const height = max > 0 ? (d.views / max) * 100 : 0;
-              return (
-                <div
-                  key={d.date}
-                  className="group relative flex-1"
-                  title={`${d.date}: ${d.views} views`}
-                >
-                  <div
-                    className="w-full rounded-t bg-primary/80 transition-colors group-hover:bg-primary"
-                    style={{ height: `${height}%`, minHeight: d.views > 0 ? "4px" : "0" }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <p className="text-sm text-muted">
-            No view data yet. Views will appear as visitors browse posts.
-          </p>
-        )}
+        <AnalyticsChart data={data.dailyViews} />
       </div>
 
       {/* Top Posts */}
