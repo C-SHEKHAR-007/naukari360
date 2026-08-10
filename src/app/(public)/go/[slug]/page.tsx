@@ -45,7 +45,7 @@ export default async function InterstitialPage({ params, searchParams }: Props) 
 
       <AdSlot slotKey="interstitial_full" className="my-8" />
 
-      <InterstitialCountdown url={destinationUrl} />
+      <InterstitialCountdown url={destinationUrl} fallbackUrl={`/post/${slug}`} />
 
       <p className="mt-8 text-xs text-muted">
         If you are not redirected automatically,{" "}

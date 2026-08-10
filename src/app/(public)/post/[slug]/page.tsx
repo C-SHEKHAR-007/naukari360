@@ -14,6 +14,7 @@ import {
 import { getPostBySlug, getRelatedPosts, getAffiliateLinks } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 import { generateJobPostingSchema, generateFAQSchema, generateBreadcrumbSchema } from "@/lib/seo";
+import sanitizeHtml from "sanitize-html";
 import AdSlot from "@/components/public/AdSlot";
 import PostCard from "@/components/public/PostCard";
 import ShareButtons from "@/components/public/ShareButtons";
@@ -251,7 +252,7 @@ export default async function PostDetailPage({ params }: Props) {
         {post.contentEn && (
           <div
             className="prose prose-sm max-w-none dark:prose-invert mt-6"
-            dangerouslySetInnerHTML={{ __html: post.contentEn }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.contentEn) }}
           />
         )}
 

@@ -4,20 +4,26 @@ import { useEffect, useState } from "react";
 
 interface InterstitialCountdownProps {
   url: string;
+  fallbackUrl: string;
   seconds?: number;
 }
 
-export default function InterstitialCountdown({ url, seconds = 5 }: InterstitialCountdownProps) {
+export default function InterstitialCountdown({ url, fallbackUrl, seconds = 5 }: InterstitialCountdownProps) {
   const [count, setCount] = useState(seconds);
 
   useEffect(() => {
     if (count <= 0) {
-      window.location.href = url;
+      const newWin = window.open(url, "_blank");
+      if (newWin) {
+        window.location.replace(fallbackUrl);
+      } else {
+        window.location.replace(url);
+      }
       return;
     }
     const timer = setTimeout(() => setCount(count - 1), 1000);
     return () => clearTimeout(timer);
-  }, [count, url]);
+  }, [count, url, fallbackUrl]);
 
   return (
     <div className="my-8 flex flex-col items-center">

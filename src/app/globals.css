@@ -74,14 +74,14 @@ body {
 }
 
 /* Light theme subtle gradient background */
-@media (prefers-color-scheme: light) {
-  body:not(.dark) {
-    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-    background-attachment: fixed;
-  }
-}
 html:not(.dark) body {
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  background-attachment: fixed;
+}
+
+/* Dark theme solid/gradient background */
+html.dark body {
+  background: #0f1629;
   background-attachment: fixed;
 }
 

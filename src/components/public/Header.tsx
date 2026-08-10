@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Moon, Sun, Search } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import LanguageToggle from "./LanguageToggle";
 import type { SiteSettings } from "@/lib/settings";
@@ -25,7 +26,9 @@ export default function Header({ settings }: { settings: SiteSettings }) {
   const announcementText = settings.announcement_text || "";
 
   return (
-    <header className="glass-header sticky top-0 z-50 shadow-sm">
+    <header 
+      className="glass-header sticky top-0 z-50 shadow-sm border-b border-border/40 backdrop-blur-md bg-background/80 transition-colors"
+    >
       {/* Announcement Bar */}
       {announcementActive && announcementText && (
         <div className="bg-primary text-white text-center text-xs sm:text-sm py-1.5 px-4 font-medium">
@@ -104,22 +107,29 @@ export default function Header({ settings }: { settings: SiteSettings }) {
         </div>
 
         {/* Mobile Nav */}
-        {mobileMenuOpen && (
-          <nav className="border-t border-border/50 pb-4 pt-2 lg:hidden">
-            <div className="space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-all hover:bg-primary/8 hover:text-primary"
-                >
-                  <span>{link.label}</span>
-                </Link>
-              ))}
-            </div>
-          </nav>
-        )}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.nav 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="border-t border-border/50 overflow-hidden lg:hidden"
+            >
+              <div className="space-y-1 pb-4 pt-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-all hover:bg-primary/8 hover:text-primary"
+                  >
+                    <span>{link.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
