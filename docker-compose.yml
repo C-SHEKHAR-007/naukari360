@@ -16,7 +16,7 @@ services:
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
       - ONESIGNAL_APP_ID=${ONESIGNAL_APP_ID}
       - REVALIDATION_SECRET=dev-revalidation-secret
-      - ADMIN_EMAIL=admin@naukari360.in
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-naukari360.official@gmail.com}
     depends_on:
       db:
         condition: service_healthy

@@ -8,6 +8,7 @@ import ExitIntentPopup from "@/components/public/ExitIntentPopup";
 import GoogleAnalytics from "@/components/public/GoogleAnalytics";
 import OfflineIndicator from "@/components/public/OfflineIndicator";
 import QuickCompare from "@/components/public/QuickCompare";
+import MobileBottomNav from "@/components/public/MobileBottomNav";
 import { getSiteSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
@@ -24,10 +25,11 @@ export default async function PublicLayout({ children }: { children: React.React
       <NewsletterPopup />
       <ScrollToTop />
       <OneSignalInit />
-      <FloatingTelegramCTA telegramUrl={settings?.telegramUrl} />
+      <FloatingTelegramCTA telegramUrl={settings?.telegram_url} />
       <ExitIntentPopup />
       <QuickCompare />
       <OfflineIndicator />
+      <MobileBottomNav />
     </>
   );
 }

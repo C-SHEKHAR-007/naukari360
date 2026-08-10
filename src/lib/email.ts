@@ -19,7 +19,7 @@ interface SendEmailParams {
 
 export async function sendEmail({ to, subject, html }: SendEmailParams) {
   return resend.emails.send({
-    from: "Naukari360 <noreply@naukari360.in>",
+    from: process.env.EMAIL_FROM || "Naukari360 <onboarding@resend.dev>",
     to,
     subject,
     html,
@@ -33,7 +33,8 @@ export async function sendContactNotification(data: {
   message: string;
   type: string;
 }) {
-  const adminEmail = process.env.ADMIN_EMAIL || "admin@naukari360.in";
+  const adminEmail = process.env.ADMIN_EMAIL || "naukari360.official@gmail.com";
+  console.log("Attempting to send Resend email TO:", `"${adminEmail}"`);
   return sendEmail({
     to: adminEmail,
     subject: `[Contact Form] ${escapeHtml(data.subject)}`,

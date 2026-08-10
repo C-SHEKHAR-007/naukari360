@@ -3,6 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { sendContactNotification } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
 
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().min(1, "Name is required").max(200, "Name is too long"),
+  email: z.string().email("Invalid email").max(320, "Email is too long"),
+  subject: z.string().min(1, "Subject is required").max(500, "Subject is too long"),
+  message: z.string().min(1, "Message is required").max(5000, "Message is too long"),
+  type: z.enum(["general", "sponsored_post", "advertisement"]).catch("general"),
+});
+
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for") || "unknown";
@@ -12,31 +22,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, email, type, subject, message } = body;
-
-    // Validation
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+    const parsed = contactSchema.safeParse(body);
+    
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0]?.message || "Invalid input" }, { status: 400 });
     }
-
-    if (typeof name !== "string" || name.length > 200) {
-      return NextResponse.json({ error: "Invalid name" }, { status: 400 });
-    }
-
-    if (
-      typeof email !== "string" ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-      email.length > 320
-    ) {
-      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
-    }
-
-    if (typeof message !== "string" || message.length > 5000) {
-      return NextResponse.json({ error: "Message too long" }, { status: 400 });
-    }
-
-    const validTypes = ["general", "sponsored_post", "advertisement"];
-    const contactType = validTypes.includes(type) ? type : "general";
+    
+    const { name, email, type: contactType, subject, message } = parsed.data;
 
     // Save to database
     await prisma.contactSubmission.create({
@@ -49,8 +41,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send email notification (fire and forget)
-    sendContactNotification({ name, email, type: contactType, subject, message }).catch(() => {});
+    // Send email notification
+    const resendResponse = await sendContactNotification({ name, email, type: contactType, subject, message });
+    if (resendResponse.error) {
+      console.error("Resend API Error:", resendResponse.error);
+    } else {
+      console.log("Email sent successfully:", resendResponse.data);
+    }
 
     return NextResponse.json({ success: true });
   } catch {
