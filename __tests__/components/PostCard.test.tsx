@@ -19,6 +19,11 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+// Mock next-auth
+vi.mock("next-auth/react", () => ({
+  useSession: () => ({ data: null, status: "unauthenticated" }),
+}));
+
 import PostCard from "@/components/public/PostCard";
 
 const mockPost = {

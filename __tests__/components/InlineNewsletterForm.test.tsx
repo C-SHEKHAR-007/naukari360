@@ -66,7 +66,7 @@ describe("InlineNewsletterForm", () => {
     fireEvent.click(screen.getByText("Subscribe"));
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("/api/newsletter", {
+      expect(global.fetch).toHaveBeenCalledWith("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: "user@test.com" }),

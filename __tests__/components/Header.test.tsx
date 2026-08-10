@@ -30,6 +30,11 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+// Mock next-auth
+vi.mock("next-auth/react", () => ({
+  useSession: () => ({ data: null, status: "unauthenticated" }),
+}));
+
 describe("Header", () => {
   const mockSettings = {
     site_name: "Naukari360",

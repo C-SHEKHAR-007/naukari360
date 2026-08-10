@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Briefcase, FileText, Bookmark, Search } from "lucide-react";
+import { Home, Bookmark, Search, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const navItems = [
   { href: "/", icon: Home, labelEn: "Home", labelHi: "होम" },
-  { href: "/latest-jobs", icon: Briefcase, labelEn: "Jobs", labelHi: "नौकरी" },
   { href: "/search", icon: Search, labelEn: "Search", labelHi: "खोजें" },
-  { href: "/results", icon: FileText, labelEn: "Results", labelHi: "रिजल्ट" },
   { href: "/bookmarks", icon: Bookmark, labelEn: "Saved", labelHi: "सेव" },
+  { href: "/profile", icon: User, labelEn: "Profile", labelHi: "प्रोफाइल" },
 ];
 
 export default function MobileBottomNav() {
@@ -19,7 +18,7 @@ export default function MobileBottomNav() {
   const { t } = useLanguage();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 block lg:hidden pb-safe bg-background/80 backdrop-blur-md border-t border-border/40 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
+    <div className="fixed bottom-0 left-0 right-0 z-50 block lg:hidden pb-[env(safe-area-inset-bottom)] bg-background/80 backdrop-blur-md border-t border-border/40 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
       <nav className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const isActive = pathname === item.href;

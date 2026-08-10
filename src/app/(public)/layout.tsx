@@ -17,7 +17,7 @@ export default async function PublicLayout({ children }: { children: React.React
   const settings = await getSiteSettings();
 
   return (
-    <>
+    <div className="pb-16 lg:pb-0 flex min-h-screen flex-col">
       {settings?.google_analytics_id && <GoogleAnalytics gaId={settings.google_analytics_id} />}
       <Header settings={settings} />
       <main className="flex-1">{children}</main>
@@ -30,6 +30,6 @@ export default async function PublicLayout({ children }: { children: React.React
       <QuickCompare />
       <OfflineIndicator />
       <MobileBottomNav />
-    </>
+    </div>
   );
 }
