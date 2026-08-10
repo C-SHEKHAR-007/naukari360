@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Save, User, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
@@ -65,11 +66,14 @@ export default function ProfilePage() {
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4 mb-8">
           {session.user.image ? (
-            <img 
+            <Image 
               src={session.user.image} 
               alt="Avatar" 
+              width={64}
+              height={64}
               className="h-16 w-16 rounded-full border border-border object-cover" 
               referrerPolicy="no-referrer"
+              unoptimized
             />
           ) : (
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
