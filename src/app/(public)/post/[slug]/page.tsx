@@ -27,6 +27,7 @@ import AddToCalendar from "@/components/public/AddToCalendar";
 import AskOnWhatsApp from "@/components/public/AskOnWhatsApp";
 import InlineNewsletterForm from "@/components/public/InlineNewsletterForm";
 import ViewTracker from "@/components/public/ViewTracker";
+import SalaryCalculator from "@/components/public/SalaryCalculator";
 import type { PostCardData } from "@/lib/db";
 
 interface Props {
@@ -82,6 +83,15 @@ export default async function PostDetailPage({ params }: Props) {
     ...(post.category ? [{ name: post.category.name, url: `/${post.category.slug}` }] : []),
     { name: post.titleEn, url: `/post/${post.slug}` },
   ];
+
+  // Try to parse pay level from salary string (e.g. "Level 7", "Level-6")
+  let initialPayLevel = 1;
+  if (post.salary) {
+    const levelMatch = post.salary.match(/level[\s-]*(\d+)/i);
+    if (levelMatch && levelMatch[1]) {
+      initialPayLevel = Math.min(14, Math.max(1, parseInt(levelMatch[1], 10)));
+    }
+  }
 
   return (
     <>
@@ -216,6 +226,13 @@ export default async function PostDetailPage({ params }: Props) {
             )}
           </div>
         </section>
+
+        {/* Salary Calculator (Render if salary is mentioned) */}
+        {post.salary && (
+          <section className="my-6">
+            <SalaryCalculator initialLevel={initialPayLevel} />
+          </section>
+        )}
 
         {/* Fee Details */}
         {(post.feeGeneral || post.feeObc || post.feeScSt || post.feeWomen) && (
