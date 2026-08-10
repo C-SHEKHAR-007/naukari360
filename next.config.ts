@@ -5,7 +5,7 @@ const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://adservice.google.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com https://www.google-analytics.com https://www.googletagmanager.com https://pagead2.googlesyndication.com",
+  "img-src 'self' data: blob: https://res.cloudinary.com https://*.googleusercontent.com https://www.google-analytics.com https://www.googletagmanager.com https://pagead2.googlesyndication.com",
   "font-src 'self' data:",
   "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://pagead2.googlesyndication.com",
   "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com",
+        hostname: "*.googleusercontent.com",
       },
     ],
     formats: ["image/avif", "image/webp"],
