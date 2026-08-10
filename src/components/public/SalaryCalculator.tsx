@@ -74,30 +74,32 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
 
   if (!isOpen) {
     return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="group flex w-full items-center justify-between rounded-xl border border-primary/20 bg-primary/5 p-4 transition-all hover:bg-primary/10 hover:border-primary/40 dark:bg-primary/10 dark:hover:bg-primary/20"
-      >
-        <span className="flex items-center gap-2 font-semibold text-primary">
-          <Calculator className="h-5 w-5" />
-          Estimate Take-Home Salary (7th CPC)
-        </span>
-        <ChevronDown className="h-5 w-5 text-primary transition-transform group-hover:translate-y-0.5" />
-      </button>
+      <div className="overflow-hidden rounded-xl border border-border/60 shadow-[var(--shadow-card)]">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="flex w-full items-center justify-between bg-primary/8 px-5 py-3 transition-colors hover:bg-primary/15 dark:bg-primary/15 dark:hover:bg-primary/25"
+        >
+          <h2 className="flex items-center gap-2 text-sm font-bold text-primary">
+            <Calculator className="h-4 w-4" />
+            Estimate Take-Home Salary (7th CPC)
+          </h2>
+          <ChevronDown className="h-4 w-4 text-primary transition-transform group-hover:translate-y-0.5" />
+        </button>
+      </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card shadow-[var(--shadow-card)] overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-border/60 bg-card shadow-[var(--shadow-card)]">
       <button
         onClick={() => setIsOpen(false)}
-        className="flex w-full items-center justify-between border-b border-border/50 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
+        className="flex w-full items-center justify-between border-b border-border/60 bg-primary/8 px-5 py-3 transition-colors hover:bg-primary/15 dark:bg-primary/15 dark:hover:bg-primary/25"
       >
-        <span className="flex items-center gap-2 font-bold text-primary">
-          <Calculator className="h-5 w-5" />
+        <h2 className="flex items-center gap-2 text-sm font-bold text-primary">
+          <Calculator className="h-4 w-4" />
           Salary Calculator (7th Pay Commission)
-        </span>
-        <ChevronUp className="h-5 w-5 text-primary" />
+        </h2>
+        <ChevronUp className="h-4 w-4 text-primary" />
       </button>
 
       <div className="p-5">
