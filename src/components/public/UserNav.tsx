@@ -3,7 +3,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogIn, LogOut, User, Bookmark } from "lucide-react";
+import { LogIn, LogOut, User, Bookmark, LayoutDashboard } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export default function UserNav() {
@@ -80,6 +80,14 @@ export default function UserNav() {
             >
               <Bookmark className="h-4 w-4 text-muted-foreground" />
               Saved Jobs
+            </Link>
+            <Link
+              href="/tracker"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted"
+            >
+              <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
+              Application Tracker
             </Link>
           </div>
           <div className="border-t border-border py-1">

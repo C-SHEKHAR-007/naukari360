@@ -12,6 +12,8 @@ import {
   Eye,
 } from "lucide-react";
 import { getPostBySlug, getRelatedPosts, getAffiliateLinks } from "@/lib/db";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 import { generateJobPostingSchema, generateFAQSchema, generateBreadcrumbSchema } from "@/lib/seo";
 import sanitizeHtml from "sanitize-html";
@@ -26,6 +28,7 @@ import ReadingTime from "@/components/public/ReadingTime";
 import AddToCalendar from "@/components/public/AddToCalendar";
 import AskOnWhatsApp from "@/components/public/AskOnWhatsApp";
 import InlineNewsletterForm from "@/components/public/InlineNewsletterForm";
+import TrackApplicationButton from "@/components/public/TrackApplicationButton";
 import ViewTracker from "@/components/public/ViewTracker";
 import SalaryCalculator from "@/components/public/SalaryCalculator";
 import CommentsSection from "@/components/public/CommentsSection";
@@ -74,10 +77,24 @@ export default async function PostDetailPage({ params }: Props) {
   const post = await getPostBySlug(slug);
   if (!post || post.status !== "published") notFound();
 
-  const [relatedPosts, affiliateLinks] = await Promise.all([
+  const [relatedPosts, affiliateLinks, session] = await Promise.all([
     getRelatedPosts(post.id, post.categoryId, 4),
     getAffiliateLinks(post.categoryId || undefined),
+    auth(),
   ]);
+
+  let isTracked = false;
+  if (session?.user) {
+    const trackedRecord = await prisma.applicationTracker.findUnique({
+      where: {
+        userId_postId: {
+          userId: session.user.id,
+          postId: post.id,
+        },
+      },
+    });
+    if (trackedRecord) isTracked = true;
+  }
 
   const breadcrumbs = [
     { name: "Home", url: "/" },
@@ -340,6 +357,7 @@ export default async function PostDetailPage({ params }: Props) {
         {/* Share & Actions */}
         <div className="my-6 flex flex-wrap items-center gap-3">
           <ShareButtons title={post.titleEn} slug={post.slug} />
+          <TrackApplicationButton postId={post.id} initialTracked={isTracked} />
           <CopyJobDetails
             title={post.titleEn}
             organization={post.organization}
