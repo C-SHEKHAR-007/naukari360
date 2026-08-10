@@ -48,59 +48,61 @@ enum SettingType {
 }
 
 model Post {
-  id                String             @id @default(uuid())
-  titleEn           String             @map("title_en")
-  titleHi           String?            @map("title_hi")
-  slug              String             @unique
-  contentEn         String?            @map("content_en")
-  contentHi         String?            @map("content_hi")
-  excerptEn         String?            @map("excerpt_en")
-  excerptHi         String?            @map("excerpt_hi")
-  categoryId        String?            @map("category_id")
-  stateId           String?            @map("state_id")
-  status            PostStatus         @default(draft)
-  badge             PostBadge?
-  totalPosts        String?            @map("total_posts")
-  organization      String?
-  qualification     String?
+  id                 String              @id @default(uuid())
+  titleEn            String              @map("title_en")
+  titleHi            String?             @map("title_hi")
+  slug               String              @unique
+  contentEn          String?             @map("content_en")
+  contentHi          String?             @map("content_hi")
+  excerptEn          String?             @map("excerpt_en")
+  excerptHi          String?             @map("excerpt_hi")
+  categoryId         String?             @map("category_id")
+  stateId            String?             @map("state_id")
+  status             PostStatus          @default(draft)
+  badge              PostBadge?
+  totalPosts         String?             @map("total_posts")
+  organization       String?
+  qualification      String?
   qualificationLevel QualificationLevel? @map("qualification_level")
-  minAge            Int?               @map("min_age")
-  maxAge            Int?               @map("max_age")
-  ageLimit          String?            @map("age_limit")
-  salary            String?
-  feeGeneral        String?            @map("fee_general")
-  feeObc            String?            @map("fee_obc")
-  feeScSt           String?            @map("fee_sc_st")
-  feeWomen          String?            @map("fee_women")
-  lastDate          DateTime?          @map("last_date")
-  examDate          DateTime?          @map("exam_date")
-  resultDate        DateTime?          @map("result_date")
-  applyLink         String?            @map("apply_link")
-  officialLink      String?            @map("official_link")
-  notificationLink  String?            @map("notification_link")
-  admitCardLink     String?            @map("admit_card_link")
-  answerKeyLink     String?            @map("answer_key_link")
-  syllabusLink      String?            @map("syllabus_link")
-  isTrending        Boolean            @default(false) @map("is_trending")
-  isHot             Boolean            @default(false) @map("is_hot")
-  isNew             Boolean            @default(true) @map("is_new")
-  metaTitle         String?            @map("meta_title")
-  metaDesc          String?            @map("meta_desc")
-  metaKeywords      String?            @map("meta_keywords")
-  ogImage           String?            @map("og_image")
-  readingTime       Int?               @map("reading_time")
-  views             Int                @default(0)
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @updatedAt @map("updated_at")
+  minAge             Int?                @map("min_age")
+  maxAge             Int?                @map("max_age")
+  ageLimit           String?             @map("age_limit")
+  salary             String?
+  feeGeneral         String?             @map("fee_general")
+  feeObc             String?             @map("fee_obc")
+  feeScSt            String?             @map("fee_sc_st")
+  feeWomen           String?             @map("fee_women")
+  lastDate           DateTime?           @map("last_date")
+  examDate           DateTime?           @map("exam_date")
+  resultDate         DateTime?           @map("result_date")
+  applyLink          String?             @map("apply_link")
+  officialLink       String?             @map("official_link")
+  notificationLink   String?             @map("notification_link")
+  admitCardLink      String?             @map("admit_card_link")
+  answerKeyLink      String?             @map("answer_key_link")
+  syllabusLink       String?             @map("syllabus_link")
+  syllabusData       Json?               @map("syllabus_data")
+  isTrending         Boolean             @default(false) @map("is_trending")
+  isHot              Boolean             @default(false) @map("is_hot")
+  isNew              Boolean             @default(true) @map("is_new")
+  metaTitle          String?             @map("meta_title")
+  metaDesc           String?             @map("meta_desc")
+  metaKeywords       String?             @map("meta_keywords")
+  ogImage            String?             @map("og_image")
+  readingTime        Int?                @map("reading_time")
+  views              Int                 @default(0)
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
 
-  category          Category?          @relation(fields: [categoryId], references: [id])
-  state             State?             @relation(fields: [stateId], references: [id])
-  importantDates    ImportantDate[]
-  faqs              Faq[]
-  postTags          PostTag[]
-  bookmarks         Bookmark[]
-  applications      ApplicationTracker[]
-  comments          Comment[]
+  category         Category?            @relation(fields: [categoryId], references: [id])
+  state            State?               @relation(fields: [stateId], references: [id])
+  importantDates   ImportantDate[]
+  faqs             Faq[]
+  postTags         PostTag[]
+  bookmarks        Bookmark[]
+  applications     ApplicationTracker[]
+  comments         Comment[]
+  syllabusProgress SyllabusProgress[]
 
   @@index([status])
   @@index([categoryId])
@@ -115,14 +117,14 @@ model Post {
 }
 
 model ImportantDate {
-  id           String @id @default(uuid())
-  postId       String @map("post_id")
-  labelEn      String @map("label_en")
+  id           String  @id @default(uuid())
+  postId       String  @map("post_id")
+  labelEn      String  @map("label_en")
   labelHi      String? @map("label_hi")
   date         String
-  displayOrder Int    @default(0) @map("display_order")
+  displayOrder Int     @default(0) @map("display_order")
 
-  post         Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@map("important_dates")
 }
@@ -140,7 +142,7 @@ model Category {
   displayOrder Int     @default(0) @map("display_order")
   isActive     Boolean @default(true) @map("is_active")
 
-  posts        Post[]
+  posts          Post[]
   affiliateLinks AffiliateLink[]
 
   @@map("categories")
@@ -160,8 +162,8 @@ model PostTag {
   postId String @map("post_id")
   tagId  String @map("tag_id")
 
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([postId, tagId])
   @@map("post_tags")
@@ -174,21 +176,21 @@ model State {
   slug     String  @unique
   isActive Boolean @default(true) @map("is_active")
 
-  posts    Post[]
+  posts Post[]
 
   @@map("states")
 }
 
 model Faq {
-  id           String @id @default(uuid())
-  postId       String @map("post_id")
-  questionEn   String @map("question_en")
+  id           String  @id @default(uuid())
+  postId       String  @map("post_id")
+  questionEn   String  @map("question_en")
   questionHi   String? @map("question_hi")
-  answerEn     String @map("answer_en")
+  answerEn     String  @map("answer_en")
   answerHi     String? @map("answer_hi")
-  displayOrder Int    @default(0) @map("display_order")
+  displayOrder Int     @default(0) @map("display_order")
 
-  post         Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@map("faqs")
 }
@@ -202,13 +204,13 @@ model SiteSetting {
 }
 
 model AdSlot {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
-  slotKey    String   @unique @map("slot_key")
-  adCode     String?  @map("ad_code")
-  isActive   Boolean  @default(false) @map("is_active")
-  device     String   @default("all")
-  popupDelay Int?     @map("popup_delay")
+  slotKey    String    @unique @map("slot_key")
+  adCode     String?   @map("ad_code")
+  isActive   Boolean   @default(false) @map("is_active")
+  device     String    @default("all")
+  popupDelay Int?      @map("popup_delay")
   startDate  DateTime? @map("start_date")
   endDate    DateTime? @map("end_date")
   notes      String?
@@ -238,25 +240,25 @@ model Announcement {
 }
 
 model NavMenu {
-  id           String   @id @default(uuid())
+  id           String  @id @default(uuid())
   label        String
-  labelHi      String?  @map("label_hi")
+  labelHi      String? @map("label_hi")
   url          String
-  parentId     String?  @map("parent_id")
-  displayOrder Int      @default(0) @map("display_order")
-  isActive     Boolean  @default(true) @map("is_active")
+  parentId     String? @map("parent_id")
+  displayOrder Int     @default(0) @map("display_order")
+  isActive     Boolean @default(true) @map("is_active")
 
-  parent       NavMenu? @relation("MenuHierarchy", fields: [parentId], references: [id])
-  children     NavMenu[] @relation("MenuHierarchy")
+  parent   NavMenu?  @relation("MenuHierarchy", fields: [parentId], references: [id])
+  children NavMenu[] @relation("MenuHierarchy")
 
   @@map("nav_menus")
 }
 
 model Page {
-  id        String @id @default(uuid())
-  titleEn   String @map("title_en")
+  id        String  @id @default(uuid())
+  titleEn   String  @map("title_en")
   titleHi   String? @map("title_hi")
-  slug      String @unique
+  slug      String  @unique
   contentEn String? @map("content_en")
   contentHi String? @map("content_hi")
   metaTitle String? @map("meta_title")
@@ -309,7 +311,7 @@ model AffiliateLink {
   categoryId     String?  @map("category_id")
   createdAt      DateTime @default(now()) @map("created_at")
 
-  category       Category? @relation(fields: [categoryId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
 
   @@map("affiliate_links")
 }
@@ -354,39 +356,40 @@ model PageView {
 // ==========================================
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  role          String?   @default("user")
-  qualification String?
-  state         String?
-  accounts      Account[]
-  sessions      Session[]
-  bookmarks     Bookmark[]
-  applications  ApplicationTracker[]
-  comments      Comment[]
- 
+  id               String               @id @default(cuid())
+  name             String?
+  email            String?              @unique
+  emailVerified    DateTime?            @map("email_verified")
+  image            String?
+  role             String?              @default("user")
+  qualification    String?
+  state            String?
+  accounts         Account[]
+  sessions         Session[]
+  bookmarks        Bookmark[]
+  applications     ApplicationTracker[]
+  comments         Comment[]
+  syllabusProgress SyllabusProgress[]
+
   @@map("users")
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
- 
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
@@ -397,7 +400,7 @@ model Session {
   userId       String   @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@map("sessions")
 }
 
@@ -405,7 +408,7 @@ model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
@@ -416,8 +419,8 @@ model Bookmark {
   postId    String   @map("post_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
   @@map("bookmarks")
@@ -432,8 +435,8 @@ model ApplicationTracker {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
   @@map("application_tracker")
@@ -446,9 +449,23 @@ model Comment {
   content   String   @db.Text
   createdAt DateTime @default(now()) @map("created_at")
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@index([postId, createdAt(sort: Desc)])
   @@map("comments")
+}
+
+model SyllabusProgress {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  postId          String   @map("post_id")
+  completedTopics Json     @map("completed_topics") // stores array of topic strings
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@map("syllabus_progress")
 }

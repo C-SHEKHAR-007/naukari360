@@ -1,0 +1,116 @@
+import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import InteractiveSyllabus from "@/components/public/InteractiveSyllabus";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toggleSyllabusTopic } from "@/app/(public)/post/[slug]/syllabus-actions";
+
+vi.mock("next-auth/react", () => ({
+  useSession: vi.fn(),
+}));
+
+vi.mock("next/navigation", () => ({
+  useRouter: vi.fn(),
+}));
+
+vi.mock("@/app/(public)/post/[slug]/syllabus-actions", () => ({
+  toggleSyllabusTopic: vi.fn(),
+}));
+
+describe("InteractiveSyllabus", () => {
+  const mockSyllabus = [
+    {
+      title: "Mathematics",
+      topics: ["Algebra", "Geometry"],
+    },
+    {
+      title: "General Knowledge",
+      topics: ["History", "Geography"],
+    },
+  ];
+
+  const mockRouter = { push: vi.fn() };
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (useRouter as any).mockReturnValue(mockRouter);
+    (useSession as any).mockReturnValue({
+      data: { user: { id: "user-1" } },
+      status: "authenticated",
+    });
+  });
+
+  it("renders the syllabus component with progress bar", () => {
+    render(
+      <InteractiveSyllabus
+        postId="post-1"
+        syllabus={mockSyllabus}
+        initialCompletedTopics={[]}
+      />
+    );
+    expect(screen.getByText("Interactive Syllabus Tracker")).toBeInTheDocument();
+    expect(screen.getByText("0% Completed")).toBeInTheDocument();
+    expect(screen.getByText("Mathematics")).toBeInTheDocument();
+    expect(screen.getByText("General Knowledge")).toBeInTheDocument();
+  });
+
+  it("renders correctly with initially completed topics", () => {
+    render(
+      <InteractiveSyllabus
+        postId="post-1"
+        syllabus={mockSyllabus}
+        initialCompletedTopics={["Algebra"]}
+      />
+    );
+    // 1 out of 4 topics = 25%
+    expect(screen.getByText("25% Completed")).toBeInTheDocument();
+  });
+
+  it("calls toggleSyllabusTopic when a topic is clicked", async () => {
+    (toggleSyllabusTopic as any).mockResolvedValue(undefined);
+    
+    render(
+      <InteractiveSyllabus
+        postId="post-1"
+        syllabus={mockSyllabus}
+        initialCompletedTopics={[]}
+      />
+    );
+    
+    // "Mathematics" section is expanded by default (the first one)
+    const algebraBtn = screen.getByRole("button", { name: /Algebra/i });
+    fireEvent.click(algebraBtn);
+    
+    expect(toggleSyllabusTopic).toHaveBeenCalledWith("post-1", "Algebra");
+    
+    // Check optimistic update
+    await waitFor(() => {
+      expect(screen.getByText("25% Completed")).toBeInTheDocument();
+    });
+  });
+
+  it("redirects to login if not authenticated", () => {
+    (useSession as any).mockReturnValue({
+      data: null,
+      status: "unauthenticated",
+    });
+    
+    render(
+      <InteractiveSyllabus
+        postId="post-1"
+        syllabus={mockSyllabus}
+        initialCompletedTopics={[]}
+      />
+    );
+    
+    const algebraBtn = screen.getByRole("button", { name: /Algebra/i });
+    fireEvent.click(algebraBtn);
+    
+    expect(mockRouter.push).toHaveBeenCalledWith("/admin/login?callbackUrl=/post/post-1");
+    expect(toggleSyllabusTopic).not.toHaveBeenCalled();
+  });
+});

@@ -29,6 +29,8 @@ import AddToCalendar from "@/components/public/AddToCalendar";
 import AskOnWhatsApp from "@/components/public/AskOnWhatsApp";
 import InlineNewsletterForm from "@/components/public/InlineNewsletterForm";
 import TrackApplicationButton from "@/components/public/TrackApplicationButton";
+import InteractiveSyllabus from "@/components/public/InteractiveSyllabus";
+import type { SyllabusSection } from "@/components/public/InteractiveSyllabus";
 import ViewTracker from "@/components/public/ViewTracker";
 import SalaryCalculator from "@/components/public/SalaryCalculator";
 import CommentsSection from "@/components/public/CommentsSection";
@@ -84,16 +86,24 @@ export default async function PostDetailPage({ params }: Props) {
   ]);
 
   let isTracked = false;
+  let initialCompletedTopics: string[] = [];
   if (session?.user) {
-    const trackedRecord = await prisma.applicationTracker.findUnique({
-      where: {
-        userId_postId: {
-          userId: session.user.id,
-          postId: post.id,
+    const [trackedRecord, syllabusProgress] = await Promise.all([
+      prisma.applicationTracker.findUnique({
+        where: {
+          userId_postId: { userId: session.user.id, postId: post.id },
         },
-      },
-    });
+      }),
+      prisma.syllabusProgress.findUnique({
+        where: {
+          userId_postId: { userId: session.user.id, postId: post.id },
+        },
+      }),
+    ]);
     if (trackedRecord) isTracked = true;
+    if (syllabusProgress && Array.isArray(syllabusProgress.completedTopics)) {
+      initialCompletedTopics = syllabusProgress.completedTopics as string[];
+    }
   }
 
   const breadcrumbs = [
@@ -330,6 +340,17 @@ export default async function PostDetailPage({ params }: Props) {
               Apply Now →
             </Link>
           </div>
+        )}
+
+        {/* Interactive Syllabus */}
+        {post.syllabusData && (
+          <section className="my-10">
+            <InteractiveSyllabus
+              postId={post.id}
+              syllabus={post.syllabusData as unknown as SyllabusSection[]}
+              initialCompletedTopics={initialCompletedTopics}
+            />
+          </section>
         )}
 
         {/* FAQ */}
