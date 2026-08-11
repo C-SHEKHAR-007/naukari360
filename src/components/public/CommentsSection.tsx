@@ -4,7 +4,26 @@ import { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { MessageSquare, Send, User, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
+
+function getShortTimeLabel(dateString: string) {
+  const diffInSeconds = Math.floor((new Date().getTime() - new Date(dateString).getTime()) / 1000);
+  if (diffInSeconds < 60) return "just now";
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) return `${diffInDays}d ago`;
+  
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) return `${diffInMonths}mo ago`;
+  
+  const diffInYears = Math.floor(diffInDays / 365);
+  return `${diffInYears}y ago`;
+}
 
 interface CommentType {
   id: string;
@@ -22,12 +41,20 @@ export default function CommentsSection({ postId }: { postId: string }) {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [fetchingMore, setFetchingMore] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/comments?postId=${postId}`)
+    fetch(`/api/comments?postId=${postId}&limit=10`)
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data)) setComments(data);
+        if (data.comments && Array.isArray(data.comments)) {
+          setComments(data.comments);
+          setNextCursor(data.nextCursor || null);
+        } else if (Array.isArray(data)) {
+          // Fallback for older API responses if cached
+          setComments(data);
+        }
         setLoading(false);
       })
       .catch((err) => {
@@ -35,6 +62,30 @@ export default function CommentsSection({ postId }: { postId: string }) {
         setLoading(false);
       });
   }, [postId]);
+
+  const loadMore = async () => {
+    if (!nextCursor || fetchingMore) return;
+    setFetchingMore(true);
+    try {
+      const res = await fetch(`/api/comments?postId=${postId}&limit=10&cursor=${nextCursor}`);
+      const data = await res.json();
+      if (data.comments && Array.isArray(data.comments)) {
+        setComments((prev) => [...prev, ...data.comments]);
+        setNextCursor(data.nextCursor || null);
+      }
+    } catch (error) {
+      console.error("Failed to fetch more comments", error);
+    } finally {
+      setFetchingMore(false);
+    }
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 50) {
+      loadMore();
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,31 +160,32 @@ export default function CommentsSection({ postId }: { postId: string }) {
                   </div>
                 )}
               </div>
-              <div className="flex-1 space-y-2">
+              <div className="relative flex-1">
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Share your thoughts or ask a question..."
-                  className="w-full resize-none rounded-lg border border-input bg-background p-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full resize-none rounded-lg border border-input bg-background p-3 pb-12 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary custom-scrollbar"
                   rows={3}
                   required
                 />
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={submitting || !content.trim()}
-                    className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-                  >
-                    {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                    Post Comment
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  disabled={submitting || !content.trim()}
+                  title="Post Comment"
+                  className="absolute bottom-4.5 right-2.5 flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50 hover:scale-105 active:scale-95"
+                >
+                  {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                </button>
               </div>
             </div>
           </form>
         )}
 
-        <div className="space-y-6">
+        <div 
+          className="space-y-6 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar pb-4" 
+          onScroll={handleScroll}
+        >
           {loading ? (
             <div className="flex justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -166,13 +218,19 @@ export default function CommentsSection({ postId }: { postId: string }) {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-foreground text-sm">{comment.user.name || "Anonymous"}</span>
                     <span className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                      {getShortTimeLabel(comment.createdAt)}
                     </span>
                   </div>
                   <p className="text-sm text-foreground/90 whitespace-pre-wrap">{comment.content}</p>
                 </div>
               </div>
             ))
+          )}
+          
+          {fetchingMore && (
+            <div className="flex justify-center py-4">
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            </div>
           )}
         </div>
       </div>

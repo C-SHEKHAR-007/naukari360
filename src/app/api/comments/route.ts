@@ -11,6 +11,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Missing postId" }, { status: 400 });
     }
 
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const cursor = searchParams.get("cursor");
+
     const comments = await prisma.comment.findMany({
       where: { postId },
       include: {
@@ -19,9 +22,20 @@ export async function GET(request: Request) {
         },
       },
       orderBy: { createdAt: "desc" },
+      take: limit + 1,
+      ...(cursor && {
+        cursor: { id: cursor },
+        skip: 1,
+      }),
     });
 
-    return NextResponse.json(comments);
+    let nextCursor = null;
+    if (comments.length > limit) {
+      const nextItem = comments.pop();
+      nextCursor = nextItem?.id;
+    }
+
+    return NextResponse.json({ comments, nextCursor });
   } catch (error) {
     console.error("GET /api/comments error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

@@ -8,16 +8,18 @@ import { useEffect } from "react";
 
 export interface SyllabusSection {
   title: string;
-  topics: string[];
+  topics?: string[];
+  modules?: string[];
 }
 
 interface Props {
   postId: string;
+  syllabusId: string;
   syllabus: SyllabusSection[];
   initialCompletedTopics: string[];
 }
 
-export default function InteractiveSyllabus({ postId, syllabus, initialCompletedTopics }: Props) {
+export default function InteractiveSyllabus({ postId, syllabusId, syllabus, initialCompletedTopics }: Props) {
   const [completed, setCompleted] = useState<Set<string>>(new Set(initialCompletedTopics));
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([syllabus[0]?.title]));
   const { data: session, status } = useSession();
@@ -27,7 +29,7 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
     if (status === "loading") return;
 
     try {
-      const localData = localStorage.getItem(`syllabus_${postId}`);
+      const localData = localStorage.getItem(`syllabus_${syllabusId}`);
       if (localData) {
         const parsed = JSON.parse(localData);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -42,28 +44,28 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
             setCompleted(merged);
             
             // Sync to server in the background
-            syncSyllabusProgress(postId, Array.from(merged)).catch(console.error);
+            syncSyllabusProgress(syllabusId, Array.from(merged)).catch(console.error);
             
             // Clear local storage so we don't sync again
-            localStorage.removeItem(`syllabus_${postId}`);
+            localStorage.removeItem(`syllabus_${syllabusId}`);
           }
         }
       }
     } catch (e) {
       console.error("Failed to parse local syllabus data", e);
     }
-  }, [postId, session?.user, status, initialCompletedTopics]);
+  }, [syllabusId, session?.user, status, initialCompletedTopics]);
 
   // Save to localStorage whenever completed changes (if not authenticated)
   useEffect(() => {
     if (status !== "loading" && !session?.user) {
-      localStorage.setItem(`syllabus_${postId}`, JSON.stringify(Array.from(completed)));
+      localStorage.setItem(`syllabus_${syllabusId}`, JSON.stringify(Array.from(completed)));
     }
-  }, [completed, postId, session?.user, status]);
+  }, [completed, syllabusId, session?.user, status]);
 
   if (!syllabus || syllabus.length === 0) return null;
 
-  const totalTopics = syllabus.reduce((acc, sec) => acc + sec.topics.length, 0);
+  const totalTopics = syllabus.reduce((acc, sec) => acc + (sec.topics || sec.modules || []).length, 0);
   const completedCount = completed.size;
   const progressPercent = totalTopics > 0 ? Math.round((completedCount / totalTopics) * 100) : 0;
 
@@ -90,9 +92,10 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
     }
 
     try {
-      await toggleSyllabusTopic(postId, topic);
-    } catch (error) {
+      await toggleSyllabusTopic(syllabusId, topic);
+    } catch (error: any) {
       console.error("Failed to toggle syllabus topic", error);
+      alert(error.message || "Failed to save your progress. Please log out and log back in.");
       // Revert optimistic update
       setCompleted((prev) => {
         const next = new Set(prev);
@@ -133,8 +136,9 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
       <div className="divide-y divide-border">
         {syllabus.map((section) => {
           const isExpanded = expandedSections.has(section.title);
-          const sectionCompletedCount = section.topics.filter(t => completed.has(t)).length;
-          const sectionTotal = section.topics.length;
+          const activeTopics = section.topics || section.modules || [];
+          const sectionCompletedCount = activeTopics.filter(t => completed.has(t)).length;
+          const sectionTotal = activeTopics.length;
           const isSectionFullyCompleted = sectionCompletedCount === sectionTotal && sectionTotal > 0;
 
           return (
@@ -161,8 +165,8 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
 
               {isExpanded && (
                 <div className="bg-muted/10 px-5 pb-4 pt-1">
-                  <ul className="grid gap-2 sm:grid-cols-2">
-                    {section.topics.map((topic) => {
+                  <ul className="flex flex-col gap-2">
+                    {activeTopics.map((topic) => {
                       const isChecked = completed.has(topic);
                       return (
                         <li key={topic}>

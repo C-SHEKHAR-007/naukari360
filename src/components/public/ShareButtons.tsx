@@ -11,18 +11,18 @@ interface ShareButtonsProps {
 export default function ShareButtons({ title, slug }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
+  const [origin, setOrigin] = useState("");
   
-  const url =
-    typeof window !== "undefined" ? `${window.location.origin}/post/${slug}` : `/post/${slug}`;
-  const text = encodeURIComponent(title);
-  const encodedUrl = encodeURIComponent(url);
-
   useEffect(() => {
+    setOrigin(window.location.origin);
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCanShare(true);
     }
   }, []);
+
+  const url = origin ? `${origin}/post/${slug}` : `/post/${slug}`;
+  const text = encodeURIComponent(title);
+  const encodedUrl = encodeURIComponent(url);
 
   function copyLink() {
     navigator.clipboard.writeText(url);

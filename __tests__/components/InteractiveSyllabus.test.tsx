@@ -50,6 +50,7 @@ describe("InteractiveSyllabus", () => {
     render(
       <InteractiveSyllabus
         postId="post-1"
+        syllabusId="syl-1"
         syllabus={mockSyllabus}
         initialCompletedTopics={[]}
       />
@@ -64,6 +65,7 @@ describe("InteractiveSyllabus", () => {
     render(
       <InteractiveSyllabus
         postId="post-1"
+        syllabusId="syl-1"
         syllabus={mockSyllabus}
         initialCompletedTopics={["Algebra"]}
       />
@@ -78,6 +80,7 @@ describe("InteractiveSyllabus", () => {
     render(
       <InteractiveSyllabus
         postId="post-1"
+        syllabusId="syl-1"
         syllabus={mockSyllabus}
         initialCompletedTopics={[]}
       />
@@ -104,6 +107,7 @@ describe("InteractiveSyllabus", () => {
     render(
       <InteractiveSyllabus
         postId="post-1"
+        syllabusId="syl-1"
         syllabus={mockSyllabus}
         initialCompletedTopics={[]}
       />

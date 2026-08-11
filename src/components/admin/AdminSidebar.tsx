@@ -23,6 +23,7 @@ import {
   Timer,
   BarChart3,
   DollarSign,
+  BookOpen,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
@@ -31,6 +32,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/posts", label: "Posts", icon: FileText },
+  { href: "/admin/syllabuses", label: "Syllabuses", icon: BookOpen },
   { href: "/admin/categories", label: "Categories", icon: FolderOpen },
   { href: "/admin/states", label: "States", icon: MapPin },
   { href: "/admin/menus", label: "Nav Menus", icon: Menu },

@@ -134,21 +134,68 @@ export async function getPostBySlug(slug: string) {
       importantDates: { orderBy: { displayOrder: "asc" } },
       faqs: { orderBy: { displayOrder: "asc" } },
       postTags: { include: { tag: true } },
+      syllabus: true,
     },
   });
 }
 
-export async function getRelatedPosts(postId: string, categoryId: string | null, limit = 5) {
-  return prisma.post.findMany({
+export async function getRelatedPosts(
+  postId: string, 
+  categoryId: string | null, 
+  qualificationLevel?: QualificationLevel | null, 
+  limit = 4
+) {
+  // 1. Try to match BOTH category and qualification
+  let matchingPosts = await prisma.post.findMany({
     where: {
       status: "published" as PostStatus,
       id: { not: postId },
       ...(categoryId ? { categoryId } : {}),
+      ...(qualificationLevel ? { qualificationLevel } : {}),
     },
     select: postCardSelect,
-    orderBy: { createdAt: "desc" },
+    orderBy: { views: "desc" },
     take: limit,
   });
+
+  // 2. If we don't have enough, relax qualification requirement (keep category)
+  if (matchingPosts.length < limit) {
+    const remaining = limit - matchingPosts.length;
+    const excludeIds = [postId, ...matchingPosts.map((p) => p.id)];
+    
+    const categoryOnlyPosts = await prisma.post.findMany({
+      where: {
+        status: "published" as PostStatus,
+        id: { notIn: excludeIds },
+        ...(categoryId ? { categoryId } : {}),
+      },
+      select: postCardSelect,
+      orderBy: { views: "desc" },
+      take: remaining,
+    });
+    
+    matchingPosts = [...matchingPosts, ...categoryOnlyPosts];
+  }
+
+  // 3. If we STILL don't have enough, relax category requirement (global trending)
+  if (matchingPosts.length < limit) {
+    const remaining = limit - matchingPosts.length;
+    const excludeIds = [postId, ...matchingPosts.map((p) => p.id)];
+    
+    const globalPosts = await prisma.post.findMany({
+      where: {
+        status: "published" as PostStatus,
+        id: { notIn: excludeIds },
+      },
+      select: postCardSelect,
+      orderBy: { views: "desc" },
+      take: remaining,
+    });
+    
+    matchingPosts = [...matchingPosts, ...globalPosts];
+  }
+
+  return matchingPosts;
 }
 
 export async function searchPosts(query: string, limit = 20, offset = 0) {

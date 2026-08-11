@@ -81,7 +81,7 @@ model Post {
   admitCardLink      String?             @map("admit_card_link")
   answerKeyLink      String?             @map("answer_key_link")
   syllabusLink       String?             @map("syllabus_link")
-  syllabusData       Json?               @map("syllabus_data")
+  syllabus           Syllabus?
   isTrending         Boolean             @default(false) @map("is_trending")
   isHot              Boolean             @default(false) @map("is_hot")
   isNew              Boolean             @default(true) @map("is_new")
@@ -102,7 +102,6 @@ model Post {
   bookmarks        Bookmark[]
   applications     ApplicationTracker[]
   comments         Comment[]
-  syllabusProgress SyllabusProgress[]
 
   @@index([status])
   @@index([categoryId])
@@ -456,16 +455,35 @@ model Comment {
   @@map("comments")
 }
 
+model Syllabus {
+  id              String   @id @default(uuid())
+  titleEn         String   @map("title_en")
+  titleHi         String?  @map("title_hi")
+  slug            String   @unique
+  markdownContent String?  @map("markdown_content") @db.Text
+  content         Json     // Syllabus sections array (used for tracker)
+  
+  postId       String?   @unique @map("post_id")
+  post         Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
+  
+  progress     SyllabusProgress[]
+  
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("syllabuses")
+}
+
 model SyllabusProgress {
   id              String   @id @default(cuid())
   userId          String   @map("user_id")
-  postId          String   @map("post_id")
+  syllabusId      String   @map("syllabus_id")
   completedTopics Json     @map("completed_topics") // stores array of topic strings
   updatedAt       DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syllabus Syllabus @relation(fields: [syllabusId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, postId])
+  @@unique([userId, syllabusId])
   @@map("syllabus_progress")
 }

@@ -4,20 +4,18 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function toggleSyllabusTopic(postId: string, topic: string) {
+export async function toggleSyllabusTopic(syllabusId: string, topic: string) {
   const session = await auth();
-  if (!session?.user) {
-    throw new Error("Must be logged in to track syllabus progress");
-  }
+  if (!session?.user?.id) throw new Error("Unauthorized");
 
   const userId = session.user.id;
 
   // Find existing progress
   const progress = await prisma.syllabusProgress.findUnique({
     where: {
-      userId_postId: {
+      userId_syllabusId: {
         userId,
-        postId,
+        syllabusId,
       },
     },
   });
@@ -32,54 +30,68 @@ export async function toggleSyllabusTopic(postId: string, topic: string) {
 
   if (isCompleted) {
     completedTopics = completedTopics.filter((t) => t !== topic);
+    
+    await prisma.syllabusProgress.update({
+      where: {
+        userId_syllabusId: {
+          userId,
+          syllabusId,
+        },
+      },
+      data: {
+        completedTopics,
+      },
+    });
   } else {
     completedTopics.push(topic);
+    
+    try {
+      await prisma.syllabusProgress.upsert({
+        where: {
+          userId_syllabusId: {
+            userId,
+            syllabusId,
+          }
+        },
+        update: {
+          completedTopics
+        },
+        create: {
+          userId,
+          syllabusId,
+          completedTopics
+        }
+      });
+    } catch (error: any) {
+      if (error.code === 'P2003') {
+        throw new Error("Your session has expired or your user account no longer exists in the database. Please log out and log back in.");
+      }
+      throw error;
+    }
   }
 
-  // Upsert the record
-  await prisma.syllabusProgress.upsert({
-    where: {
-      userId_postId: {
-        userId,
-        postId,
-      },
-    },
-    update: {
-      completedTopics,
-    },
-    create: {
-      userId,
-      postId,
-      completedTopics,
-    },
-  });
-
-  // Not revalidating the whole path here to allow optimistic updates without full refresh, 
-  // but if needed we can revalidate the post page.
-  // revalidatePath(`/post/${slug}`); // Need slug if we want to revalidate
+  revalidatePath(`/syllabus/[slug]`, "page");
+  revalidatePath(`/post/[slug]/syllabus`, "page");
 }
 
-export async function syncSyllabusProgress(postId: string, topics: string[]) {
+export async function syncSyllabusProgress(syllabusId: string, completedTopics: string[]) {
   const session = await auth();
-  if (!session?.user) return;
+  if (!session?.user?.id) throw new Error("Unauthorized");
 
-  const userId = session.user.id;
-
-  // Upsert the record with the merged topics
   await prisma.syllabusProgress.upsert({
     where: {
-      userId_postId: {
-        userId,
-        postId,
+      userId_syllabusId: {
+        userId: session.user.id,
+        syllabusId,
       },
     },
     update: {
-      completedTopics: topics,
+      completedTopics,
     },
     create: {
-      userId,
-      postId,
-      completedTopics: topics,
+      userId: session.user.id,
+      syllabusId,
+      completedTopics,
     },
   });
 }

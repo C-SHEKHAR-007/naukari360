@@ -200,6 +200,9 @@ async function main() {
   const latestJobsCat = await prisma.category.findUnique({ where: { slug: "latest-jobs" } });
   const resultsCat = await prisma.category.findUnique({ where: { slug: "results" } });
   const admitCardCat = await prisma.category.findUnique({ where: { slug: "admit-card" } });
+  const answerKeyCat = await prisma.category.findUnique({ where: { slug: "answer-key" } });
+  const admissionCat = await prisma.category.findUnique({ where: { slug: "admission" } });
+  const syllabusCat = await prisma.category.findUnique({ where: { slug: "syllabus" } });
   const allIndiaState = await prisma.state.findUnique({ where: { slug: "all-india" } });
   const upState = await prisma.state.findUnique({ where: { slug: "uttar-pradesh" } });
   const biharState = await prisma.state.findUnique({ where: { slug: "bihar" } });
@@ -560,6 +563,37 @@ async function main() {
       applyLink: "https://rpsc.rajasthan.gov.in",
       officialLink: "https://rpsc.rajasthan.gov.in",
     },
+    {
+      titleEn: "UPSC Civil Services 2024 Preliminary Answer Key",
+      titleHi: "UPSC सिविल सेवा 2024 प्रारंभिक उत्तर कुंजी",
+      slug: "upsc-civil-services-2024-answer-key",
+      excerptEn: "UPSC Prelims 2024 official answer key released by the commission.",
+      categoryId: answerKeyCat!.id,
+      stateId: allIndiaState!.id,
+      status: "published" as const,
+      badge: "NEW" as const,
+      organization: "Union Public Service Commission (UPSC)",
+      answerKeyLink: "https://upsc.gov.in",
+      officialLink: "https://upsc.gov.in",
+      isNew: true,
+    },
+    {
+      titleEn: "IGNOU July 2025 Session Admissions Open",
+      titleHi: "इग्नू जुलाई 2025 सत्र के प्रवेश शुरू",
+      slug: "ignou-july-2025-admission",
+      excerptEn: "Indira Gandhi National Open University fresh admissions for UG/PG courses.",
+      categoryId: admissionCat!.id,
+      stateId: allIndiaState!.id,
+      status: "published" as const,
+      badge: "HOT" as const,
+      organization: "IGNOU",
+      qualification: "10th / 12th / Graduate",
+      qualificationLevel: "twelfth" as const,
+      lastDate: new Date("2025-08-31"),
+      applyLink: "https://ignou.ac.in",
+      officialLink: "https://ignou.ac.in",
+      isTrending: true,
+    }
   ];
 
   for (const post of samplePosts) {
@@ -569,7 +603,50 @@ async function main() {
       create: post,
     });
   }
-  console.log("✅ 15 Sample Posts created");
+  console.log("✅ 14 Sample Posts created");
+
+  const sscCglPost = await prisma.post.findUnique({
+    where: { slug: "ssc-cgl-2025-notification" }
+  });
+
+  await prisma.syllabus.create({
+    data: {
+      postId: sscCglPost?.id,
+      titleEn: "SSC CGL Tier 1 Complete Syllabus & Exam Pattern 2025",
+      slug: "ssc-cgl-tier-1-complete-syllabus-2025",
+      markdownContent: `
+## Tier 1 Exam Pattern
+The Tier 1 exam is a computer-based test (CBT) consisting of 4 sections with 25 questions each. Each question carries 2 marks, making the total score 200. There is a negative marking of 0.50 marks for each incorrect answer.
+
+### Subject Breakdown
+1. **General Intelligence and Reasoning**
+2. **General Awareness**
+3. **Quantitative Aptitude**
+4. **English Comprehension**
+
+## Detailed Subject Syllabus
+### General Intelligence & Reasoning
+Includes questions on semantic analogy, symbolic operations, space orientation, Venn diagrams, drawing inferences, pattern-folding & un-folding, figural pattern etc.
+
+### General Awareness
+Questions in this component will be aimed at testing the candidates' general awareness of the environment around him and its application to society.
+`,
+          content: [
+            {
+              id: "q_reasoning",
+              title: "General Intelligence & Reasoning",
+              topics: ["Analogies", "Spatial Orientation", "Problem Solving", "Visual Memory"],
+            },
+            {
+              id: "gen_awareness",
+              title: "General Awareness",
+              topics: ["History", "Culture", "Geography", "Economic Scene", "General Policy"],
+            }
+          ]
+    }
+  });
+
+  console.log("✅ Standalone Syllabus created");
 
   // --- Nav Menus ---
   const navMenus = [

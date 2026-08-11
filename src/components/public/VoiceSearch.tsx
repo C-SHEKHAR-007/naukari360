@@ -35,8 +35,13 @@ interface VoiceSearchProps {
 }
 
 export default function VoiceSearch({ onResult }: VoiceSearchProps) {
+  const [mounted, setMounted] = useState(false);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isSupported =
     typeof window !== "undefined" &&
@@ -55,19 +60,19 @@ export default function VoiceSearch({ onResult }: VoiceSearchProps) {
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
       onResult(transcript);
-      setListening(false);
+      stopListening();
     };
 
     recognition.onerror = () => {
-      setListening(false);
+      stopListening();
     };
 
     recognition.onend = () => {
       setListening(false);
     };
 
-    recognitionRef.current = recognition;
     recognition.start();
+    recognitionRef.current = recognition;
     setListening(true);
   }
 
@@ -76,7 +81,7 @@ export default function VoiceSearch({ onResult }: VoiceSearchProps) {
     setListening(false);
   }
 
-  if (!isSupported) return null;
+  if (!mounted || !isSupported) return null;
 
   return (
     <button

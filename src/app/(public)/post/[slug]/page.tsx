@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Clock,
   Eye,
+  BookOpen,
 } from "lucide-react";
 import { getPostBySlug, getRelatedPosts, getAffiliateLinks } from "@/lib/db";
 import { auth } from "@/lib/auth";
@@ -20,6 +21,8 @@ import sanitizeHtml from "sanitize-html";
 import AdSlot from "@/components/public/AdSlot";
 import PostCard from "@/components/public/PostCard";
 import ShareButtons from "@/components/public/ShareButtons";
+import ApplyButton from "@/components/public/ApplyButton";
+import QuickTrackerModal from "@/components/public/QuickTrackerModal";
 import PostTitle from "@/components/public/PostTitle";
 import ReadingProgressBar from "@/components/public/ReadingProgressBar";
 import CopyJobDetails from "@/components/public/CopyJobDetails";
@@ -29,8 +32,6 @@ import AddToCalendar from "@/components/public/AddToCalendar";
 import AskOnWhatsApp from "@/components/public/AskOnWhatsApp";
 import InlineNewsletterForm from "@/components/public/InlineNewsletterForm";
 import TrackApplicationButton from "@/components/public/TrackApplicationButton";
-import InteractiveSyllabus from "@/components/public/InteractiveSyllabus";
-import type { SyllabusSection } from "@/components/public/InteractiveSyllabus";
 import ViewTracker from "@/components/public/ViewTracker";
 import SalaryCalculator from "@/components/public/SalaryCalculator";
 import CommentsSection from "@/components/public/CommentsSection";
@@ -80,31 +81,36 @@ export default async function PostDetailPage({ params }: Props) {
   if (!post || post.status !== "published") notFound();
 
   const [relatedPosts, affiliateLinks, session] = await Promise.all([
-    getRelatedPosts(post.id, post.categoryId, 4),
+    getRelatedPosts(post.id, post.categoryId, post.qualificationLevel, 4),
     getAffiliateLinks(post.categoryId || undefined),
     auth(),
   ]);
 
   let isTracked = false;
-  let initialCompletedTopics: string[] = [];
+  let syllabusProgress = null;
   
   if (session?.user?.id) {
-    const userId = session.user.id;
-    const [trackedRecord, syllabusProgress] = await Promise.all([
-      prisma.applicationTracker.findUnique({
-        where: {
-          userId_postId: { userId, postId: post.id },
+    // Check if application is tracked
+    const tracking = await prisma.applicationTracker.findUnique({
+      where: {
+        userId_postId: {
+          userId: session.user.id,
+          postId: post.id,
         },
-      }),
-      prisma.syllabusProgress.findUnique({
+      },
+    });
+    if (tracking) isTracked = true;
+
+    // Fetch syllabus progress for the Quick Tracker modal
+    if (post.syllabus) {
+      syllabusProgress = await prisma.syllabusProgress.findUnique({
         where: {
-          userId_postId: { userId, postId: post.id },
+          userId_syllabusId: {
+            userId: session.user.id,
+            syllabusId: post.syllabus.id,
+          },
         },
-      }),
-    ]);
-    if (trackedRecord) isTracked = true;
-    if (syllabusProgress && Array.isArray(syllabusProgress.completedTopics)) {
-      initialCompletedTopics = syllabusProgress.completedTopics as string[];
+      });
     }
   }
 
@@ -150,7 +156,9 @@ export default async function PostDetailPage({ params }: Props) {
         />
       )}
 
-      <article className="mx-auto max-w-4xl px-4 sm:px-6 py-8 lg:py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <article className="lg:col-span-8">
         {/* Breadcrumbs */}
         <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted" aria-label="Breadcrumb">
           <Link href="/" className="transition-colors hover:text-primary">
@@ -257,13 +265,6 @@ export default async function PostDetailPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Salary Calculator (Render if salary is mentioned) */}
-        {post.salary && (
-          <section className="my-6">
-            <SalaryCalculator initialLevel={initialPayLevel} />
-          </section>
-        )}
-
         {/* Fee Details */}
         {(post.feeGeneral || post.feeObc || post.feeScSt || post.feeWomen) && (
           <section className="my-6 overflow-hidden rounded-lg border border-border">
@@ -271,11 +272,18 @@ export default async function PostDetailPage({ params }: Props) {
               <h2 className="text-sm font-bold text-primary">Application Fee</h2>
             </div>
             <div className="divide-y divide-border">
-              {post.feeGeneral && <InfoRow label="General / OBC" value={`₹${post.feeGeneral}`} />}
-              {post.feeObc && <InfoRow label="OBC" value={`₹${post.feeObc}`} />}
-              {post.feeScSt && <InfoRow label="SC / ST" value={`₹${post.feeScSt}`} />}
-              {post.feeWomen && <InfoRow label="Women" value={`₹${post.feeWomen}`} />}
+              {post.feeGeneral && <InfoRow label="General / OBC" value={post.feeGeneral} />}
+              {post.feeObc && <InfoRow label="OBC" value={post.feeObc} />}
+              {post.feeScSt && <InfoRow label="SC / ST" value={post.feeScSt} />}
+              {post.feeWomen && <InfoRow label="Women" value={post.feeWomen} />}
             </div>
+          </section>
+        )}
+
+        {/* Salary Calculator (Render if salary is mentioned) */}
+        {post.salary && (
+          <section className="my-6">
+            <SalaryCalculator initialLevel={initialPayLevel} />
           </section>
         )}
 
@@ -305,55 +313,9 @@ export default async function PostDetailPage({ params }: Props) {
 
         <AdSlot slotKey="in_article_3" className="my-6" />
 
-        {/* Important Links */}
-        <section className="my-6 overflow-hidden rounded-lg border border-border">
-          <div className="bg-primary/5 px-4 py-2">
-            <h2 className="text-sm font-bold text-primary">Important Links</h2>
-          </div>
-          <div className="divide-y divide-border">
-            {post.applyLink && (
-              <LinkRow label="Apply Online" href={`/go/${post.slug}?type=apply`} highlight />
-            )}
-            {post.officialLink && (
-              <LinkRow label="Official Website" href={post.officialLink} external />
-            )}
-            {post.notificationLink && (
-              <LinkRow label="Official Notification" href={post.notificationLink} external />
-            )}
-            {post.admitCardLink && (
-              <LinkRow label="Download Admit Card" href={post.admitCardLink} external />
-            )}
-            {post.answerKeyLink && (
-              <LinkRow label="Answer Key" href={post.answerKeyLink} external />
-            )}
-            {post.syllabusLink && <LinkRow label="Syllabus" href={post.syllabusLink} external />}
-          </div>
-        </section>
 
-        <AdSlot slotKey="before_apply_btn" className="my-6" />
 
-        {/* Apply CTA */}
-        {post.applyLink && (
-          <div className="my-8 text-center">
-            <Link
-              href={`/go/${post.slug}?type=apply`}
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-10 py-4 text-lg font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98]"
-            >
-              Apply Now →
-            </Link>
-          </div>
-        )}
 
-        {/* Interactive Syllabus */}
-        {post.syllabusData && (
-          <section className="my-10">
-            <InteractiveSyllabus
-              postId={post.id}
-              syllabus={post.syllabusData as unknown as SyllabusSection[]}
-              initialCompletedTopics={initialCompletedTopics}
-            />
-          </section>
-        )}
 
         {/* FAQ */}
         {post.faqs.length > 0 && (
@@ -426,23 +388,141 @@ export default async function PostDetailPage({ params }: Props) {
 
         <AdSlot slotKey="in_article_4" className="my-6" />
 
-        {/* Related Posts */}
-        {relatedPosts.length > 0 && (
-          <section className="my-8">
-            <h2 className="mb-4 text-xl font-bold text-foreground">Related Posts</h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {relatedPosts.map((p) => (
-                <PostCard key={p.id} post={p as PostCardData} />
-              ))}
-            </div>
-          </section>
+
+
+        {/* Important Links (Mobile Only) */}
+        <section className="my-6 overflow-hidden rounded-lg border border-border lg:hidden">
+          <div className="bg-primary/5 px-4 py-2">
+            <h2 className="text-sm font-bold text-primary">Important Links</h2>
+          </div>
+          <div className="divide-y divide-border">
+            {post.applyLink && (
+              <LinkRow label="Apply Online" href={`/go/${post.slug}?type=apply`} highlight />
+            )}
+            {post.officialLink && (
+              <LinkRow label="Official Website" href={post.officialLink} external />
+            )}
+            {post.notificationLink && (
+              <LinkRow label="Official Notification" href={post.notificationLink} external />
+            )}
+            {post.admitCardLink && (
+              <LinkRow label="Download Admit Card" href={post.admitCardLink} external />
+            )}
+            {post.answerKeyLink && (
+              <LinkRow label="Answer Key" href={post.answerKeyLink} external />
+            )}
+            {post.syllabusLink && <LinkRow label="Syllabus" href={post.syllabusLink} external />}
+          </div>
+        </section>
+
+        <AdSlot slotKey="before_apply_btn" className="my-6 lg:hidden" />
+
+        {/* Apply CTA (Mobile Only) */}
+        {post.applyLink && (
+          <div className="my-8 text-center lg:hidden">
+            <Link
+              href={`/go/${post.slug}?type=apply`}
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-10 py-4 text-lg font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98]"
+            >
+              Apply Now →
+            </Link>
+          </div>
         )}
 
         <InlineNewsletterForm />
         
         {/* Discussion Forum */}
         <CommentsSection postId={post.id} />
-      </article>
+          </article>
+
+          {/* Right Sidebar */}
+          <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-24">
+            
+            {/* Apply CTA & Important Links (Desktop Only) */}
+            <div className="hidden lg:flex flex-col gap-6">
+              {post.applyLink && (
+                <Link
+                  href={`/go/${post.slug}?type=apply`}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98]"
+                >
+                  Apply Now →
+                </Link>
+              )}
+              
+              {(post.applyLink || post.officialLink || post.notificationLink || post.admitCardLink || post.answerKeyLink || post.syllabusLink) && (
+                <section className="overflow-hidden rounded-xl border border-border/60 bg-card shadow-[var(--shadow-card)]">
+                  <div className="bg-primary/8 px-4 py-3 dark:bg-primary/15">
+                    <h2 className="text-sm font-bold text-primary">Important Links</h2>
+                  </div>
+                  <div className="divide-y divide-border/60">
+                    {post.applyLink && (
+                      <LinkRow label="Apply Online" href={`/go/${post.slug}?type=apply`} highlight />
+                    )}
+                    {post.officialLink && (
+                      <LinkRow label="Official Website" href={post.officialLink} external />
+                    )}
+                    {post.notificationLink && (
+                      <LinkRow label="Official Notification" href={post.notificationLink} external />
+                    )}
+                    {post.admitCardLink && (
+                      <LinkRow label="Download Admit Card" href={post.admitCardLink} external />
+                    )}
+                    {post.answerKeyLink && (
+                      <LinkRow label="Answer Key" href={post.answerKeyLink} external />
+                    )}
+                    {post.syllabusLink && <LinkRow label="Syllabus" href={post.syllabusLink} external />}
+                  </div>
+                </section>
+              )}
+            </div>
+
+            {/* Interactive Syllabus Link */}
+            {post.syllabus && (
+              <section className="overflow-hidden rounded-xl border border-border/60 bg-primary/5 p-5 dark:bg-primary/10 shadow-[var(--shadow-card)]">
+                <div className="flex flex-col items-center text-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <BookOpen className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-foreground">Interactive Syllabus Tracker</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Track your preparation progress with our interactive checklist.
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row w-full gap-3 mt-2">
+                    <QuickTrackerModal 
+                      postId={post.id}
+                      syllabusId={post.syllabus.id} 
+                      syllabus={post.syllabus.content} 
+                      initialCompletedTopics={syllabusProgress?.completedTopics || []} 
+                    />
+                    <Link
+                      href={`/syllabus/${post.syllabus.slug}`}
+                      className="w-full flex justify-center items-center rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-[0.98]"
+                    >
+                      View Syllabus →
+                    </Link>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* Related Posts */}
+            {relatedPosts.length > 0 && (
+              <section className="rounded-xl border border-border/60 bg-card shadow-[var(--shadow-card)] p-4 sm:p-5">
+                <h2 className="mb-4 text-lg font-bold text-foreground border-b border-border/60 pb-3">Related Posts</h2>
+                <div className="flex flex-col gap-4">
+                  {relatedPosts.map((p) => (
+                    <PostCard key={p.id} post={p as PostCardData} />
+                  ))}
+                </div>
+              </section>
+            )}
+            
+            <AdSlot slotKey="sidebar_1" className="mt-6 hidden lg:block" />
+          </aside>
+        </div>
+      </div>
     </>
   );
 }
