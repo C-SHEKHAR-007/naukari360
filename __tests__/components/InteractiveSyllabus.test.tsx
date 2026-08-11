@@ -16,6 +16,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/app/(public)/post/[slug]/syllabus-actions", () => ({
   toggleSyllabusTopic: vi.fn(),
+  syncSyllabusProgress: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe("InteractiveSyllabus", () => {

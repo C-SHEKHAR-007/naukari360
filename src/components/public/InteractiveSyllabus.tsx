@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, Circle, ChevronDown, ChevronUp, BookOpen, AlertCircle } from "lucide-react";
-import { toggleSyllabusTopic } from "@/app/(public)/post/[slug]/syllabus-actions";
+import { toggleSyllabusTopic, syncSyllabusProgress } from "@/app/(public)/post/[slug]/syllabus-actions";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
@@ -22,23 +22,37 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([syllabus[0]?.title]));
   const { data: session, status } = useSession();
 
-  // Load from localStorage on mount if not authenticated
+  // Load from localStorage on mount and sync if authenticated
   useEffect(() => {
-    if (status !== "loading" && !session?.user) {
-      try {
-        const localData = localStorage.getItem(`syllabus_${postId}`);
-        if (localData) {
-          const parsed = JSON.parse(localData);
-          if (Array.isArray(parsed)) {
+    if (status === "loading") return;
+
+    try {
+      const localData = localStorage.getItem(`syllabus_${postId}`);
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          
+          if (!session?.user) {
+            // User is offline: just load from local storage
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setCompleted(new Set(parsed));
+          } else {
+            // User is logged in: merge offline progress with server progress and sync
+            const merged = new Set([...initialCompletedTopics, ...parsed]);
+            setCompleted(merged);
+            
+            // Sync to server in the background
+            syncSyllabusProgress(postId, Array.from(merged)).catch(console.error);
+            
+            // Clear local storage so we don't sync again
+            localStorage.removeItem(`syllabus_${postId}`);
           }
         }
-      } catch (e) {
-        console.error("Failed to parse local syllabus data", e);
       }
+    } catch (e) {
+      console.error("Failed to parse local syllabus data", e);
     }
-  }, [postId, session?.user, status]);
+  }, [postId, session?.user, status, initialCompletedTopics]);
 
   // Save to localStorage whenever completed changes (if not authenticated)
   useEffect(() => {

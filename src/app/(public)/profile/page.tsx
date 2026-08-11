@@ -21,7 +21,6 @@ export default function ProfilePage() {
     } else if (session?.user) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setQualification(session.user.qualification || "");
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState(session.user.state || "");
     }
   }, [session, status, router]);

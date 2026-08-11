@@ -58,3 +58,28 @@ export async function toggleSyllabusTopic(postId: string, topic: string) {
   // but if needed we can revalidate the post page.
   // revalidatePath(`/post/${slug}`); // Need slug if we want to revalidate
 }
+
+export async function syncSyllabusProgress(postId: string, topics: string[]) {
+  const session = await auth();
+  if (!session?.user) return;
+
+  const userId = session.user.id;
+
+  // Upsert the record with the merged topics
+  await prisma.syllabusProgress.upsert({
+    where: {
+      userId_postId: {
+        userId,
+        postId,
+      },
+    },
+    update: {
+      completedTopics: topics,
+    },
+    create: {
+      userId,
+      postId,
+      completedTopics: topics,
+    },
+  });
+}
