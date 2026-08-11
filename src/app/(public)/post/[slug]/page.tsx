@@ -87,16 +87,18 @@ export default async function PostDetailPage({ params }: Props) {
 
   let isTracked = false;
   let initialCompletedTopics: string[] = [];
-  if (session?.user) {
+  
+  if (session?.user?.id) {
+    const userId = session.user.id;
     const [trackedRecord, syllabusProgress] = await Promise.all([
       prisma.applicationTracker.findUnique({
         where: {
-          userId_postId: { userId: session.user.id, postId: post.id },
+          userId_postId: { userId, postId: post.id },
         },
       }),
       prisma.syllabusProgress.findUnique({
         where: {
-          userId_postId: { userId: session.user.id, postId: post.id },
+          userId_postId: { userId, postId: post.id },
         },
       }),
     ]);

@@ -32,6 +32,7 @@ function CountdownTimer({ lastDate }: { lastDate: Date }) {
   const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -67,6 +68,7 @@ export default function PostCard({ post }: { post: PostCardData }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const saved = JSON.parse(localStorage.getItem("bookmarks") || "[]") as string[];
     setBookmarked(saved.includes(post.id));

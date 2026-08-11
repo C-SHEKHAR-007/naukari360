@@ -37,11 +37,11 @@ describe("InteractiveSyllabus", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRouter as any).mockReturnValue(mockRouter);
-    (useSession as any).mockReturnValue({
-      data: { user: { id: "user-1" } },
+    vi.mocked(useRouter).mockReturnValue(mockRouter as never);
+    vi.mocked(useSession).mockReturnValue({
+      data: { user: { id: "user-1", role: "user" } },
       status: "authenticated",
-    });
+    } as never);
   });
 
   it("renders the syllabus component with progress bar", () => {
@@ -71,7 +71,7 @@ describe("InteractiveSyllabus", () => {
   });
 
   it("calls toggleSyllabusTopic when a topic is clicked", async () => {
-    (toggleSyllabusTopic as any).mockResolvedValue(undefined);
+    vi.mocked(toggleSyllabusTopic).mockResolvedValue(undefined);
     
     render(
       <InteractiveSyllabus
@@ -94,10 +94,10 @@ describe("InteractiveSyllabus", () => {
   });
 
   it("redirects to login if not authenticated", () => {
-    (useSession as any).mockReturnValue({
+    vi.mocked(useSession).mockReturnValue({
       data: null,
       status: "unauthenticated",
-    });
+    } as never);
     
     render(
       <InteractiveSyllabus

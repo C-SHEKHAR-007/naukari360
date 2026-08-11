@@ -18,7 +18,8 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
   const encodedUrl = encodeURIComponent(url);
 
   useEffect(() => {
-    if (typeof navigator !== "undefined" && navigator.share) {
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCanShare(true);
     }
   }, []);

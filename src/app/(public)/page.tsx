@@ -81,8 +81,8 @@ export const revalidate = 300; // ISR: revalidate every 5 minutes
 
 export default async function HomePage() {
   const session = await auth();
-  const qual = (session?.user as any)?.qualification || null;
-  const userState = (session?.user as any)?.state || null;
+  const qual = session?.user?.qualification || null;
+  const userState = session?.user?.state || null;
 
   const results = await Promise.all([
     getClosingSoonPosts(6),

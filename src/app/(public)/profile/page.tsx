@@ -19,8 +19,10 @@ export default function ProfilePage() {
     if (status === "unauthenticated") {
       router.push("/admin/login?callbackUrl=/profile");
     } else if (session?.user) {
-      setQualification((session.user as any).qualification || "");
-      setState((session.user as any).state || "");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setQualification(session.user.qualification || "");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setState(session.user.state || "");
     }
   }, [session, status, router]);
 
