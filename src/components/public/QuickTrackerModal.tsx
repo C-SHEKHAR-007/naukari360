@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
-import InteractiveSyllabus from "@/components/public/InteractiveSyllabus";
+import InteractiveSyllabus, { SyllabusSection } from "@/components/public/InteractiveSyllabus";
 
 interface QuickTrackerModalProps {
   postId: string;
   syllabusId: string;
-  syllabus: unknown;
+  syllabus: SyllabusSection[];
   initialCompletedTopics: string[];
 }
 
