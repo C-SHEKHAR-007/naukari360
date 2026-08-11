@@ -50,7 +50,7 @@ next-env.d.ts
 .idea/
 
 # plan/notes (personal)
-plan.md
+/plan/
 
 logs/
 .pnpm-store/
