@@ -22,6 +22,7 @@ import AdSlot from "@/components/public/AdSlot";
 import PostCard from "@/components/public/PostCard";
 import ShareButtons from "@/components/public/ShareButtons";
 import QuickTrackerModal from "@/components/public/QuickTrackerModal";
+import { SyllabusSection } from "@/components/public/InteractiveSyllabus";
 import PostTitle from "@/components/public/PostTitle";
 import ReadingProgressBar from "@/components/public/ReadingProgressBar";
 import CopyJobDetails from "@/components/public/CopyJobDetails";
@@ -492,7 +493,7 @@ export default async function PostDetailPage({ params }: Props) {
                     <QuickTrackerModal 
                       postId={post.id}
                       syllabusId={post.syllabus.id} 
-                      syllabus={post.syllabus.content} 
+                      syllabus={(post.syllabus.content as unknown) as SyllabusSection[] || []} 
                       initialCompletedTopics={(syllabusProgress?.completedTopics as string[]) || []} 
                     />
                     <Link
