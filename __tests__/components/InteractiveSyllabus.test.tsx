@@ -94,7 +94,7 @@ describe("InteractiveSyllabus", () => {
     });
   });
 
-  it("prompts Google login if not authenticated", () => {
+  it("updates offline progress if not authenticated", () => {
     vi.mocked(useSession).mockReturnValue({
       data: null,
       status: "unauthenticated",
@@ -111,7 +111,10 @@ describe("InteractiveSyllabus", () => {
     const algebraBtn = screen.getByRole("button", { name: /Algebra/i });
     fireEvent.click(algebraBtn);
     
-    expect(signIn).toHaveBeenCalledWith("google");
+    expect(signIn).not.toHaveBeenCalled();
     expect(toggleSyllabusTopic).not.toHaveBeenCalled();
+    
+    // Check if UI optimistically updated
+    expect(screen.getByText("25% Completed")).toBeInTheDocument();
   });
 });

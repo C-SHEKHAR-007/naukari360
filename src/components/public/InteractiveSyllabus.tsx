@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { CheckCircle2, Circle, ChevronDown, ChevronUp, BookOpen, AlertCircle } from "lucide-react";
 import { toggleSyllabusTopic } from "@/app/(public)/post/[slug]/syllabus-actions";
-import { useSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export interface SyllabusSection {
   title: string;
@@ -20,8 +20,32 @@ interface Props {
 export default function InteractiveSyllabus({ postId, syllabus, initialCompletedTopics }: Props) {
   const [completed, setCompleted] = useState<Set<string>>(new Set(initialCompletedTopics));
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([syllabus[0]?.title]));
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Load from localStorage on mount if not authenticated
+  useEffect(() => {
+    if (status !== "loading" && !session?.user) {
+      try {
+        const localData = localStorage.getItem(`syllabus_${postId}`);
+        if (localData) {
+          const parsed = JSON.parse(localData);
+          if (Array.isArray(parsed)) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setCompleted(new Set(parsed));
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse local syllabus data", e);
+      }
+    }
+  }, [postId, session?.user, status]);
+
+  // Save to localStorage whenever completed changes (if not authenticated)
+  useEffect(() => {
+    if (status !== "loading" && !session?.user) {
+      localStorage.setItem(`syllabus_${postId}`, JSON.stringify(Array.from(completed)));
+    }
+  }, [completed, postId, session?.user, status]);
 
   if (!syllabus || syllabus.length === 0) return null;
 
@@ -39,11 +63,6 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
   }
 
   async function handleToggleTopic(topic: string) {
-    if (!session?.user) {
-      signIn("google");
-      return;
-    }
-
     // Optimistic UI update
     setCompleted((prev) => {
       const next = new Set(prev);
@@ -51,6 +70,10 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
       else next.add(topic);
       return next;
     });
+
+    if (!session?.user) {
+      return; // The useEffect will handle saving to localStorage
+    }
 
     try {
       await toggleSyllabusTopic(postId, topic);
