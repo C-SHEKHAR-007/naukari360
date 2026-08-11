@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { getExamCalendarPosts } from "@/lib/db";
+import BilingualText from "@/components/public/BilingualText";
 
 export const metadata: Metadata = {
   title: "Exam Calendar — Upcoming Government Exams",
@@ -28,13 +29,15 @@ export default async function ExamCalendarPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
-      <div className="mb-8 flex items-center gap-3">
-        <Calendar className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Exam Calendar</h1>
-          <p className="text-sm text-muted">Upcoming government exam dates</p>
-        </div>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-12">
+      <div className="mb-8 border-b border-border pb-8">
+        <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+          Exam Calendar
+        </h1>
+        <p className="mt-1 font-hindi text-base text-muted">परीक्षा कैलेंडर</p>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+          Upcoming government exam dates, admit card releases, and results in a visual timeline.
+        </p>
       </div>
 
       {Object.keys(grouped).length === 0 ? (
@@ -46,31 +49,34 @@ export default async function ExamCalendarPage() {
           {Object.entries(grouped).map(([month, monthPosts]) => (
             <section key={month}>
               <h2 className="mb-3 text-lg font-bold text-primary">{month}</h2>
-              <div className="space-y-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 {monthPosts.map((post) => (
                   <Link
                     key={post.id}
                     href={`/post/${post.slug}`}
-                    className="flex items-center gap-4 rounded-lg border border-border p-3 transition-colors hover:border-primary/30 hover:bg-primary/5"
+                    className="group flex items-center gap-4 rounded-xl border border-border bg-card/80 p-4 shadow-sm backdrop-blur-sm transition-all hover:border-primary/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
                   >
-                    <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/10">
-                      <span className="text-xs font-medium text-primary">
+                    <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/10">
+                      <span className="text-xs font-semibold text-primary">
                         {new Date(post.examDate!).toLocaleDateString("en-IN", { month: "short" })}
                       </span>
-                      <span className="text-lg font-bold text-primary">
+                      <span className="text-xl font-extrabold text-primary">
                         {new Date(post.examDate!).getDate()}
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-foreground line-clamp-1">
-                        {post.titleEn}
-                      </p>
+                      <BilingualText 
+                        en={post.titleEn}
+                        hi={post.titleHi || undefined}
+                        as="p"
+                        className="text-sm font-bold text-foreground line-clamp-1 transition-colors group-hover:text-primary"
+                      />
                       {post.organization && (
                         <p className="text-xs text-muted">{post.organization}</p>
                       )}
                     </div>
                     {post.category && (
-                      <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                      <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
                         {post.category.name}
                       </span>
                     )}

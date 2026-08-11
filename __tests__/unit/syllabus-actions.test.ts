@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createSyllabus, updateSyllabus } from "@/app/(admin)/admin/(dashboard)/syllabuses/actions";
+import { toggleSyllabusTopic } from "@/app/(public)/post/[slug]/syllabus-actions";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -11,11 +12,20 @@ vi.mock("@/lib/prisma", () => ({
       update: vi.fn(),
       delete: vi.fn(),
     },
+    syllabusProgress: {
+      findUnique: vi.fn(),
+      upsert: vi.fn(),
+      update: vi.fn(),
+    },
   },
 }));
 
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
+}));
+
+vi.mock("@/lib/auth", () => ({
+  auth: vi.fn(),
 }));
 
 describe("Syllabus Server Actions", () => {
@@ -93,6 +103,59 @@ describe("Syllabus Server Actions", () => {
           titleEn: "Updated Title",
         })
       });
+    });
+  });
+
+  describe("toggleSyllabusTopic", () => {
+    it("returns error if user is not authenticated", async () => {
+      const { auth } = await import("@/lib/auth");
+      vi.mocked(auth).mockResolvedValue(null);
+      
+      await expect(toggleSyllabusTopic("syl-1", "Topic A"))
+        .rejects
+        .toThrow("Unauthorized");
+    });
+
+    it("upserts new progress correctly when topic is added", async () => {
+      const { auth } = await import("@/lib/auth");
+      vi.mocked(auth).mockResolvedValue({ user: { id: "user-1" } } as any);
+      vi.mocked(prisma.syllabusProgress.findUnique).mockResolvedValue(null);
+      
+      await toggleSyllabusTopic("syl-1", "Topic A");
+      
+      expect(prisma.syllabusProgress.upsert).toHaveBeenCalledWith(expect.objectContaining({
+        where: { userId_syllabusId: { userId: "user-1", syllabusId: "syl-1" } },
+        update: { completedTopics: ["Topic A"] },
+        create: { userId: "user-1", syllabusId: "syl-1", completedTopics: ["Topic A"] }
+      }));
+    });
+
+    it("removes topic if it already exists", async () => {
+      const { auth } = await import("@/lib/auth");
+      vi.mocked(auth).mockResolvedValue({ user: { id: "user-1" } } as any);
+      vi.mocked(prisma.syllabusProgress.findUnique).mockResolvedValue({
+        completedTopics: ["Topic A", "Topic B"]
+      } as any);
+      
+      await toggleSyllabusTopic("syl-1", "Topic A");
+      
+      expect(prisma.syllabusProgress.update).toHaveBeenCalledWith(expect.objectContaining({
+        data: { completedTopics: ["Topic B"] }
+      }));
+    });
+
+    it("throws a graceful error on P2003 foreign key constraint (stale session)", async () => {
+      const { auth } = await import("@/lib/auth");
+      vi.mocked(auth).mockResolvedValue({ user: { id: "user-1" } } as any);
+      vi.mocked(prisma.syllabusProgress.findUnique).mockResolvedValue(null);
+      
+      const prismaError = new Error("Prisma error") as any;
+      prismaError.code = "P2003";
+      vi.mocked(prisma.syllabusProgress.upsert).mockRejectedValue(prismaError);
+      
+      await expect(toggleSyllabusTopic("syl-1", "Topic A"))
+        .rejects
+        .toThrow("Your session has expired or your user account no longer exists in the database");
     });
   });
 });

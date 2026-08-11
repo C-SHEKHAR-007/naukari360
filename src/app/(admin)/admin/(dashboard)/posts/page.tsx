@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import PostsTable from "@/components/admin/PostsTable";
+import AdminSearch from "@/components/admin/AdminSearch";
 
 interface Props {
   searchParams: Promise<{ page?: string; status?: string; q?: string }>;
@@ -65,17 +66,7 @@ export default async function AdminPostsPage({ searchParams }: Props) {
 
       {/* Filters */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <form className="relative flex-1" action="/admin/posts" method="GET">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-          <input
-            type="text"
-            name="q"
-            defaultValue={query}
-            placeholder="Search posts..."
-            className="w-full rounded-lg border border-border bg-card py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-muted focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-          {status !== "all" && <input type="hidden" name="status" value={status} />}
-        </form>
+        <AdminSearch placeholder="Search posts..." />
         <div className="flex gap-2">
           {["all", "published", "draft", "archived"].map((s) => (
             <Link

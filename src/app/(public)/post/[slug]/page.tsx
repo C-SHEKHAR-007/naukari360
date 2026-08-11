@@ -21,7 +21,6 @@ import sanitizeHtml from "sanitize-html";
 import AdSlot from "@/components/public/AdSlot";
 import PostCard from "@/components/public/PostCard";
 import ShareButtons from "@/components/public/ShareButtons";
-import ApplyButton from "@/components/public/ApplyButton";
 import QuickTrackerModal from "@/components/public/QuickTrackerModal";
 import PostTitle from "@/components/public/PostTitle";
 import ReadingProgressBar from "@/components/public/ReadingProgressBar";
@@ -494,7 +493,7 @@ export default async function PostDetailPage({ params }: Props) {
                       postId={post.id}
                       syllabusId={post.syllabus.id} 
                       syllabus={post.syllabus.content} 
-                      initialCompletedTopics={syllabusProgress?.completedTopics || []} 
+                      initialCompletedTopics={(syllabusProgress?.completedTopics as string[]) || []} 
                     />
                     <Link
                       href={`/syllabus/${post.syllabus.slug}`}

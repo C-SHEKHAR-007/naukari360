@@ -1,18 +1,44 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { BookOpen, Plus, Edit } from "lucide-react";
+import { BookOpen, Plus, Edit, Search } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import DeleteSyllabusButton from "@/components/admin/DeleteSyllabusButton";
+import AdminSearch from "@/components/admin/AdminSearch";
 
 export const metadata = {
   title: "Manage Syllabuses | Admin Dashboard",
 };
 
-export default async function AdminSyllabusesPage() {
-  const syllabuses = await prisma.syllabus.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { post: true },
-  });
+interface Props {
+  searchParams: Promise<{ page?: string; q?: string }>;
+}
+
+export default async function AdminSyllabusesPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1"));
+  const query = params.q || "";
+  const perPage = 15;
+
+  const where: Record<string, unknown> = {};
+  if (query) {
+    where.OR = [
+      { titleEn: { contains: query, mode: "insensitive" } },
+      { titleHi: { contains: query, mode: "insensitive" } },
+      { post: { titleEn: { contains: query, mode: "insensitive" } } },
+    ];
+  }
+
+  const [syllabuses, total] = await Promise.all([
+    prisma.syllabus.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      include: { post: true },
+      skip: (page - 1) * perPage,
+      take: perPage,
+    }),
+    prisma.syllabus.count({ where }),
+  ]);
+  const totalPages = Math.ceil(total / perPage);
 
   return (
     <>
@@ -20,7 +46,7 @@ export default async function AdminSyllabusesPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Syllabuses</h1>
-          <p className="mt-1 text-sm text-muted">{syllabuses.length} total syllabuses</p>
+          <p className="mt-1 text-sm text-muted">{total} total syllabuses</p>
         </div>
         <Link
           href="/admin/syllabuses/new"
@@ -31,15 +57,20 @@ export default async function AdminSyllabusesPage() {
         </Link>
       </div>
 
+      {/* Filters */}
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <AdminSearch placeholder="Search syllabuses..." />
+      </div>
+
       <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-muted/50 text-muted-foreground border-b border-border">
+            <thead className="border-b border-border bg-surface">
               <tr>
-                <th className="px-6 py-4 font-medium">Title</th>
-                <th className="px-6 py-4 font-medium">Linked Post</th>
-                <th className="px-6 py-4 font-medium">Last Updated</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
+                <th className="px-6 py-3 font-medium text-muted">Title</th>
+                <th className="px-6 py-3 font-medium text-muted">Linked Post</th>
+                <th className="px-6 py-3 font-medium text-muted">Last Updated</th>
+                <th className="px-6 py-3 font-medium text-muted text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -87,6 +118,33 @@ export default async function AdminSyllabusesPage() {
           </table>
         </div>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between">
+          <p className="text-sm text-muted">
+            Page {page} of {totalPages}
+          </p>
+          <div className="flex gap-2">
+            {page > 1 && (
+              <Link
+                href={`/admin/syllabuses?page=${page - 1}${query ? `&q=${query}` : ""}`}
+                className="rounded-lg border border-border px-3 py-1.5 text-sm text-foreground hover:bg-surface"
+              >
+                Previous
+              </Link>
+            )}
+            {page < totalPages && (
+              <Link
+                href={`/admin/syllabuses?page=${page + 1}${query ? `&q=${query}` : ""}`}
+                className="rounded-lg border border-border px-3 py-1.5 text-sm text-foreground hover:bg-surface"
+              >
+                Next
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

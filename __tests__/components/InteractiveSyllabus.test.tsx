@@ -90,7 +90,7 @@ describe("InteractiveSyllabus", () => {
     const algebraBtn = screen.getByRole("button", { name: /Algebra/i });
     fireEvent.click(algebraBtn);
     
-    expect(toggleSyllabusTopic).toHaveBeenCalledWith("post-1", "Algebra");
+    expect(toggleSyllabusTopic).toHaveBeenCalledWith("syl-1", "Algebra");
     
     // Check optimistic update
     await waitFor(() => {

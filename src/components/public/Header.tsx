@@ -16,6 +16,7 @@ const navLinks = [
   { href: "/answer-key", label: "Answer Key", labelHi: "आंसर की" },
   { href: "/admission", label: "Admission", labelHi: "एडमिशन" },
   { href: "/syllabus", label: "Syllabus", labelHi: "सिलेबस" },
+  { href: "/exam-calendar", label: "Calendar", labelHi: "कैलेंडर" },
 ];
 
 export default function Header({ settings }: { settings: SiteSettings }) {

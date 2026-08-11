@@ -93,9 +93,10 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
 
     try {
       await toggleSyllabusTopic(syllabusId, topic);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to toggle syllabus topic", error);
-      alert(error.message || "Failed to save your progress. Please log out and log back in.");
+      const msg = error instanceof Error ? error.message : "Failed to save your progress. Please log out and log back in.";
+      alert(msg);
       // Revert optimistic update
       setCompleted((prev) => {
         const next = new Set(prev);

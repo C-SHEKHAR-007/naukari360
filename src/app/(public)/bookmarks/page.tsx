@@ -18,15 +18,15 @@ export default async function BookmarksPage() {
   if (!session?.user) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-          <Bookmark className="h-10 w-10 text-primary" />
-        </div>
-        <h1 className="mt-6 text-2xl font-bold text-foreground">Save your favorite jobs</h1>
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+        <Bookmark className="mb-4 h-16 w-16 text-muted-foreground/30" />
+        <h1 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Save your favorite jobs</h1>
         <p className="mt-2 text-muted">
           Sign in to save job postings and access them from any device, anytime.
         </p>
         <div className="mt-8 flex justify-center">
           <SignInButton />
+        </div>
         </div>
       </div>
     );
@@ -48,9 +48,9 @@ export default async function BookmarksPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <div className="mb-8 flex items-center justify-between border-b border-border pb-4">
+      <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">My Saved Jobs</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">My Saved Jobs</h1>
           <p className="mt-1 text-sm text-muted">
             You have {bookmarks.length} saved job{bookmarks.length !== 1 && "s"}.
           </p>

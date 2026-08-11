@@ -14,6 +14,7 @@ interface SyllabusSection {
 }
 
 interface SyllabusFormProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialData?: any;
   posts: { id: string; titleEn: string }[];
 }
@@ -84,7 +85,7 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
       slug,
       postId: postId || null,
       markdownContent,
-      content: sections,
+      content: sections as unknown,
     };
 
     let result;

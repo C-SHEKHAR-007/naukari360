@@ -174,23 +174,25 @@ export default function PostCard({ post }: { post: PostCardData }) {
       </div>
 
       {/* Footer */}
-      <div className="mt-auto flex items-center justify-between border-t border-border pt-2.5">
-        <div className="flex items-center gap-3 text-[11px] text-muted">
-          {post.lastDate && (
-            <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              {formatDate(post.lastDate)}
-            </span>
-          )}
-          {post.readingTime && (
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {post.readingTime} min
-            </span>
-          )}
+      {(post.lastDate || post.readingTime) && (
+        <div className="mt-auto flex items-center justify-between border-t border-border pt-2.5">
+          <div className="flex items-center gap-3 text-[11px] text-muted">
+            {post.lastDate && (
+              <span className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                {formatDate(post.lastDate)}
+              </span>
+            )}
+            {post.readingTime && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {post.readingTime} min
+              </span>
+            )}
+          </div>
+          {post.lastDate && <CountdownTimer lastDate={new Date(post.lastDate)} />}
         </div>
-        {post.lastDate && <CountdownTimer lastDate={new Date(post.lastDate)} />}
-      </div>
+      )}
       </Link>
     </motion.div>
   );

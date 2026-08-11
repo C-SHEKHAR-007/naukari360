@@ -96,7 +96,7 @@ export default function RootLayout({
     >
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body className="flex min-h-screen flex-col bg-background text-foreground dark:bg-[#0f1629] dark:text-[#f1f5f9]" suppressHydrationWarning>

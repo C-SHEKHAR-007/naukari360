@@ -14,6 +14,7 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
   const [origin, setOrigin] = useState("");
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
       setCanShare(true);
@@ -37,8 +38,8 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
         text: title,
         url: url,
       });
-    } catch (err) {
-      // User cancelled or share failed, silently ignore
+    } catch {
+      // User cancelled native share or it failed
     }
   }
 

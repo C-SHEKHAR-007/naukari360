@@ -20,7 +20,7 @@ export default async function TrackerPage() {
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
           <LayoutDashboard className="h-10 w-10 text-primary" />
         </div>
-        <h1 className="mt-6 text-2xl font-bold text-foreground">Application Tracker</h1>
+        <h1 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Application Tracker</h1>
         <p className="mt-2 text-muted">
           Sign in to track your job applications (Interested, Applied, Admit Card, Result).
         </p>
@@ -52,7 +52,7 @@ export default async function TrackerPage() {
     <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Application Tracker</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Application Tracker</h1>
           <p className="mt-1 text-sm text-muted">
             Manage your government job application pipeline seamlessly.
           </p>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Briefcase, ArrowRight } from "lucide-react";
 import SyllabusDetailedView from "@/components/public/SyllabusDetailedView";
 import InteractiveSyllabus, { SyllabusSection } from "@/components/public/InteractiveSyllabus";
-import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import BilingualText from "@/components/public/BilingualText";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -45,9 +45,9 @@ export default async function SyllabusViewPage({ params }: { params: Promise<{ s
   }
 
   const breadcrumbs = [
-    { name: "Home", url: "/" },
-    { name: "Syllabuses", url: "/syllabus" },
-    { name: syllabus.titleEn, url: `/syllabus/${syllabus.slug}` },
+    { name: <BilingualText en="Home" hi="होम" />, url: "/" },
+    { name: <BilingualText en="Syllabuses" hi="पाठ्यक्रम" />, url: "/syllabus" },
+    { name: <BilingualText en={syllabus.titleEn} hi={syllabus.titleHi || undefined} />, url: `/syllabus/${syllabus.slug}` },
   ];
 
   return (
@@ -57,9 +57,9 @@ export default async function SyllabusViewPage({ params }: { params: Promise<{ s
           {breadcrumbs.map((crumb, idx) => (
             <li key={idx} className="flex items-center">
               {idx > 0 && <span className="mx-2">/</span>}
-              <a href={crumb.url} className="hover:text-primary transition-colors">
+              <Link href={crumb.url} className="hover:text-primary transition-colors line-clamp-1 max-w-[200px]">
                 {crumb.name}
-              </a>
+              </Link>
             </li>
           ))}
         </ol>
@@ -105,9 +105,12 @@ export default async function SyllabusViewPage({ params }: { params: Promise<{ s
                     <p className="text-xs text-muted-foreground mt-0.5">Apply for this post</p>
                   </div>
                 </div>
-                <h4 className="text-sm font-medium text-foreground mb-4 line-clamp-2">
-                  {syllabus.post.titleEn}
-                </h4>
+                <BilingualText 
+                  en={syllabus.post.titleEn}
+                  hi={syllabus.post.titleHi || undefined}
+                  as="h4"
+                  className="text-sm font-medium text-foreground mb-4 line-clamp-2"
+                />
                 <Link
                   href={`/post/${syllabus.post.slug}`}
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98]"

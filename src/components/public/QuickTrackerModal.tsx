@@ -8,7 +8,7 @@ import InteractiveSyllabus from "@/components/public/InteractiveSyllabus";
 interface QuickTrackerModalProps {
   postId: string;
   syllabusId: string;
-  syllabus: any;
+  syllabus: unknown;
   initialCompletedTopics: string[];
 }
 
@@ -17,6 +17,7 @@ export default function QuickTrackerModal({ postId, syllabusId, syllabus, initia
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

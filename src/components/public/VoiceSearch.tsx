@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Mic, MicOff } from "lucide-react";
 
 interface SpeechRecognitionResult {
@@ -40,6 +40,7 @@ export default function VoiceSearch({ onResult }: VoiceSearchProps) {
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

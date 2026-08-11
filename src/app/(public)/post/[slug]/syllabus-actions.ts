@@ -62,8 +62,8 @@ export async function toggleSyllabusTopic(syllabusId: string, topic: string) {
           completedTopics
         }
       });
-    } catch (error: any) {
-      if (error.code === 'P2003') {
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'code' in error && (error as any).code === 'P2003') {
         throw new Error("Your session has expired or your user account no longer exists in the database. Please log out and log back in.");
       }
       throw error;

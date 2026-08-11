@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { Search } from "lucide-react";
 
 interface SearchInputProps {
@@ -11,6 +11,24 @@ interface SearchInputProps {
 export default function SearchInput({ defaultValue = "" }: SearchInputProps) {
   const router = useRouter();
   const [query, setQuery] = useState(defaultValue);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (query === defaultValue) return;
+    
+    const delayDebounceFn = setTimeout(() => {
+      const trimmed = query.trim();
+      startTransition(() => {
+        if (trimmed) {
+          router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+        } else {
+          router.push(`/search`);
+        }
+      });
+    }, 800);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [query, router, defaultValue]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
