@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CheckCircle2, Circle, ChevronDown, ChevronUp, BookOpen, AlertCircle } from "lucide-react";
 import { toggleSyllabusTopic } from "@/app/(public)/post/[slug]/syllabus-actions";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export interface SyllabusSection {
@@ -40,7 +40,7 @@ export default function InteractiveSyllabus({ postId, syllabus, initialCompleted
 
   async function handleToggleTopic(topic: string) {
     if (!session?.user) {
-      router.push(`/admin/login?callbackUrl=/post/${postId}`);
+      signIn("google");
       return;
     }
 

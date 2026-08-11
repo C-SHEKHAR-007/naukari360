@@ -1,12 +1,13 @@
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import InteractiveSyllabus from "@/components/public/InteractiveSyllabus";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toggleSyllabusTopic } from "@/app/(public)/post/[slug]/syllabus-actions";
 
 vi.mock("next-auth/react", () => ({
   useSession: vi.fn(),
+  signIn: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -93,7 +94,7 @@ describe("InteractiveSyllabus", () => {
     });
   });
 
-  it("redirects to login if not authenticated", () => {
+  it("prompts Google login if not authenticated", () => {
     vi.mocked(useSession).mockReturnValue({
       data: null,
       status: "unauthenticated",
@@ -110,7 +111,7 @@ describe("InteractiveSyllabus", () => {
     const algebraBtn = screen.getByRole("button", { name: /Algebra/i });
     fireEvent.click(algebraBtn);
     
-    expect(mockRouter.push).toHaveBeenCalledWith("/admin/login?callbackUrl=/post/post-1");
+    expect(signIn).toHaveBeenCalledWith("google");
     expect(toggleSyllabusTopic).not.toHaveBeenCalled();
   });
 });
