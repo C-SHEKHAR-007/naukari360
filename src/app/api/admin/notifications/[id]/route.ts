@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireSuperAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
+import { withInvalidation } from "@/lib/cache";
 
-export async function DELETE(
+async function deleteHandler(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -18,3 +19,5 @@ export async function DELETE(
     return NextResponse.json({ error: "Failed to delete notification" }, { status: 500 });
   }
 }
+
+export const DELETE = withInvalidation(deleteHandler);

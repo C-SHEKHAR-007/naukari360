@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireSuperAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
+import { withInvalidation } from "@/lib/cache";
 
 export async function GET() {
   const authResult = await requireSuperAdmin();
@@ -12,7 +13,7 @@ export async function GET() {
   return NextResponse.json(configs);
 }
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const authResult = await requireSuperAdmin();
   if (!authResult.authorized) return authResult.response;
 
@@ -36,3 +37,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to create config" }, { status: 500 });
   }
 }
+
+export const POST = withInvalidation(postHandler);

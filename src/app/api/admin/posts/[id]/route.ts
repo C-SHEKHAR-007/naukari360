@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, requireSuperAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
+import { withInvalidation } from "@/lib/cache";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+async function putHandler(request: NextRequest, { params }: RouteParams) {
   const authResult = await requireAdmin();
   if (!authResult.authorized) return authResult.response;
 
@@ -89,7 +90,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+async function deleteHandler(_request: NextRequest, { params }: RouteParams) {
   const authResult = await requireSuperAdmin();
   if (!authResult.authorized) return authResult.response;
 
@@ -106,3 +107,7 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 }
+
+export const PUT = withInvalidation(putHandler);
+
+export const DELETE = withInvalidation(deleteHandler);

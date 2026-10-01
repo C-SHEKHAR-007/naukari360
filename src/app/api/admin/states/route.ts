@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
+import { withInvalidation } from "@/lib/cache";
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const authResult = await requireAdmin();
   if (!authResult.authorized) return authResult.response;
 
@@ -19,3 +20,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to create state" }, { status: 500 });
   }
 }
+
+export const POST = withInvalidation(postHandler);

@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { cached } from "./cache";
 import type { PostStatus, QualificationLevel } from "@prisma/client";
 
 // Shared select for post cards (lightweight - no content)
@@ -31,9 +32,9 @@ const postCardSelect = {
   state: { select: { id: true, name: true, nameHi: true, slug: true } },
 } as const;
 
-export type PostCardData = Awaited<ReturnType<typeof getLatestPosts>>[number];
+export type PostCardData = Awaited<ReturnType<typeof getLatestPostsUncached>>[number];
 
-export async function getLatestPosts(limit = 20, offset = 0) {
+async function getLatestPostsUncached(limit = 20, offset = 0) {
   return prisma.post.findMany({
     where: { status: "published" as PostStatus },
     select: postCardSelect,
@@ -43,7 +44,7 @@ export async function getLatestPosts(limit = 20, offset = 0) {
   });
 }
 
-export async function getPostsByCategory(categorySlug: string, limit = 20, offset = 0) {
+async function getPostsByCategoryUncached(categorySlug: string, limit = 20, offset = 0) {
   return prisma.post.findMany({
     where: {
       status: "published" as PostStatus,
@@ -56,7 +57,7 @@ export async function getPostsByCategory(categorySlug: string, limit = 20, offse
   });
 }
 
-export async function getPostsByState(stateSlug: string, limit = 20, offset = 0) {
+async function getPostsByStateUncached(stateSlug: string, limit = 20, offset = 0) {
   return prisma.post.findMany({
     where: {
       status: "published" as PostStatus,
@@ -69,7 +70,7 @@ export async function getPostsByState(stateSlug: string, limit = 20, offset = 0)
   });
 }
 
-export async function getPostsByQualification(level: string, limit = 20, offset = 0) {
+async function getPostsByQualificationUncached(level: string, limit = 20, offset = 0) {
   return prisma.post.findMany({
     where: {
       status: "published" as PostStatus,
@@ -82,9 +83,13 @@ export async function getPostsByQualification(level: string, limit = 20, offset 
   });
 }
 
-export async function getPersonalizedPosts(qualification: string | null, state: string | null, limit = 6) {
+export async function getPersonalizedPosts(
+  qualification: string | null,
+  state: string | null,
+  limit = 6
+) {
   if (!qualification && !state) return [];
-  
+
   return prisma.post.findMany({
     where: {
       status: "published" as PostStatus,
@@ -99,7 +104,7 @@ export async function getPersonalizedPosts(qualification: string | null, state: 
   });
 }
 
-export async function getTrendingPosts(limit = 10) {
+async function getTrendingPostsUncached(limit = 10) {
   return prisma.post.findMany({
     where: {
       status: "published" as PostStatus,
@@ -111,7 +116,7 @@ export async function getTrendingPosts(limit = 10) {
   });
 }
 
-export async function getClosingSoonPosts(limit = 10) {
+async function getClosingSoonPostsUncached(limit = 10) {
   const now = new Date();
   const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
   return prisma.post.findMany({
@@ -125,7 +130,7 @@ export async function getClosingSoonPosts(limit = 10) {
   });
 }
 
-export async function getPostBySlug(slug: string) {
+async function getPostBySlugUncached(slug: string) {
   return prisma.post.findUnique({
     where: { slug },
     include: {
@@ -139,10 +144,10 @@ export async function getPostBySlug(slug: string) {
   });
 }
 
-export async function getRelatedPosts(
-  postId: string, 
-  categoryId: string | null, 
-  qualificationLevel?: QualificationLevel | null, 
+async function getRelatedPostsUncached(
+  postId: string,
+  categoryId: string | null,
+  qualificationLevel?: QualificationLevel | null,
   limit = 4
 ) {
   // 1. Try to match BOTH category and qualification
@@ -162,7 +167,7 @@ export async function getRelatedPosts(
   if (matchingPosts.length < limit) {
     const remaining = limit - matchingPosts.length;
     const excludeIds = [postId, ...matchingPosts.map((p) => p.id)];
-    
+
     const categoryOnlyPosts = await prisma.post.findMany({
       where: {
         status: "published" as PostStatus,
@@ -173,7 +178,7 @@ export async function getRelatedPosts(
       orderBy: { views: "desc" },
       take: remaining,
     });
-    
+
     matchingPosts = [...matchingPosts, ...categoryOnlyPosts];
   }
 
@@ -181,7 +186,7 @@ export async function getRelatedPosts(
   if (matchingPosts.length < limit) {
     const remaining = limit - matchingPosts.length;
     const excludeIds = [postId, ...matchingPosts.map((p) => p.id)];
-    
+
     const globalPosts = await prisma.post.findMany({
       where: {
         status: "published" as PostStatus,
@@ -191,14 +196,14 @@ export async function getRelatedPosts(
       orderBy: { views: "desc" },
       take: remaining,
     });
-    
+
     matchingPosts = [...matchingPosts, ...globalPosts];
   }
 
   return matchingPosts;
 }
 
-export async function searchPosts(query: string, limit = 20, offset = 0) {
+async function searchPostsUncached(query: string, limit = 20, offset = 0) {
   return prisma.post.findMany({
     where: {
       status: "published" as PostStatus,
@@ -216,56 +221,48 @@ export async function searchPosts(query: string, limit = 20, offset = 0) {
   });
 }
 
-export async function getPostsCount(where?: Parameters<typeof prisma.post.count>[0]) {
+async function getPostsCountUncached(where?: Parameters<typeof prisma.post.count>[0]) {
   return prisma.post.count(where);
 }
 
-export async function getCategories() {
+async function getCategoriesUncached() {
   return prisma.category.findMany({
     where: { isActive: true },
     orderBy: { displayOrder: "asc" },
   });
 }
 
-export async function getCategoryBySlug(slug: string) {
+async function getCategoryBySlugUncached(slug: string) {
   return prisma.category.findUnique({ where: { slug } });
 }
 
-export async function getStates() {
+async function getStatesUncached() {
   return prisma.state.findMany({
     where: { isActive: true },
     orderBy: { name: "asc" },
   });
 }
 
-export async function getStateBySlug(slug: string) {
+async function getStateBySlugUncached(slug: string) {
   return prisma.state.findUnique({ where: { slug } });
 }
 
-export async function getAdSlots() {
+async function getAdSlotsUncached() {
   return prisma.adSlot.findMany({
     where: { isActive: true },
   });
 }
 
 export async function getAdSlot(slotKey: string) {
-  return prisma.adSlot.findUnique({
-    where: { slotKey },
-  });
+  const slots = await getAdSlots();
+  return slots.find((s) => s.slotKey === slotKey) ?? null;
 }
 
-export async function getSiteSettings() {
-  const settings = await prisma.siteSetting.findMany();
-  return Object.fromEntries(
-    settings.map((s: { key: string; value: string }) => [s.key, s.value])
-  ) as Record<string, string>;
-}
-
-export async function getPageBySlug(slug: string) {
+async function getPageBySlugUncached(slug: string) {
   return prisma.page.findUnique({ where: { slug } });
 }
 
-export async function getInterstitialConfig() {
+async function getInterstitialConfigUncached() {
   return prisma.interstitialPage.findFirst({
     where: { isActive: true },
   });
@@ -278,7 +275,7 @@ export async function incrementPostViews(id: string) {
   });
 }
 
-export async function getExamCalendarPosts() {
+async function getExamCalendarPostsUncached() {
   const now = new Date();
   return prisma.post.findMany({
     where: {
@@ -298,7 +295,7 @@ export async function getExamCalendarPosts() {
   });
 }
 
-export async function getAffiliateLinks(categoryId?: string) {
+async function getAffiliateLinksUncached(categoryId?: string) {
   return prisma.affiliateLink.findMany({
     where: {
       isActive: true,
@@ -307,3 +304,27 @@ export async function getAffiliateLinks(categoryId?: string) {
     orderBy: { createdAt: "desc" },
   });
 }
+
+// Cached public read queries (invalidated by admin writes via invalidatePublicContent)
+export const getLatestPosts = cached(getLatestPostsUncached, "getLatestPosts");
+export const getPostsByCategory = cached(getPostsByCategoryUncached, "getPostsByCategory");
+export const getPostsByState = cached(getPostsByStateUncached, "getPostsByState");
+export const getPostsByQualification = cached(
+  getPostsByQualificationUncached,
+  "getPostsByQualification"
+);
+export const getTrendingPosts = cached(getTrendingPostsUncached, "getTrendingPosts");
+export const getClosingSoonPosts = cached(getClosingSoonPostsUncached, "getClosingSoonPosts");
+export const getPostBySlug = cached(getPostBySlugUncached, "getPostBySlug");
+export const getRelatedPosts = cached(getRelatedPostsUncached, "getRelatedPosts");
+export const searchPosts = cached(searchPostsUncached, "searchPosts");
+export const getPostsCount = cached(getPostsCountUncached, "getPostsCount");
+export const getCategories = cached(getCategoriesUncached, "getCategories");
+export const getCategoryBySlug = cached(getCategoryBySlugUncached, "getCategoryBySlug");
+export const getStates = cached(getStatesUncached, "getStates");
+export const getStateBySlug = cached(getStateBySlugUncached, "getStateBySlug");
+export const getAdSlots = cached(getAdSlotsUncached, "getAdSlots");
+export const getPageBySlug = cached(getPageBySlugUncached, "getPageBySlug");
+export const getInterstitialConfig = cached(getInterstitialConfigUncached, "getInterstitialConfig");
+export const getExamCalendarPosts = cached(getExamCalendarPostsUncached, "getExamCalendarPosts");
+export const getAffiliateLinks = cached(getAffiliateLinksUncached, "getAffiliateLinks");

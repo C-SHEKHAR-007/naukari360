@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireSuperAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
+import { withInvalidation } from "@/lib/cache";
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+async function putHandler(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const authResult = await requireSuperAdmin();
   if (!authResult.authorized) return authResult.response;
 
@@ -25,7 +26,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(
+async function deleteHandler(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -41,3 +42,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Failed to delete config" }, { status: 500 });
   }
 }
+
+export const PUT = withInvalidation(putHandler);
+
+export const DELETE = withInvalidation(deleteHandler);
