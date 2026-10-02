@@ -11,8 +11,6 @@ import QuickCompare from "@/components/public/QuickCompare";
 import MobileBottomNav from "@/components/public/MobileBottomNav";
 import { getSiteSettings } from "@/lib/settings";
 
-export const dynamic = "force-dynamic";
-
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
 
