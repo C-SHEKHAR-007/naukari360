@@ -4,17 +4,23 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import InteractiveSyllabus, { SyllabusSection } from "@/components/public/InteractiveSyllabus";
+import { useSyllabusProgress } from "@/components/public/SyllabusTracker";
 
 interface QuickTrackerModalProps {
   postId: string;
   syllabusId: string;
   syllabus: SyllabusSection[];
-  initialCompletedTopics: string[];
 }
 
-export default function QuickTrackerModal({ postId, syllabusId, syllabus, initialCompletedTopics }: QuickTrackerModalProps) {
+export default function QuickTrackerModal({
+  postId,
+  syllabusId,
+  syllabus,
+}: QuickTrackerModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // Saved progress is loaded on first open so the post page itself can be cached
+  const completedTopics = useSyllabusProgress(postId, syllabusId, isOpen);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -34,14 +40,14 @@ export default function QuickTrackerModal({ postId, syllabusId, syllabus, initia
 
   const modalContent = isOpen ? (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
-      <div 
-        className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity" 
+      <div
+        className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
         onClick={() => setIsOpen(false)}
       />
       <div className="relative w-full max-w-2xl bg-card rounded-2xl shadow-2xl border border-border flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">Syllabus Tracker</h2>
-          <button 
+          <button
             onClick={() => setIsOpen(false)}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
           >
@@ -49,12 +55,16 @@ export default function QuickTrackerModal({ postId, syllabusId, syllabus, initia
           </button>
         </div>
         <div className="p-4 sm:p-6 overflow-y-auto flex-1">
-          <InteractiveSyllabus 
-            postId={postId}
-            syllabusId={syllabusId} 
-            syllabus={syllabus} 
-            initialCompletedTopics={initialCompletedTopics} 
-          />
+          {completedTopics === null ? (
+            <p className="py-8 text-center text-sm text-muted">Loading your progress…</p>
+          ) : (
+            <InteractiveSyllabus
+              postId={postId}
+              syllabusId={syllabusId}
+              syllabus={syllabus}
+              initialCompletedTopics={completedTopics}
+            />
+          )}
         </div>
       </div>
     </div>

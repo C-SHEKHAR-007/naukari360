@@ -1,15 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LayoutDashboard, Loader2, Check } from "lucide-react";
 import { addJobToTracker } from "@/app/(public)/tracker/actions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export default function TrackApplicationButton({ postId, initialTracked }: { postId: string; initialTracked: boolean }) {
+export default function TrackApplicationButton({ postId }: { postId: string }) {
   const [loading, setLoading] = useState(false);
-  const [isCurrentlyTracked, setIsCurrentlyTracked] = useState(initialTracked);
+  const [isCurrentlyTracked, setIsCurrentlyTracked] = useState(false);
   const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  // Tracked status is per-user, so it's loaded client-side to keep the post page cacheable
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    fetch(`/api/post-user-state?postId=${postId}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.isTracked) setIsCurrentlyTracked(true);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, postId]);
   const router = useRouter();
 
   async function handleTrack() {
