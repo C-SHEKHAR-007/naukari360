@@ -328,3 +328,8 @@ export const getPageBySlug = cached(getPageBySlugUncached, "getPageBySlug");
 export const getInterstitialConfig = cached(getInterstitialConfigUncached, "getInterstitialConfig");
 export const getExamCalendarPosts = cached(getExamCalendarPostsUncached, "getExamCalendarPosts");
 export const getAffiliateLinks = cached(getAffiliateLinksUncached, "getAffiliateLinks");
+
+export const getSyllabusBySlug = cached(
+  (slug: string) => prisma.syllabus.findUnique({ where: { slug }, include: { post: true } }),
+  "getSyllabusBySlug"
+);

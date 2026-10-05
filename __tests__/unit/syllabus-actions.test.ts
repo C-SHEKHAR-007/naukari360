@@ -143,6 +143,17 @@ describe("Syllabus Server Actions", () => {
       );
     });
 
+    it("does not purge cached public pages when a user ticks a topic", async () => {
+      const { auth } = await import("@/lib/auth");
+      vi.mocked(auth).mockResolvedValue({ user: { id: "user-1" } } as any);
+      vi.mocked(prisma.syllabusProgress.findUnique).mockResolvedValue(null);
+
+      await toggleSyllabusTopic("syl-1", "Topic A");
+
+      expect(revalidatePath).not.toHaveBeenCalled();
+      expect(revalidateTag).not.toHaveBeenCalled();
+    });
+
     it("removes topic if it already exists", async () => {
       const { auth } = await import("@/lib/auth");
       vi.mocked(auth).mockResolvedValue({ user: { id: "user-1" } } as any);

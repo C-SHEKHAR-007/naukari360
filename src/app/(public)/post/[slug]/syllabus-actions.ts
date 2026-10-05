@@ -2,7 +2,6 @@
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
 
 export async function toggleSyllabusTopic(syllabusId: string, topic: string) {
   const session = await auth();
@@ -30,7 +29,7 @@ export async function toggleSyllabusTopic(syllabusId: string, topic: string) {
 
   if (isCompleted) {
     completedTopics = completedTopics.filter((t) => t !== topic);
-    
+
     await prisma.syllabusProgress.update({
       where: {
         userId_syllabusId: {
@@ -44,34 +43,38 @@ export async function toggleSyllabusTopic(syllabusId: string, topic: string) {
     });
   } else {
     completedTopics.push(topic);
-    
+
     try {
       await prisma.syllabusProgress.upsert({
         where: {
           userId_syllabusId: {
             userId,
             syllabusId,
-          }
+          },
         },
         update: {
-          completedTopics
+          completedTopics,
         },
         create: {
           userId,
           syllabusId,
-          completedTopics
-        }
+          completedTopics,
+        },
       });
     } catch (error: unknown) {
-      if (typeof error === 'object' && error !== null && 'code' in error && (error as any).code === 'P2003') {
-        throw new Error("Your session has expired or your user account no longer exists in the database. Please log out and log back in.");
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code?: string }).code === "P2003"
+      ) {
+        throw new Error(
+          "Your session has expired or your user account no longer exists in the database. Please log out and log back in."
+        );
       }
       throw error;
     }
   }
-
-  revalidatePath(`/syllabus/[slug]`, "page");
-  revalidatePath(`/post/[slug]/syllabus`, "page");
 }
 
 export async function syncSyllabusProgress(syllabusId: string, completedTopics: string[]) {
