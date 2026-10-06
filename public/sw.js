@@ -1,21 +1,21 @@
-const CACHE_NAME = "naukari360-v1";
+const CACHE_NAME = "naukari360-v2";
 const STATIC_ASSETS = ["/", "/manifest.json"];
 const MAX_CACHED_POSTS = 20;
 
 // Install: cache essential assets
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
   self.skipWaiting();
 });
 
 // Activate: clean old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
-    )
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+      )
   );
   self.clients.claim();
 });
@@ -30,6 +30,8 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/api")) return;
   if (url.pathname.startsWith("/_next/")) return;
+  // Next.js client navigations/prefetches (RSC payloads) must go straight to the network
+  if (request.headers.get("RSC") || url.searchParams.has("_rsc")) return;
 
   // Static assets (JS, CSS, images) — Cache-first
   if (
@@ -50,6 +52,9 @@ self.addEventListener("fetch", (event) => {
     );
     return;
   }
+
+  // Only full page loads below; anything else is left to the browser
+  if (request.mode !== "navigate") return;
 
   // HTML pages (posts) — Network-first, cache for offline
   if (url.pathname.startsWith("/post/")) {
