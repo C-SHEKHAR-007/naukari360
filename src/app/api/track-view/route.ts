@@ -18,18 +18,18 @@ export async function POST(request: NextRequest) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Upsert daily page view record
-    await prisma.pageView.upsert({
-      where: { postId_date: { postId, date: today } },
-      update: { views: { increment: 1 } },
-      create: { postId, date: today, views: 1 },
-    });
-
-    // Also increment the total views on the post
-    await prisma.post.update({
-      where: { id: postId },
-      data: { views: { increment: 1 } },
-    });
+    // Daily page view record + total views on the post, in one round trip
+    await prisma.$transaction([
+      prisma.pageView.upsert({
+        where: { postId_date: { postId, date: today } },
+        update: { views: { increment: 1 } },
+        create: { postId, date: today, views: 1 },
+      }),
+      prisma.post.update({
+        where: { id: postId },
+        data: { views: { increment: 1 } },
+      }),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch {
