@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Bookmark, Search, User } from "lucide-react";
-import { motion } from "framer-motion";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const navItems = [
@@ -30,13 +29,7 @@ export default function MobileBottomNav() {
                 isActive ? "text-primary" : "text-muted hover:text-foreground"
               }`}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="bottom-nav-indicator"
-                  className="absolute top-0 w-8 h-1 bg-primary rounded-b-full"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
+              {isActive && <div className="absolute top-0 w-8 h-1 bg-primary rounded-b-full" />}
               <item.icon className={`h-5 w-5 ${isActive ? "fill-primary/20" : ""}`} />
               <span className="text-[10px] font-medium tracking-wide">
                 {t(item.labelEn, item.labelHi)}
