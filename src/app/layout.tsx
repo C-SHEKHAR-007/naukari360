@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ServiceWorkerRegistrar } from "@/components/providers/ServiceWorkerRegistrar";
-import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,6 +15,9 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
   variable: "--font-hindi",
   subsets: ["devanagari"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+  // 4 weights is a large download; don't let it compete with critical JS/CSS
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -99,7 +101,10 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body className="flex min-h-screen flex-col bg-background text-foreground dark:bg-[#0f1629] dark:text-[#f1f5f9]" suppressHydrationWarning>
+      <body
+        className="flex min-h-screen flex-col bg-background text-foreground dark:bg-[#0f1629] dark:text-[#f1f5f9]"
+        suppressHydrationWarning
+      >
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
