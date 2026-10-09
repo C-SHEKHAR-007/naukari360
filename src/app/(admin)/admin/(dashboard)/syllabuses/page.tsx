@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { BookOpen, Plus, Edit, Search } from "lucide-react";
+import { BookOpen, Plus, Edit } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import DeleteSyllabusButton from "@/components/admin/DeleteSyllabusButton";
 import AdminSearch from "@/components/admin/AdminSearch";
@@ -95,7 +95,11 @@ export default async function AdminSyllabusesPage({ searchParams }: Props) {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">
-                      {syl.post ? syl.post.titleEn : <span className="text-amber-500">Standalone</span>}
+                      {syl.post ? (
+                        syl.post.titleEn
+                      ) : (
+                        <span className="text-amber-500">Standalone</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-muted-foreground whitespace-nowrap">
                       {formatDate(syl.updatedAt)}

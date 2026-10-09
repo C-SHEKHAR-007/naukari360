@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import PostsTable from "@/components/admin/PostsTable";
 import AdminSearch from "@/components/admin/AdminSearch";

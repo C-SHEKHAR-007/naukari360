@@ -55,7 +55,7 @@ export default function ProfilePage() {
         const data = await res.json();
         setMessage(data.error || "Failed to update profile.");
       }
-    } catch (error) {
+    } catch {
       setMessage("An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -67,12 +67,12 @@ export default function ProfilePage() {
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4 mb-8">
           {session.user.image ? (
-            <Image 
-              src={session.user.image} 
-              alt="Avatar" 
+            <Image
+              src={session.user.image}
+              alt="Avatar"
               width={64}
               height={64}
-              className="h-16 w-16 rounded-full border border-border object-cover" 
+              className="h-16 w-16 rounded-full border border-border object-cover"
               referrerPolicy="no-referrer"
               unoptimized
             />
@@ -91,11 +91,14 @@ export default function ProfilePage() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Personalize Your Job Feed</h2>
             <p className="text-sm text-muted">
-              Select your qualification and state below. Your homepage feed will automatically prioritize jobs that match your profile!
+              Select your qualification and state below. Your homepage feed will automatically
+              prioritize jobs that match your profile!
             </p>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">Highest Qualification</label>
+              <label className="mb-2 block text-sm font-medium text-foreground">
+                Highest Qualification
+              </label>
               <select
                 value={qualification}
                 onChange={(e) => setQualification(e.target.value)}
@@ -111,7 +114,9 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">Preferred State</label>
+              <label className="mb-2 block text-sm font-medium text-foreground">
+                Preferred State
+              </label>
               <select
                 value={state}
                 onChange={(e) => setState(e.target.value)}
@@ -129,7 +134,9 @@ export default function ProfilePage() {
           </div>
 
           {message && (
-            <div className={`rounded-lg p-3 text-sm ${message.includes("success") ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"}`}>
+            <div
+              className={`rounded-lg p-3 text-sm ${message.includes("success") ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"}`}
+            >
               {message}
             </div>
           )}

@@ -2,8 +2,6 @@
 
 import { useTheme } from "next-themes";
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -20,10 +18,10 @@ type DailyView = {
 
 export default function AnalyticsChart({ data }: { data: DailyView[] }) {
   const { theme, resolvedTheme } = useTheme();
-  
+
   // Use resolvedTheme if available, fallback to theme, then "light"
   const currentTheme = resolvedTheme || theme || "light";
-  
+
   const textColor = currentTheme === "dark" ? "#94a3b8" : "#64748b";
   const gridColor = currentTheme === "dark" ? "#1e293b" : "#e2e8f0";
   const primaryColor = "#ff6b00"; // Naukari360 brand color
@@ -59,37 +57,37 @@ export default function AnalyticsChart({ data }: { data: DailyView[] }) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
-          <XAxis 
-            dataKey="displayDate" 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: textColor, fontSize: 12 }} 
+          <XAxis
+            dataKey="displayDate"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: textColor, fontSize: 12 }}
             dy={10}
             minTickGap={20}
           />
-          <YAxis 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: textColor, fontSize: 12 }} 
+          <YAxis
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: textColor, fontSize: 12 }}
             tickFormatter={(value) => (value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value)}
           />
           <Tooltip
-            contentStyle={{ 
-              backgroundColor: tooltipBg, 
+            contentStyle={{
+              backgroundColor: tooltipBg,
               borderColor: tooltipBorder,
               borderRadius: "8px",
               color: tooltipTextColor,
-              boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)"
+              boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
             }}
             itemStyle={{ color: primaryColor, fontWeight: "bold" }}
           />
-          <Area 
-            type="monotone" 
-            dataKey="views" 
-            stroke={primaryColor} 
+          <Area
+            type="monotone"
+            dataKey="views"
+            stroke={primaryColor}
             strokeWidth={3}
-            fillOpacity={1} 
-            fill="url(#colorViews)" 
+            fillOpacity={1}
+            fill="url(#colorViews)"
             activeDot={{ r: 6, fill: primaryColor, stroke: tooltipBg, strokeWidth: 2 }}
           />
         </AreaChart>

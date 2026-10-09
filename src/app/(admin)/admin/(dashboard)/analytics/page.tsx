@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { BarChart3, Eye, TrendingUp, Users, MousePointerClick } from "lucide-react";
+import { Eye, TrendingUp, Users, MousePointerClick } from "lucide-react";
 import Link from "next/link";
 import AnalyticsChart from "@/components/admin/AnalyticsChart";
 

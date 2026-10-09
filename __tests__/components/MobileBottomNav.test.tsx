@@ -11,7 +11,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("@/components/providers/LanguageProvider", () => ({
-  useLanguage: () => ({ t: (en: string, hi: string) => en }),
+  useLanguage: () => ({ t: (en: string) => en }),
 }));
 
 describe("MobileBottomNav Component", () => {
@@ -26,11 +26,11 @@ describe("MobileBottomNav Component", () => {
 
   it("applies active styles to the current path", () => {
     render(<MobileBottomNav />);
-    
+
     // Home should be active based on usePathname mock ("/")
     const homeLink = screen.getByRole("link", { name: /home/i });
     expect(homeLink).toHaveClass("text-primary");
-    
+
     const searchLink = screen.getByRole("link", { name: /search/i });
     expect(searchLink).toHaveClass("text-muted");
   });

@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { CheckCircle2, Circle, ChevronDown, ChevronUp, BookOpen, AlertCircle } from "lucide-react";
-import { toggleSyllabusTopic, syncSyllabusProgress } from "@/app/(public)/post/[slug]/syllabus-actions";
+import {
+  toggleSyllabusTopic,
+  syncSyllabusProgress,
+} from "@/app/(public)/post/[slug]/syllabus-actions";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
@@ -19,9 +22,15 @@ interface Props {
   initialCompletedTopics: string[];
 }
 
-export default function InteractiveSyllabus({ postId, syllabusId, syllabus, initialCompletedTopics }: Props) {
+export default function InteractiveSyllabus({
+  syllabusId,
+  syllabus,
+  initialCompletedTopics,
+}: Props) {
   const [completed, setCompleted] = useState<Set<string>>(new Set(initialCompletedTopics));
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([syllabus[0]?.title]));
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set([syllabus[0]?.title])
+  );
   const { data: session, status } = useSession();
 
   // Load from localStorage on mount and sync if authenticated
@@ -33,7 +42,6 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
       if (localData) {
         const parsed = JSON.parse(localData);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          
           if (!session?.user) {
             // User is offline: just load from local storage
             // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -42,10 +50,10 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
             // User is logged in: merge offline progress with server progress and sync
             const merged = new Set([...initialCompletedTopics, ...parsed]);
             setCompleted(merged);
-            
+
             // Sync to server in the background
             syncSyllabusProgress(syllabusId, Array.from(merged)).catch(console.error);
-            
+
             // Clear local storage so we don't sync again
             localStorage.removeItem(`syllabus_${syllabusId}`);
           }
@@ -65,7 +73,10 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
 
   if (!syllabus || syllabus.length === 0) return null;
 
-  const totalTopics = syllabus.reduce((acc, sec) => acc + (sec.topics || sec.modules || []).length, 0);
+  const totalTopics = syllabus.reduce(
+    (acc, sec) => acc + (sec.topics || sec.modules || []).length,
+    0
+  );
   const completedCount = completed.size;
   const progressPercent = totalTopics > 0 ? Math.round((completedCount / totalTopics) * 100) : 0;
 
@@ -95,7 +106,10 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
       await toggleSyllabusTopic(syllabusId, topic);
     } catch (error: unknown) {
       console.error("Failed to toggle syllabus topic", error);
-      const msg = error instanceof Error ? error.message : "Failed to save your progress. Please log out and log back in.";
+      const msg =
+        error instanceof Error
+          ? error.message
+          : "Failed to save your progress. Please log out and log back in.";
       alert(msg);
       // Revert optimistic update
       setCompleted((prev) => {
@@ -117,15 +131,15 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
           </div>
           <span className="text-sm font-semibold text-primary">{progressPercent}% Completed</span>
         </div>
-        
+
         {/* Progress bar */}
         <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-border/50">
-          <div 
+          <div
             className="h-full bg-primary transition-all duration-500 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
-        
+
         {!session?.user && (
           <div className="mt-3 flex items-center gap-2 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
             <AlertCircle className="h-4 w-4 shrink-0" />
@@ -138,9 +152,10 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
         {syllabus.map((section) => {
           const isExpanded = expandedSections.has(section.title);
           const activeTopics = section.topics || section.modules || [];
-          const sectionCompletedCount = activeTopics.filter(t => completed.has(t)).length;
+          const sectionCompletedCount = activeTopics.filter((t) => completed.has(t)).length;
           const sectionTotal = activeTopics.length;
-          const isSectionFullyCompleted = sectionCompletedCount === sectionTotal && sectionTotal > 0;
+          const isSectionFullyCompleted =
+            sectionCompletedCount === sectionTotal && sectionTotal > 0;
 
           return (
             <div key={section.title} className="group">
@@ -149,10 +164,14 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
                 className="flex w-full items-center justify-between px-5 py-3.5 text-left transition-colors hover:bg-muted/50"
               >
                 <div className="flex items-center gap-3">
-                  <div className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${isSectionFullyCompleted ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-primary/10 text-primary'}`}>
+                  <div
+                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${isSectionFullyCompleted ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-primary/10 text-primary"}`}
+                  >
                     {isSectionFullyCompleted ? <CheckCircle2 className="h-4 w-4" /> : sectionTotal}
                   </div>
-                  <span className={`font-semibold ${isSectionFullyCompleted ? 'text-foreground' : 'text-foreground'}`}>
+                  <span
+                    className={`font-semibold ${isSectionFullyCompleted ? "text-foreground" : "text-foreground"}`}
+                  >
                     {section.title}
                   </span>
                 </div>
@@ -160,7 +179,11 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
                   <span className="text-xs font-medium">
                     {sectionCompletedCount} / {sectionTotal}
                   </span>
-                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  {isExpanded ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
                 </div>
               </button>
 
@@ -174,15 +197,23 @@ export default function InteractiveSyllabus({ postId, syllabusId, syllabus, init
                           <button
                             onClick={() => handleToggleTopic(topic)}
                             className={`flex w-full items-start gap-3 rounded-lg border p-3 text-left transition-all ${
-                              isChecked 
-                                ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-900/30 dark:bg-emerald-900/10' 
-                                : 'border-border/60 bg-card hover:border-primary/40 hover:shadow-sm'
+                              isChecked
+                                ? "border-emerald-200 bg-emerald-50 dark:border-emerald-900/30 dark:bg-emerald-900/10"
+                                : "border-border/60 bg-card hover:border-primary/40 hover:shadow-sm"
                             }`}
                           >
-                            <div className={`mt-0.5 shrink-0 transition-colors ${isChecked ? 'text-emerald-500' : 'text-muted/40 group-hover:text-primary/60'}`}>
-                              {isChecked ? <CheckCircle2 className="h-4 w-4" /> : <Circle className="h-4 w-4" />}
+                            <div
+                              className={`mt-0.5 shrink-0 transition-colors ${isChecked ? "text-emerald-500" : "text-muted/40 group-hover:text-primary/60"}`}
+                            >
+                              {isChecked ? (
+                                <CheckCircle2 className="h-4 w-4" />
+                              ) : (
+                                <Circle className="h-4 w-4" />
+                              )}
                             </div>
-                            <span className={`text-sm leading-relaxed ${isChecked ? 'text-emerald-700 line-through opacity-80 dark:text-emerald-300' : 'text-foreground'}`}>
+                            <span
+                              className={`text-sm leading-relaxed ${isChecked ? "text-emerald-700 line-through opacity-80 dark:text-emerald-300" : "text-foreground"}`}
+                            >
                               {topic}
                             </span>
                           </button>
