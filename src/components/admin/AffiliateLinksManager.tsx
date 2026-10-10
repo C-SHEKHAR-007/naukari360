@@ -124,8 +124,7 @@ export default function AffiliateLinksManager({ links: initialLinks, categories 
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Affiliate Links</h2>
+      <div className="flex items-center justify-end">
         <button
           onClick={() => {
             setAdding(true);

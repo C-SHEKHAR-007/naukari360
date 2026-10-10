@@ -102,8 +102,7 @@ export default function InterstitialManager({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Interstitial Pages</h2>
+      <div className="flex items-center justify-end">
         <button
           onClick={() => {
             setAdding(true);

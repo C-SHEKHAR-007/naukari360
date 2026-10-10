@@ -202,7 +202,6 @@ async function main() {
   const admitCardCat = await prisma.category.findUnique({ where: { slug: "admit-card" } });
   const answerKeyCat = await prisma.category.findUnique({ where: { slug: "answer-key" } });
   const admissionCat = await prisma.category.findUnique({ where: { slug: "admission" } });
-  const syllabusCat = await prisma.category.findUnique({ where: { slug: "syllabus" } });
   const allIndiaState = await prisma.state.findUnique({ where: { slug: "all-india" } });
   const upState = await prisma.state.findUnique({ where: { slug: "uttar-pradesh" } });
   const biharState = await prisma.state.findUnique({ where: { slug: "bihar" } });
@@ -593,7 +592,7 @@ async function main() {
       applyLink: "https://ignou.ac.in",
       officialLink: "https://ignou.ac.in",
       isTrending: true,
-    }
+    },
   ];
 
   for (const post of samplePosts) {
@@ -606,7 +605,7 @@ async function main() {
   console.log("✅ 14 Sample Posts created");
 
   const sscCglPost = await prisma.post.findUnique({
-    where: { slug: "ssc-cgl-2025-notification" }
+    where: { slug: "ssc-cgl-2025-notification" },
   });
 
   await prisma.syllabus.create({
@@ -631,19 +630,19 @@ Includes questions on semantic analogy, symbolic operations, space orientation, 
 ### General Awareness
 Questions in this component will be aimed at testing the candidates' general awareness of the environment around him and its application to society.
 `,
-          content: [
-            {
-              id: "q_reasoning",
-              title: "General Intelligence & Reasoning",
-              topics: ["Analogies", "Spatial Orientation", "Problem Solving", "Visual Memory"],
-            },
-            {
-              id: "gen_awareness",
-              title: "General Awareness",
-              topics: ["History", "Culture", "Geography", "Economic Scene", "General Policy"],
-            }
-          ]
-    }
+      content: [
+        {
+          id: "q_reasoning",
+          title: "General Intelligence & Reasoning",
+          topics: ["Analogies", "Spatial Orientation", "Problem Solving", "Visual Memory"],
+        },
+        {
+          id: "gen_awareness",
+          title: "General Awareness",
+          topics: ["History", "Culture", "Geography", "Economic Scene", "General Policy"],
+        },
+      ],
+    },
   });
 
   console.log("✅ Standalone Syllabus created");
@@ -674,36 +673,35 @@ Questions in this component will be aimed at testing the candidates' general awa
       titleHi: "हमारे बारे में",
       slug: "about",
       contentEn:
-        "<h1>About Naukari360</h1><p>Naukari360 is your one-stop destination for all government job notifications, exam results, admit cards, and more. We provide accurate and timely information to help you prepare for and apply to government jobs across India.</p>",
+        "<h2>About Naukari360</h2><p>Naukari360 is your one-stop destination for all government job notifications, exam results, admit cards, and more. We provide accurate and timely information to help you prepare for and apply to government jobs across India.</p>",
       contentHi:
-        "<h1>सरकारी पल्स के बारे में</h1><p>सरकारी पल्स सभी सरकारी नौकरी अधिसूचनाओं, परीक्षा परिणामों, एडमिट कार्ड और अन्य जानकारी के लिए आपका एक-स्टॉप डेस्टिनेशन है।</p>",
+        "<h2>नौकरी360 के बारे में</h2><p>नौकरी360 सभी सरकारी नौकरी अधिसूचनाओं, परीक्षा परिणामों, एडमिट कार्ड और अन्य जानकारी के लिए आपका एक-स्टॉप डेस्टिनेशन है।</p>",
     },
     {
       titleEn: "Contact Us",
       titleHi: "संपर्क करें",
       slug: "contact",
       contentEn:
-        "<h1>Contact Us</h1><p>Have a question or want to advertise with us? Fill out the form below and we'll get back to you.</p>",
-      contentHi:
-        "<h1>संपर्क करें</h1><p>कोई प्रश्न है या विज्ञापन देना चाहते हैं? नीचे फॉर्म भरें।</p>",
+        "<p>Have a question or want to advertise with us? Fill out the form below and we'll get back to you.</p>",
+      contentHi: "<p>कोई प्रश्न है या विज्ञापन देना चाहते हैं? नीचे फॉर्म भरें।</p>",
     },
     {
       titleEn: "Privacy Policy",
       titleHi: "गोपनीयता नीति",
       slug: "privacy-policy",
       contentEn:
-        "<h1>Privacy Policy</h1><p>This privacy policy explains how Naukari360 collects, uses, and protects your personal information when you use our website.</p>",
+        "<p>This privacy policy explains how Naukari360 collects, uses, and protects your personal information when you use our website.</p>",
       contentHi:
-        "<h1>गोपनीयता नीति</h1><p>यह गोपनीयता नीति बताती है कि सरकारी पल्स आपकी व्यक्तिगत जानकारी कैसे एकत्र, उपयोग और सुरक्षित करती है।</p>",
+        "<p>यह गोपनीयता नीति बताती है कि नौकरी360 आपकी व्यक्तिगत जानकारी कैसे एकत्र, उपयोग और सुरक्षित करती है।</p>",
     },
     {
       titleEn: "Disclaimer",
       titleHi: "अस्वीकरण",
       slug: "disclaimer",
       contentEn:
-        "<h1>Disclaimer</h1><p>The information provided on Naukari360 is for general informational purposes only. We make every effort to ensure accuracy but recommend verifying details from official sources before applying.</p>",
+        "<p>The information provided on Naukari360 is for general informational purposes only. We make every effort to ensure accuracy but recommend verifying details from official sources before applying.</p>",
       contentHi:
-        "<h1>अस्वीकरण</h1><p>सरकारी पल्स पर दी गई जानकारी केवल सामान्य सूचना उद्देश्यों के लिए है। आवेदन करने से पहले आधिकारिक स्रोतों से विवरण सत्यापित करें।</p>",
+        "<p>नौकरी360 पर दी गई जानकारी केवल सामान्य सूचना उद्देश्यों के लिए है। आवेदन करने से पहले आधिकारिक स्रोतों से विवरण सत्यापित करें।</p>",
     },
   ];
 
