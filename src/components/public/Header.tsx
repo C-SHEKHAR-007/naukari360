@@ -54,7 +54,7 @@ export default function Header({ settings }: { settings: SiteSettings }) {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-0.5 lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-0.5 lg:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -101,6 +101,8 @@ export default function Header({ settings }: { settings: SiteSettings }) {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="rounded-lg p-2.5 text-muted lg:hidden"
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -109,7 +111,11 @@ export default function Header({ settings }: { settings: SiteSettings }) {
 
         {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <nav className="mobile-menu-enter border-t border-border/50 overflow-hidden lg:hidden">
+          <nav
+            id="mobile-menu"
+            aria-label="Mobile"
+            className="mobile-menu-enter border-t border-border/50 overflow-hidden lg:hidden"
+          >
             <div className="space-y-1 pb-4 pt-2">
               {navLinks.map((link) => (
                 <Link

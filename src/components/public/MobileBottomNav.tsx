@@ -18,7 +18,7 @@ export default function MobileBottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 block lg:hidden pb-[env(safe-area-inset-bottom)] bg-background/80 backdrop-blur-md border-t border-border/40 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
-      <nav className="flex justify-around items-center h-16">
+      <nav aria-label="Quick links" className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (

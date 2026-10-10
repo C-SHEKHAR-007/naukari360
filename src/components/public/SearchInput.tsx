@@ -11,11 +11,11 @@ interface SearchInputProps {
 export default function SearchInput({ defaultValue = "" }: SearchInputProps) {
   const router = useRouter();
   const [query, setQuery] = useState(defaultValue);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     if (query === defaultValue) return;
-    
+
     const delayDebounceFn = setTimeout(() => {
       const trimmed = query.trim();
       startTransition(() => {
@@ -44,6 +44,8 @@ export default function SearchInput({ defaultValue = "" }: SearchInputProps) {
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted/60" />
         <input
           type="text"
+          name="q"
+          aria-label="Search jobs"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search jobs, results, admit cards..."

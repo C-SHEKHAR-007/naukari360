@@ -3,7 +3,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogIn, LogOut, User, Bookmark, LayoutDashboard } from "lucide-react";
+import { LogOut, User, Bookmark, LayoutDashboard } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export default function UserNav() {
@@ -30,6 +30,7 @@ export default function UserNav() {
       <button
         onClick={() => signIn("google")}
         title="Sign In / Register"
+        aria-label="Sign in"
         className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition-all hover:bg-primary hover:text-white"
       >
         <User className="h-4 w-4" />
@@ -41,12 +42,14 @@ export default function UserNav() {
     <div className="relative z-50" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Account menu"
+        aria-expanded={isOpen}
         className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-primary/20 bg-muted transition-all hover:border-primary focus:outline-none shadow-sm"
       >
         {session.user.image ? (
-          <Image 
-            src={session.user.image} 
-            alt={session.user.name || "User"} 
+          <Image
+            src={session.user.image}
+            alt={session.user.name || "User"}
             width={32}
             height={32}
             className="h-full w-full object-cover"

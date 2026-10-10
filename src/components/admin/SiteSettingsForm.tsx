@@ -75,11 +75,16 @@ export default function SiteSettingsForm({ settings }: { settings: Record<string
           <div className="grid gap-4 sm:grid-cols-2">
             {group.fields.map((field) => (
               <div key={field.key} className={field.type === "textarea" ? "sm:col-span-2" : ""}>
-                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor={`setting-${field.key}`}
+                  className="mb-1.5 block text-sm font-medium text-foreground"
+                >
                   {field.label}
                 </label>
                 {field.type === "textarea" ? (
                   <textarea
+                    id={`setting-${field.key}`}
+                    name={field.key}
                     rows={3}
                     value={form[field.key] || ""}
                     onChange={(e) => setForm({ ...form, [field.key]: e.target.value })}
@@ -87,6 +92,8 @@ export default function SiteSettingsForm({ settings }: { settings: Record<string
                   />
                 ) : (
                   <input
+                    id={`setting-${field.key}`}
+                    name={field.key}
                     type="text"
                     value={form[field.key] || ""}
                     onChange={(e) => setForm({ ...form, [field.key]: e.target.value })}
