@@ -5,21 +5,22 @@
 
 @theme inline {
   /*
-   * Design tokens. Components use these (bg-card, text-muted-foreground,
-   * bg-danger-subtle …) instead of raw palette classes, so the whole look can be
-   * changed here. Values that differ between light and dark point at CSS
-   * variables defined in :root / .dark below.
+   * Design tokens — "refined saffron". Components use these (bg-card,
+   * text-muted-foreground, bg-danger-subtle …) instead of raw palette classes,
+   * so the whole look is defined here. Every value has a light and a dark
+   * variant below; pairs are contrast-checked in __tests__/unit/theme-contrast.
    */
 
   /* Brand */
-  --color-primary: #ff6b00;
-  --color-primary-light: #ff8c33;
-  --color-primary-dark: #cc5500;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #1a237e;
-  --color-secondary-light: #5c6bc0;
-  --color-secondary-dark: #0d1442;
-  --color-secondary-foreground: #ffffff;
+  --color-brand: var(--brand);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-hover);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-subtle: var(--primary-subtle);
+  --color-primary-emphasis: var(--primary-emphasis);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
 
   /* Surfaces & text */
   --color-background: var(--background);
@@ -33,22 +34,38 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
 
-  /* Status: base (fills/icons), subtle (tinted backgrounds), emphasis (text on subtle) */
-  --color-success: #22c55e;
+  /* Status & accents: base (solid fills, white text), subtle (tinted bg), emphasis (text on subtle) */
+  --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
   --color-success-emphasis: var(--success-emphasis);
-  --color-warning: #f59e0b;
+  --color-warning: var(--warning);
   --color-warning-subtle: var(--warning-subtle);
   --color-warning-emphasis: var(--warning-emphasis);
-  --color-danger: #ef4444;
+  --color-danger: var(--danger);
   --color-danger-subtle: var(--danger-subtle);
   --color-danger-emphasis: var(--danger-emphasis);
-  --color-info: #3b82f6;
+  --color-info: var(--info);
   --color-info-subtle: var(--info-subtle);
   --color-info-emphasis: var(--info-emphasis);
-  --color-destructive: #dc2626;
+  --color-highlight: var(--highlight);
+  --color-highlight-subtle: var(--highlight-subtle);
+  --color-highlight-emphasis: var(--highlight-emphasis);
+  --color-notice: var(--notice);
+  --color-notice-subtle: var(--notice-subtle);
+  --color-notice-emphasis: var(--notice-emphasis);
+  --color-destructive: var(--danger);
   --color-destructive-foreground: #ffffff;
+
+  /* Third-party brand colours (same in both themes) */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-hover: #1ebe5a;
+  --color-telegram: #0088cc;
+  --color-telegram-hover: #006fa8;
+  --color-facebook: #1877f2;
+  --color-x: #0f1419;
+  --color-linkedin: #0a66c2;
 
   /* Fonts */
   --font-sans: "Inter", "Noto Sans Devanagari", sans-serif;
@@ -59,58 +76,101 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
-  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.05);
+  --shadow-lg: 0 12px 28px -6px rgb(15 23 42 / 0.12), 0 4px 8px -4px rgb(15 23 42 / 0.06);
+  --shadow-card: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04);
 }
 
 :root {
   color-scheme: light;
+
+  --brand: #ff6b00;
+  --primary: #c2410c;
+  --primary-hover: #9a3412;
+  --primary-foreground: #ffffff;
+  --primary-subtle: #fff4eb;
+  --primary-emphasis: #9a3412;
+  --secondary: #1e2a78;
+  --secondary-foreground: #ffffff;
+
   --background: #f8fafc;
   --foreground: #0f172a;
   --surface: #f1f5f9;
   --card: #ffffff;
   --card-foreground: #0f172a;
   --accent: #f1f5f9;
-  --muted: #64748b;
+  --muted: #526075;
   --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #ff6b00;
+  --input: #cbd5e1;
+  --ring: #c2410c;
+  --overlay: rgb(15 23 42 / 0.55);
 
-  --success-subtle: #ecfdf5;
-  --success-emphasis: #047857;
+  --success: #15803d;
+  --success-subtle: #ecfdf3;
+  --success-emphasis: #166534;
+  --warning: #b45309;
   --warning-subtle: #fffbeb;
-  --warning-emphasis: #b45309;
+  --warning-emphasis: #92400e;
+  --danger: #b91c1c;
   --danger-subtle: #fef2f2;
   --danger-emphasis: #b91c1c;
+  --info: #1d4ed8;
   --info-subtle: #eff6ff;
-  --info-emphasis: #1d4ed8;
+  --info-emphasis: #1e40af;
+  --highlight: #6d28d9;
+  --highlight-subtle: #f5f3ff;
+  --highlight-emphasis: #5b21b6;
+  --notice: #be123c;
+  --notice-subtle: #fff1f2;
+  --notice-emphasis: #9f1239;
 }
 
 .dark {
   color-scheme: dark;
-  --background: #0f1629;
-  --foreground: #f1f5f9;
-  --surface: #1c2b3d;
-  --card: #182033;
-  --card-foreground: #f1f5f9;
-  --accent: #1c2b3d;
-  --muted: #94a3b8;
-  --border: #2d3b4f;
-  --input: #2d3b4f;
-  --ring: #ff8c33;
 
+  --brand: #ff7a1a;
+  --primary: #fb923c;
+  --primary-hover: #fdba74;
+  --primary-foreground: #1c0a00;
+  --primary-subtle: rgb(154 52 18 / 0.25);
+  --primary-emphasis: #fdba74;
+  --secondary: #a5b4fc;
+  --secondary-foreground: #0b1120;
+
+  --background: #0b1120;
+  --foreground: #e6eaf1;
+  --surface: #131c2e;
+  --card: #121a2b;
+  --card-foreground: #e6eaf1;
+  --accent: #1a2438;
+  --muted: #9ba7b9;
+  --border: #243049;
+  --input: #33415c;
+  --ring: #fb923c;
+  --overlay: rgb(2 6 23 / 0.7);
+
+  --success: #15803d;
   --success-subtle: rgb(6 78 59 / 0.3);
-  --success-emphasis: #34d399;
+  --success-emphasis: #4ade80;
+  --warning: #b45309;
   --warning-subtle: rgb(120 53 15 / 0.3);
   --warning-emphasis: #fbbf24;
+  --danger: #b91c1c;
   --danger-subtle: rgb(127 29 29 / 0.3);
   --danger-emphasis: #f87171;
+  --info: #1d4ed8;
   --info-subtle: rgb(30 58 138 / 0.3);
   --info-emphasis: #60a5fa;
+  --highlight: #6d28d9;
+  --highlight-subtle: rgb(76 29 149 / 0.3);
+  --highlight-emphasis: #c4b5fd;
+  --notice: #be123c;
+  --notice-subtle: rgb(136 19 55 / 0.3);
+  --notice-emphasis: #fda4af;
 }
 
 body {
@@ -129,12 +189,8 @@ html:not(.dark) body {
   background-attachment: fixed;
 }
 
-/* Smooth theme transitions */
-* {
-  transition-property: background-color, border-color, box-shadow;
-  transition-duration: 200ms;
-  transition-timing-function: ease-in-out;
-}
+/* Interactive elements ease their hover/focus states. (No global `*` transition:
+   it made every element animate, and theme switches disable transitions anyway.) */
 a,
 button,
 input,
@@ -200,7 +256,7 @@ textarea {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  background: linear-gradient(135deg, var(--color-brand), var(--color-primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -279,4 +335,16 @@ textarea {
 }
 .mobile-menu-enter {
   animation: mobile-menu-enter 0.18s ease-out;
+}
+
+/* Respect the OS "reduce motion" setting */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
