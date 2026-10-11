@@ -92,8 +92,12 @@ export default async function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="mb-12 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-info/5 px-6 py-12 text-center">
-        <div className="mx-auto max-w-2xl">
+      <section className="relative mb-12 overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/8 via-card/70 to-info/8 px-6 py-12 text-center shadow-sm backdrop-blur-sm">
+        <div
+          aria-hidden="true"
+          className="bg-dots pointer-events-none absolute inset-0 text-primary [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"
+        />
+        <div className="relative mx-auto max-w-2xl">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             <span className="text-primary">Naukari</span>
             <span className="text-secondary">360</span>

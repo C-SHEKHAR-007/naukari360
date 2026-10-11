@@ -58,6 +58,10 @@
   --color-destructive: var(--danger);
   --color-destructive-foreground: #ffffff;
 
+  /* Deep brand navy for hero/brand panels that stay dark in both themes */
+  --color-ink: #0b1437;
+  --color-ink-foreground: #f8fafc;
+
   /* Third-party brand colours (same in both themes) */
   --color-whatsapp: #25d366;
   --color-whatsapp-hover: #1ebe5a;
@@ -183,29 +187,98 @@ body {
   min-height: 100vh;
 }
 
-/* Light theme subtle gradient background */
-html:not(.dark) body {
-  background: linear-gradient(180deg, var(--background) 0%, var(--surface) 100%);
-  background-attachment: fixed;
+/*
+ * Page backdrop: soft brand glows + a faint dot grid that fades out down the page.
+ * Fixed pseudo-elements behind everything (pure CSS, no images). Areas with their
+ * own opaque background (e.g. the admin shell) simply cover it.
+ */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+body::before {
+  background:
+    radial-gradient(
+      60rem 32rem at 50% -12rem,
+      color-mix(in srgb, var(--color-brand) 12%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      40rem 28rem at 105% 10%,
+      color-mix(in srgb, var(--color-info) 7%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      36rem 26rem at -5% 35%,
+      color-mix(in srgb, var(--color-highlight) 5%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(180deg, var(--background) 0%, var(--surface) 100%);
+}
+body::after {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--foreground) 9%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, black 0%, transparent 55%);
+}
+.dark body::before {
+  background:
+    radial-gradient(
+      60rem 32rem at 50% -12rem,
+      color-mix(in srgb, var(--color-brand) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      40rem 28rem at 105% 10%,
+      color-mix(in srgb, var(--color-info) 12%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      36rem 26rem at -5% 35%,
+      color-mix(in srgb, var(--color-highlight) 10%, transparent),
+      transparent 70%
+    ),
+    var(--background);
 }
 
-/* Interactive elements ease their hover/focus states. (No global `*` transition:
-   it made every element animate, and theme switches disable transitions anyway.) */
-a,
-button,
-input,
-select,
-textarea {
-  transition-property: background-color, border-color, box-shadow, color, opacity, transform;
-  transition-duration: 150ms;
-  transition-timing-function: ease-in-out;
+/* Reusable dot-grid texture (hero, admin header band, login panel) */
+.bg-dots {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, currentColor 18%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 18px 18px;
 }
 
-/* Focus ring utility */
-:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  border-radius: 4px;
+/* Base element styles live in a layer so Tailwind utilities (focus:outline-none,
+   duration-*, transition-*) can override them; un-layered CSS would always win. */
+@layer base {
+  /* Interactive elements ease their hover/focus states. (No global `*` transition:
+     it made every element animate, and theme switches disable transitions anyway.) */
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    transition-property: background-color, border-color, box-shadow, color, opacity, transform;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+  }
+
+  /* Focus ring utility */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 /* Scrollbar Styling */
@@ -347,4 +420,21 @@ textarea {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Slow drifting glow (login brand panel) */
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(2rem, -1.5rem) scale(1.08);
+  }
+}
+.animate-float {
+  animation: float 14s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: float 20s ease-in-out infinite reverse;
 }
