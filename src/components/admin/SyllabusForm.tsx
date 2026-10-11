@@ -310,7 +310,7 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
               <button
                 type="button"
                 onClick={() => removeSection(sIdx)}
-                className="absolute top-4 right-4 p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                className="absolute top-4 right-4 p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-lg transition-colors sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
                 title="Remove Subject"
               >
                 <Trash2 className="h-5 w-5" />
@@ -340,7 +340,7 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
                   <button
                     type="button"
                     onClick={() => addTopic(sIdx)}
-                    className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg"
+                    className="flex min-h-8 items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg"
                   >
                     <Plus className="h-3 w-3" /> Add Topic
                   </button>

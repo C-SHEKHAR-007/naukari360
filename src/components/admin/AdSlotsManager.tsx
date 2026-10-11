@@ -155,11 +155,14 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-medium text-foreground">{slot.name}</h3>
-                  <span className="rounded bg-surface px-2 py-0.5 font-mono text-xs text-muted">
+            <div className="flex items-start justify-between gap-3 sm:items-center">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Phones: name gets its own line; key + device wrap underneath */}
+                  <h3 className="basis-full break-words font-medium text-foreground sm:basis-auto">
+                    {slot.name}
+                  </h3>
+                  <span className="max-w-full break-all rounded bg-surface px-2 py-0.5 font-mono text-xs text-muted">
                     {slot.slotKey}
                   </span>
                   <span className="rounded bg-surface px-2 py-0.5 text-xs text-muted">
@@ -170,10 +173,12 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                   {slot.adCode ? `${slot.adCode.length} chars of ad code` : "No ad code set"}
                 </p>
                 {slot.notes && (
-                  <p className="mt-0.5 text-xs italic text-warning-emphasis">📝 {slot.notes}</p>
+                  <p className="mt-0.5 break-words text-xs italic text-warning-emphasis">
+                    📝 {slot.notes}
+                  </p>
                 )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-1 sm:gap-2">
                 <button
                   onClick={() => toggleActive(slot.id, slot.isActive)}
                   className={slot.isActive ? "text-success" : "text-muted"}

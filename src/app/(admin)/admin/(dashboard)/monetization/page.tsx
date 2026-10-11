@@ -86,7 +86,7 @@ export default function MonetizationPage() {
                     href={step.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                    className="-ml-2 mt-0.5 inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-xs text-primary hover:bg-primary/10 hover:underline"
                   >
                     <ExternalLink className="h-3 w-3" /> Visit Site
                   </a>

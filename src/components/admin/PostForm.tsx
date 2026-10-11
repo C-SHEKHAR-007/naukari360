@@ -427,7 +427,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
             <button
               type="button"
               onClick={() => setImportantDates([...importantDates, { labelEn: "", date: "" }])}
-              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+              className="-mr-2 inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 hover:underline"
             >
               <Plus className="h-3 w-3" /> Add Date
             </button>
@@ -528,7 +528,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
           <button
             type="button"
             onClick={() => setFaqs([...faqs, { questionEn: "", answerEn: "" }])}
-            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            className="-mr-2 inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 hover:underline"
           >
             <Plus className="h-3 w-3" /> Add FAQ
           </button>

@@ -207,13 +207,15 @@ export default function AffiliateLinksManager({ links: initialLinks, categories 
         <table className="w-full text-sm">
           <thead className="bg-surface text-left">
             <tr>
-              <th className="px-4 py-3 font-medium">Name</th>
-              <th className="px-4 py-3 font-medium">Slug</th>
-              <th className="px-4 py-3 font-medium">Category</th>
-              <th className="px-4 py-3 font-medium text-center">Clicks</th>
-              <th className="px-4 py-3 font-medium text-center">Active</th>
-              <th className="px-4 py-3 font-medium text-center">In Posts</th>
-              <th className="px-4 py-3 font-medium text-right">Actions</th>
+              <th className="px-3 py-3 font-medium md:px-4">Name</th>
+              <th className="hidden px-4 py-3 font-medium md:table-cell">Slug</th>
+              <th className="hidden px-4 py-3 font-medium md:table-cell">Category</th>
+              <th className="px-2 py-3 font-medium text-center md:px-4">Clicks</th>
+              <th className="px-2 py-3 font-medium text-center md:px-4">Active</th>
+              <th className="hidden px-4 py-3 font-medium text-center md:table-cell">In Posts</th>
+              <th className="px-3 py-3 font-medium text-right md:px-4">
+                <span className="sr-only md:not-sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -283,8 +285,23 @@ export default function AffiliateLinksManager({ links: initialLinks, categories 
                   </td>
                 ) : (
                   <>
-                    <td className="px-4 py-3 font-medium text-foreground">{link.name}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-3 md:px-4">
+                      <span className="break-words font-medium text-foreground">{link.name}</span>
+                      {/* Below md: slug (and "In posts") shown here instead of columns */}
+                      <span className="mt-0.5 flex flex-wrap items-center gap-x-1 break-all text-xs text-muted md:hidden">
+                        /go/{link.slug}
+                        <a
+                          href={link.originalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-0.5"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                        {link.displayInPosts && <span className="break-normal">· In posts</span>}
+                      </span>
+                    </td>
+                    <td className="hidden px-4 py-3 md:table-cell">
                       <span className="flex items-center gap-1 text-muted">
                         /go/{link.slug}
                         <a href={link.originalUrl} target="_blank" rel="noopener noreferrer">
@@ -292,9 +309,11 @@ export default function AffiliateLinksManager({ links: initialLinks, categories 
                         </a>
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-muted">{link.category?.name || "—"}</td>
-                    <td className="px-4 py-3 text-center font-mono">{link.clicks}</td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="hidden px-4 py-3 text-muted md:table-cell">
+                      {link.category?.name || "—"}
+                    </td>
+                    <td className="px-2 py-3 text-center font-mono md:px-4">{link.clicks}</td>
+                    <td className="px-2 py-3 text-center md:px-4">
                       <button onClick={() => toggleActive(link.id, link.isActive)}>
                         {link.isActive ? (
                           <ToggleRight className="h-5 w-5 text-success" />
@@ -303,19 +322,21 @@ export default function AffiliateLinksManager({ links: initialLinks, categories 
                         )}
                       </button>
                     </td>
-                    <td className="px-4 py-3 text-center">{link.displayInPosts ? "✓" : "—"}</td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="hidden px-4 py-3 text-center md:table-cell">
+                      {link.displayInPosts ? "✓" : "—"}
+                    </td>
+                    <td className="px-2 py-3 text-right md:px-4">
+                      <div className="flex items-center justify-end gap-1 md:gap-2">
                         <button
                           onClick={() => startEdit(link)}
-                          className="rounded p-1 hover:bg-surface"
+                          className="rounded p-1.5 hover:bg-surface md:p-1"
                         >
                           <Edit className="h-4 w-4 text-muted" />
                         </button>
                         {isSuperAdmin && (
                           <button
                             onClick={() => handleDelete(link.id)}
-                            className="rounded p-1 hover:bg-danger-subtle"
+                            className="rounded p-1.5 hover:bg-danger-subtle md:p-1"
                           >
                             <Trash2 className="h-4 w-4 text-danger-emphasis" />
                           </button>
@@ -328,7 +349,7 @@ export default function AffiliateLinksManager({ links: initialLinks, categories 
             ))}
             {links.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted">
+                <td colSpan={7} className="whitespace-normal px-4 py-8 text-center text-muted">
                   No affiliate links yet. Click &ldquo;Add Link&rdquo; to create one.
                 </td>
               </tr>

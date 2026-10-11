@@ -134,7 +134,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <StatCard
           label="Total Posts"
           value={stats.totalPosts}
@@ -176,7 +176,7 @@ export default async function AdminDashboardPage() {
             <h2 className="font-semibold text-foreground">Recent Posts</h2>
             <Link
               href="/admin/posts"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+              className="-mr-2 inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-sm font-medium text-primary hover:bg-primary/10 hover:underline"
             >
               View all <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -294,15 +294,15 @@ function StatCard({
   return (
     <Link
       href={href}
-      className="group rounded-xl border border-border bg-card p-5 shadow-card transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+      className="group min-w-0 rounded-xl border border-border bg-card p-3.5 shadow-card transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5"
     >
-      <div className="flex items-start justify-between">
-        <p className="text-sm font-medium text-muted-foreground">{label}</p>
-        <IconTile tone={tone} ring>
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-xs font-medium text-muted-foreground sm:text-sm">{label}</p>
+        <IconTile tone={tone} ring className="shrink-0">
           <Icon className="h-4 w-4" />
         </IconTile>
       </div>
-      <p className="mt-3 text-3xl font-bold tracking-tight text-foreground tabular-nums">
+      <p className="mt-2 text-2xl font-bold tracking-tight text-foreground tabular-nums sm:mt-3 sm:text-3xl">
         {nf.format(value)}
       </p>
       <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
