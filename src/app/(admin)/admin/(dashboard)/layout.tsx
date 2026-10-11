@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import ClientAdminSidebar from "@/components/admin/ClientAdminSidebar";
+import AdminShell from "@/components/admin/AdminShell";
 import { AdminRoleProvider } from "@/components/admin/AdminRoleProvider";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -13,13 +13,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       : "editor";
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <ClientAdminSidebar user={session.user} />
-      <main className="flex-1 overflow-y-auto">
-        <AdminRoleProvider role={role as "super_admin" | "editor"}>
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
-        </AdminRoleProvider>
-      </main>
-    </div>
+    <AdminRoleProvider role={role}>
+      <AdminShell user={{ name: session.user?.name, email: session.user?.email }} role={role}>
+        {children}
+      </AdminShell>
+    </AdminRoleProvider>
   );
 }

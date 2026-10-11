@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { adminNavLink, loginAsAdmin } from "./helpers/admin";
 
 test.describe("Admin Login", () => {
   test("redirects to login when accessing admin without auth", async ({ page }) => {
@@ -34,36 +35,31 @@ test.describe("Admin Login", () => {
     expect(page.url()).not.toContain("/admin/login");
   });
 
-  test("admin dashboard shows sidebar navigation", async ({ page }) => {
-    // Login first
-    await page.goto("/admin/login");
-    await page.fill('input[type="email"], input[name="email"]', "admin@naukari360.in");
-    await page.fill('input[type="password"]', "admin123");
-    await page.click('button[type="submit"]');
-    await page.waitForURL(/\/admin(?!\/login)/);
-
-    // Check sidebar navigation links
-    await expect(page.locator('aside a[href="/admin/posts"]')).toBeVisible();
-    await expect(page.locator('aside a[href="/admin/categories"]')).toBeVisible();
-    await expect(page.locator('aside a[href="/admin/site-settings"]')).toBeVisible();
+  test("admin dashboard shows grouped sidebar navigation", async ({ page }) => {
+    await loginAsAdmin(page);
+    for (const href of ["/admin/posts", "/admin/categories", "/admin/site-settings"]) {
+      await expect(await adminNavLink(page, href)).toBeVisible();
+    }
+    await expect(
+      page.locator("aside:visible").getByText("Monetization", { exact: true }).first()
+    ).toBeVisible();
   });
 
   test("logout works", async ({ page }) => {
-    // Login
-    await page.goto("/admin/login");
-    await page.fill('input[type="email"], input[name="email"]', "admin@naukari360.in");
-    await page.fill('input[type="password"]', "admin123");
-    await page.click('button[type="submit"]');
-    await page.waitForURL(/\/admin(?!\/login)/);
+    await loginAsAdmin(page);
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await page.getByRole("menuitem", { name: "Sign out" }).click();
+    await page.waitForURL(/\/admin\/login/);
+    expect(page.url()).toContain("/admin/login");
+  });
 
-    // Find and click logout
-    const logoutBtn = page.locator(
-      'button:has-text("Logout"), a:has-text("Logout"), button:has-text("Sign Out")'
-    );
-    if (await logoutBtn.isVisible()) {
-      await logoutBtn.click();
-      await page.waitForURL(/\/admin\/login/);
-      expect(page.url()).toContain("/admin/login");
-    }
+  // Caps Lock state can't be toggled in headless browsers; that warning is unit-tested
+  test("toggles password visibility", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.locator('input[type="password"]').fill("secret");
+    await page.getByRole("button", { name: "Show password" }).click();
+    await expect(page.locator("#password")).toHaveAttribute("type", "text");
+    await page.getByRole("button", { name: "Hide password" }).click();
+    await expect(page.locator("#password")).toHaveAttribute("type", "password");
   });
 });

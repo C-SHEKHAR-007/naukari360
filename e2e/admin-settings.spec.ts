@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { adminNavLink } from "./helpers/admin";
 
 test.describe("Admin Settings", () => {
   test.beforeEach(async ({ page }) => {
@@ -11,7 +12,7 @@ test.describe("Admin Settings", () => {
   });
 
   test("can navigate to site settings", async ({ page }) => {
-    await page.locator('aside a[href="/admin/site-settings"]').click();
+    await (await adminNavLink(page, "/admin/site-settings")).click();
     await page.waitForURL(/\/admin\/site-settings/);
     expect(page.url()).toContain("/admin/site-settings");
   });
