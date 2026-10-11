@@ -62,6 +62,10 @@
   --color-ink: #0b1437;
   --color-ink-foreground: #f8fafc;
 
+  /* Royal blue used by the admin login (white text: 6.5:1) */
+  --color-royal: #2b46f0;
+  --color-royal-hover: #2238d6;
+
   /* Third-party brand colours (same in both themes) */
   --color-whatsapp: #25d366;
   --color-whatsapp-hover: #1ebe5a;

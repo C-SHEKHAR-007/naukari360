@@ -4,7 +4,6 @@ import { render, screen, fireEvent, cleanup, waitFor } from "@testing-library/re
 const router = vi.hoisted(() => ({ push: vi.fn(), refresh: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => router }));
 vi.mock("next-auth/react", () => ({ signIn: vi.fn() }));
-vi.mock("@/components/public/ThemeToggle", () => ({ default: () => <button>Theme</button> }));
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
@@ -65,8 +64,13 @@ describe("Admin login page", () => {
     expect(screen.queryByText("Caps Lock is on")).not.toBeInTheDocument();
   });
 
-  it("links back to the public site", () => {
+  it("shows the brand panel copy and the restricted-area notice", () => {
     render(<AdminLoginPage />);
-    expect(screen.getByRole("link", { name: /back to site/i })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("heading", { level: 1, name: "Admin Login" })).toBeInTheDocument();
+    expect(screen.getByText("Admin Access Only")).toBeInTheDocument();
+    expect(screen.getByText("Create & Manage Content")).toBeInTheDocument();
+    expect(
+      screen.getByText("This area is restricted to authorized admins only.")
+    ).toBeInTheDocument();
   });
 });
