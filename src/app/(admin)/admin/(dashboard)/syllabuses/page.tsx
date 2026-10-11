@@ -50,7 +50,7 @@ export default async function AdminSyllabusesPage({ searchParams }: Props) {
         </div>
         <Link
           href="/admin/syllabuses/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark"
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark"
         >
           <Plus className="h-4 w-4" />
           Add Syllabus
@@ -98,7 +98,7 @@ export default async function AdminSyllabusesPage({ searchParams }: Props) {
                       {syl.post ? (
                         syl.post.titleEn
                       ) : (
-                        <span className="text-amber-500">Standalone</span>
+                        <span className="text-warning-emphasis">Standalone</span>
                       )}
                     </td>
                     <td className="px-6 py-4 text-muted-foreground whitespace-nowrap">

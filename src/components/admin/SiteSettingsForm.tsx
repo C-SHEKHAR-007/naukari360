@@ -110,12 +110,12 @@ export default function SiteSettingsForm({ settings }: { settings: Record<string
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark disabled:opacity-50"
         >
           <Save className="h-4 w-4" />
           {saving ? "Saving..." : "Save Settings"}
         </button>
-        {saved && <span className="text-sm text-emerald-600">Settings saved!</span>}
+        {saved && <span className="text-sm text-success-emphasis">Settings saved!</span>}
       </div>
     </form>
   );

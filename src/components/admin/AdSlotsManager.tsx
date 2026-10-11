@@ -140,7 +140,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                 <button
                   onClick={() => handleUpdate(slot.id)}
                   disabled={saving}
-                  className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-dark"
+                  className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary-dark"
                 >
                   <Check className="mr-1 inline h-3 w-3" />
                   Save
@@ -170,15 +170,13 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                   {slot.adCode ? `${slot.adCode.length} chars of ad code` : "No ad code set"}
                 </p>
                 {slot.notes && (
-                  <p className="mt-0.5 text-xs italic text-amber-600 dark:text-amber-400">
-                    📝 {slot.notes}
-                  </p>
+                  <p className="mt-0.5 text-xs italic text-warning-emphasis">📝 {slot.notes}</p>
                 )}
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => toggleActive(slot.id, slot.isActive)}
-                  className={slot.isActive ? "text-emerald-500" : "text-muted"}
+                  className={slot.isActive ? "text-success" : "text-muted"}
                 >
                   {slot.isActive ? (
                     <ToggleRight className="h-6 w-6" />
@@ -195,7 +193,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                 {isSuperAdmin && (
                   <button
                     onClick={() => handleDelete(slot.id)}
-                    className="rounded p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="rounded p-1.5 text-danger-emphasis hover:bg-danger-subtle"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -251,7 +249,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
             <button
               onClick={handleAdd}
               disabled={saving}
-              className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-dark"
+              className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary-dark"
             >
               <Check className="mr-1 inline h-3 w-3" />
               Create

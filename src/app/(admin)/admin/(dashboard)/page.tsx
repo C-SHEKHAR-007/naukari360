@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FileText, Eye, Users, Mail, Plus, FolderOpen, Megaphone, Settings } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { Badge, type Tone } from "@/components/ui";
 
 async function getStats() {
   const [totalPosts, published, drafts, subscribers, contactUnread] = await Promise.all([
@@ -33,7 +34,7 @@ export default async function AdminDashboardPage() {
         </div>
         <Link
           href="/admin/posts/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark"
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark"
         >
           <Plus className="h-4 w-4" /> New Post
         </Link>
@@ -52,21 +53,21 @@ export default async function AdminDashboardPage() {
           value={stats.published}
           icon={Eye}
           href="/admin/posts"
-          color="text-emerald-600"
+          color="text-success-emphasis"
         />
         <StatCard
           label="Subscribers"
           value={stats.subscribers}
           icon={Users}
           href="/admin/subscribers"
-          color="text-blue-600"
+          color="text-info-emphasis"
         />
         <StatCard
           label="Unread Messages"
           value={stats.contactUnread}
           icon={Mail}
           href="/admin/contact-inbox"
-          color="text-amber-600"
+          color="text-warning-emphasis"
         />
       </div>
 
@@ -174,16 +175,10 @@ function StatCard({
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    published: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400",
-    draft: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
-    archived: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+  const tones: Record<string, Tone> = {
+    published: "success",
+    draft: "warning",
+    archived: "neutral",
   };
-  return (
-    <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${styles[status] || styles.draft}`}
-    >
-      {status}
-    </span>
-  );
+  return <Badge tone={tones[status] ?? tones.draft}>{status}</Badge>;
 }

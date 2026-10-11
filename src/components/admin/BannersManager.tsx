@@ -112,7 +112,7 @@ export default function BannersManager({ initialBanners }: { initialBanners: Ban
             resetForm();
             setShowForm(true);
           }}
-          className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+          className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
           <Plus className="h-4 w-4" /> Add Banner
         </button>
@@ -142,8 +142,8 @@ export default function BannersManager({ initialBanners }: { initialBanners: Ban
                   }}
                 />
                 {!banner.isActive && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                    <span className="rounded bg-yellow-500 px-2 py-1 text-xs font-bold text-white">
+                  <div className="absolute inset-0 flex items-center justify-center bg-overlay">
+                    <span className="rounded bg-warning px-2 py-1 text-xs font-bold text-white">
                       HIDDEN
                     </span>
                   </div>
@@ -174,7 +174,7 @@ export default function BannersManager({ initialBanners }: { initialBanners: Ban
                   {isSuperAdmin && (
                     <button
                       onClick={() => handleDelete(banner.id)}
-                      className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
+                      className="rounded p-1.5 text-muted hover:bg-danger-subtle hover:text-danger-emphasis"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -241,7 +241,7 @@ export default function BannersManager({ initialBanners }: { initialBanners: Ban
             <button
               onClick={handleSave}
               disabled={saving || !title.trim() || !imageUrl.trim()}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 disabled:opacity-50"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
               {saving ? "Saving..." : editing ? "Update" : "Add"}
             </button>

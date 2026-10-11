@@ -108,7 +108,7 @@ export default function InterstitialManager({
             setAdding(true);
             resetForm();
           }}
-          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
         >
           <Plus className="h-4 w-4" /> Add Config
         </button>
@@ -158,7 +158,7 @@ export default function InterstitialManager({
             <button
               onClick={handleAdd}
               disabled={saving}
-              className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700 disabled:opacity-50"
+              className="flex items-center gap-1 rounded-lg bg-success px-3 py-1.5 text-sm text-white hover:bg-success/90 disabled:opacity-50"
             >
               <Check className="h-4 w-4" /> Save
             </button>
@@ -213,7 +213,7 @@ export default function InterstitialManager({
                   <button
                     onClick={() => handleUpdate(config.id)}
                     disabled={saving}
-                    className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700 disabled:opacity-50"
+                    className="flex items-center gap-1 rounded-lg bg-success px-3 py-1.5 text-sm text-white hover:bg-success/90 disabled:opacity-50"
                   >
                     <Check className="h-4 w-4" /> Save
                   </button>
@@ -237,7 +237,7 @@ export default function InterstitialManager({
                 <div className="flex items-center gap-2">
                   <button onClick={() => toggleActive(config.id, config.isActive)}>
                     {config.isActive ? (
-                      <ToggleRight className="h-5 w-5 text-green-500" />
+                      <ToggleRight className="h-5 w-5 text-success" />
                     ) : (
                       <ToggleLeft className="h-5 w-5 text-muted" />
                     )}
@@ -251,9 +251,9 @@ export default function InterstitialManager({
                   {isSuperAdmin && (
                     <button
                       onClick={() => handleDelete(config.id)}
-                      className="rounded p-1 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      className="rounded p-1 hover:bg-danger-subtle"
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash2 className="h-4 w-4 text-danger-emphasis" />
                     </button>
                   )}
                 </div>

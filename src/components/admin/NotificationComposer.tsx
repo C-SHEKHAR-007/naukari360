@@ -103,15 +103,17 @@ export default function NotificationComposer({
             <button
               type="submit"
               disabled={sending}
-              className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
               {sending ? "Sending..." : "Send Notification"}
             </button>
             {status === "success" && (
-              <span className="text-sm text-green-600">Notification sent!</span>
+              <span className="text-sm text-success-emphasis">Notification sent!</span>
             )}
-            {status === "error" && <span className="text-sm text-red-500">Failed to send</span>}
+            {status === "error" && (
+              <span className="text-sm text-danger-emphasis">Failed to send</span>
+            )}
           </div>
         </form>
       </div>
@@ -147,9 +149,9 @@ export default function NotificationComposer({
               {isSuperAdmin && (
                 <button
                   onClick={() => handleDelete(n.id)}
-                  className="rounded p-1.5 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="rounded p-1.5 hover:bg-danger-subtle"
                 >
-                  <Trash2 className="h-4 w-4 text-red-500" />
+                  <Trash2 className="h-4 w-4 text-danger-emphasis" />
                 </button>
               )}
             </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MoreHorizontal, Edit, Trash2, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
+import { Badge, type Tone } from "@/components/ui";
 
 interface Post {
   id: string;
@@ -58,10 +59,10 @@ function PostRow({ post }: { post: Post }) {
   const isSuperAdmin = useIsSuperAdmin();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const statusStyles: Record<string, string> = {
-    published: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400",
-    draft: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
-    archived: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+  const statusTones: Record<string, Tone> = {
+    published: "success",
+    draft: "warning",
+    archived: "neutral",
   };
 
   return (
@@ -82,11 +83,7 @@ function PostRow({ post }: { post: Post }) {
         )}
       </td>
       <td className="hidden px-4 py-3 md:table-cell">
-        <span
-          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[post.status] || statusStyles.draft}`}
-        >
-          {post.status}
-        </span>
+        <Badge tone={statusTones[post.status] ?? statusTones.draft}>{post.status}</Badge>
       </td>
       <td className="hidden px-4 py-3 text-muted lg:table-cell">{post.views}</td>
       <td className="px-4 py-3 text-muted">
@@ -130,7 +127,7 @@ function PostRow({ post }: { post: Post }) {
                       await fetch(`/api/admin/posts/${post.id}`, { method: "DELETE" });
                       window.location.reload();
                     }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-danger-emphasis hover:bg-danger-subtle"
                   >
                     <Trash2 className="h-3.5 w-3.5" /> Delete
                   </button>

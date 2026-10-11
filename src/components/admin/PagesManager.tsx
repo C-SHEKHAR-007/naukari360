@@ -112,7 +112,7 @@ export default function PagesManager({ initialPages }: { initialPages: PageItem[
             resetForm();
             setShowForm(true);
           }}
-          className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+          className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
           <Plus className="h-4 w-4" /> Add Page
         </button>
@@ -158,7 +158,7 @@ export default function PagesManager({ initialPages }: { initialPages: PageItem[
                     {isSuperAdmin && (
                       <button
                         onClick={() => handleDelete(page.id)}
-                        className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 ml-1"
+                        className="rounded p-1.5 text-muted hover:bg-danger-subtle hover:text-danger-emphasis ml-1"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -258,7 +258,7 @@ export default function PagesManager({ initialPages }: { initialPages: PageItem[
             <button
               onClick={handleSave}
               disabled={saving || !titleEn.trim() || !slug.trim()}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 disabled:opacity-50"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
               {saving ? "Saving..." : editing ? "Update" : "Add"}
             </button>

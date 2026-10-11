@@ -116,7 +116,7 @@ export default function MonetizationPage() {
               <span className="text-sm text-foreground">
                 {item.text}
                 {item.critical && (
-                  <span className="ml-2 inline-flex items-center gap-0.5 text-xs text-red-500">
+                  <span className="ml-2 inline-flex items-center gap-0.5 text-xs text-danger-emphasis">
                     <AlertTriangle className="h-3 w-3" /> Required
                   </span>
                 )}
@@ -125,10 +125,10 @@ export default function MonetizationPage() {
           ))}
         </div>
 
-        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-900/20">
+        <div className="mt-6 rounded-lg border border-warning-emphasis/25 bg-warning-subtle p-4">
           <div className="flex items-start gap-2">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-            <div className="text-sm text-amber-800 dark:text-amber-300">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-warning-emphasis" />
+            <div className="text-sm text-warning-emphasis">
               <p className="font-medium">After AdSense Approval:</p>
               <ul className="mt-1 list-disc pl-4 text-xs">
                 <li>Add Publisher ID to Site Settings → SEO → AdSense Publisher ID</li>
