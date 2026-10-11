@@ -29,7 +29,7 @@ export default function Header({ settings }: { settings: SiteSettings }) {
     <header className="glass-header sticky top-0 z-50 shadow-sm border-b border-border/40 backdrop-blur-md bg-background/80 transition-colors">
       {/* Announcement Bar */}
       {announcementActive && announcementText && (
-        <div className="bg-primary text-white text-center text-xs sm:text-sm py-1.5 px-4 font-medium">
+        <div className="bg-primary text-primary-foreground text-center text-xs sm:text-sm py-1.5 px-4 font-medium">
           {announcementText}
         </div>
       )}
@@ -43,7 +43,7 @@ export default function Header({ settings }: { settings: SiteSettings }) {
               <span className="text-2xl font-extrabold tracking-tight text-primary group-hover:text-primary-dark">
                 {siteName.replace(/360$/i, "") || "Naukari"}
               </span>
-              <span className="text-2xl font-extrabold tracking-tight text-secondary dark:text-blue-400">
+              <span className="text-2xl font-extrabold tracking-tight text-secondary">
                 {siteName.match(/360$/i) ? "360" : ""}
               </span>
             </div>

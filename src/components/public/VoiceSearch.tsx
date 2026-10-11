@@ -89,7 +89,7 @@ export default function VoiceSearch({ onResult }: VoiceSearchProps) {
       onClick={listening ? stopListening : startListening}
       className={`rounded-lg p-2 transition-colors ${
         listening
-          ? "bg-red-100 text-red-600 dark:bg-red-900/30"
+          ? "bg-danger-subtle text-danger-emphasis"
           : "text-muted-foreground hover:text-foreground hover:bg-muted"
       }`}
       aria-label={listening ? "Stop voice search" : "Start voice search"}

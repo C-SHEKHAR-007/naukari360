@@ -141,7 +141,7 @@ export default function InteractiveSyllabus({
         </div>
 
         {!session?.user && (
-          <div className="mt-3 flex items-center gap-2 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
+          <div className="mt-3 flex items-center gap-2 rounded-md bg-warning-subtle px-3 py-2 text-xs text-warning-emphasis">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>Login to save your study progress across devices.</span>
           </div>
@@ -165,7 +165,7 @@ export default function InteractiveSyllabus({
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${isSectionFullyCompleted ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-primary/10 text-primary"}`}
+                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${isSectionFullyCompleted ? "bg-success-subtle text-success-emphasis" : "bg-primary/10 text-primary"}`}
                   >
                     {isSectionFullyCompleted ? <CheckCircle2 className="h-4 w-4" /> : sectionTotal}
                   </div>
@@ -198,12 +198,12 @@ export default function InteractiveSyllabus({
                             onClick={() => handleToggleTopic(topic)}
                             className={`flex w-full items-start gap-3 rounded-lg border p-3 text-left transition-all ${
                               isChecked
-                                ? "border-emerald-200 bg-emerald-50 dark:border-emerald-900/30 dark:bg-emerald-900/10"
+                                ? "border-success-emphasis/25 bg-success-subtle"
                                 : "border-border/60 bg-card hover:border-primary/40 hover:shadow-sm"
                             }`}
                           >
                             <div
-                              className={`mt-0.5 shrink-0 transition-colors ${isChecked ? "text-emerald-500" : "text-muted/40 group-hover:text-primary/60"}`}
+                              className={`mt-0.5 shrink-0 transition-colors ${isChecked ? "text-success-emphasis" : "text-muted/40 group-hover:text-primary/60"}`}
                             >
                               {isChecked ? (
                                 <CheckCircle2 className="h-4 w-4" />
@@ -212,7 +212,7 @@ export default function InteractiveSyllabus({
                               )}
                             </div>
                             <span
-                              className={`text-sm leading-relaxed ${isChecked ? "text-emerald-700 line-through opacity-80 dark:text-emerald-300" : "text-foreground"}`}
+                              className={`text-sm leading-relaxed ${isChecked ? "text-success-emphasis line-through opacity-80" : "text-foreground"}`}
                             >
                               {topic}
                             </span>

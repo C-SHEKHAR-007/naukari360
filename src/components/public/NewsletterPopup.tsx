@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, Bell } from "lucide-react";
+import { Alert } from "@/components/ui";
 
 export default function NewsletterPopup() {
   const [show, setShow] = useState(false);
@@ -52,7 +53,7 @@ export default function NewsletterPopup() {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay px-4 backdrop-blur-sm">
       <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
         <button
           onClick={handleDismiss}
@@ -73,9 +74,9 @@ export default function NewsletterPopup() {
         </div>
 
         {status === "success" ? (
-          <div className="rounded-lg bg-green-50 p-4 text-center dark:bg-green-900/20">
-            <p className="font-medium text-green-700 dark:text-green-400">{message}</p>
-          </div>
+          <Alert tone="success" className="p-4 text-center text-base">
+            <p className="font-medium">{message}</p>
+          </Alert>
         ) : (
           <>
             <p className="mb-4 text-sm text-muted">
@@ -91,11 +92,11 @@ export default function NewsletterPopup() {
                 required
                 className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
-              {status === "error" && <p className="text-xs text-red-500">{message}</p>}
+              {status === "error" && <p className="text-xs text-danger-emphasis">{message}</p>}
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
               >
                 {status === "loading" ? "Subscribing..." : "Subscribe Free"}
               </button>

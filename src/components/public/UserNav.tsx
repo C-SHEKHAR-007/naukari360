@@ -31,7 +31,7 @@ export default function UserNav() {
         onClick={() => signIn("google")}
         title="Sign In / Register"
         aria-label="Sign in"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition-all hover:bg-primary hover:text-white"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition-all hover:bg-primary hover:text-primary-foreground"
       >
         <User className="h-4 w-4" />
       </button>
@@ -96,7 +96,7 @@ export default function UserNav() {
           <div className="border-t border-border py-1">
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+              className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-danger-emphasis hover:bg-danger-subtle"
             >
               <LogOut className="h-4 w-4" />
               Sign Out

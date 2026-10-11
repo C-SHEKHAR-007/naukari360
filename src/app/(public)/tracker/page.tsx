@@ -62,7 +62,7 @@ export default async function TrackerPage() {
         </div>
         <Link
           href="/"
-          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
+          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
         >
           Browse Jobs to Track
         </Link>

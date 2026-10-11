@@ -10,7 +10,7 @@ export default function FloatingTelegramCTA({ telegramUrl }: { telegramUrl?: str
 
   return (
     <div className="fixed bottom-20 right-6 z-30 flex items-center gap-2 print:hidden">
-      <div className="animate-bounce rounded-full bg-[#0088cc] p-3 shadow-lg">
+      <div className="animate-bounce rounded-full bg-telegram p-3 shadow-lg">
         <a
           href={telegramUrl}
           target="_blank"

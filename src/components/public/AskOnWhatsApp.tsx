@@ -22,7 +22,7 @@ export default function AskOnWhatsApp({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
+      className="inline-flex items-center gap-1.5 rounded-lg bg-whatsapp px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
       aria-label="Ask on WhatsApp"
     >
       <MessageCircle className="h-3.5 w-3.5" />

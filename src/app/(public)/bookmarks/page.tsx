@@ -66,7 +66,7 @@ export default async function BookmarksPage() {
           <p className="mt-1 text-sm text-muted">When you bookmark a job, it will appear here.</p>
           <Link
             href="/"
-            className="mt-6 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
+            className="mt-6 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
           >
             Browse Jobs
           </Link>

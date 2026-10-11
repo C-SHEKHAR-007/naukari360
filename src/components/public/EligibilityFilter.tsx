@@ -63,7 +63,7 @@ export default function EligibilityFilter({
 
       <button
         onClick={handleFilter}
-        className="rounded-lg bg-primary px-7 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-dark hover:shadow-md active:scale-[0.98]"
+        className="rounded-lg bg-primary px-7 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary-dark hover:shadow-md active:scale-[0.98]"
       >
         Find Jobs
       </button>

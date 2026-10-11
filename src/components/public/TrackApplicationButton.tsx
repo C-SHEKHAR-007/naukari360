@@ -56,7 +56,7 @@ export default function TrackApplicationButton({ postId }: { postId: string }) {
       disabled={loading}
       className={`flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-semibold shadow-sm transition-all active:scale-[0.97] ${
         isCurrentlyTracked
-          ? "border-emerald-500/40 bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400"
+          ? "border-success-emphasis/40 bg-success-subtle text-success-emphasis"
           : "border-border bg-card text-foreground hover:border-primary/40 hover:text-primary"
       }`}
     >

@@ -12,7 +12,7 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
   const [origin, setOrigin] = useState("");
-  
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
@@ -44,14 +44,14 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
   }
 
   return (
-    <div className="my-8 flex flex-wrap items-center gap-3 rounded-xl border border-border/60 bg-surface/50 px-5 py-4 dark:bg-card">
+    <div className="my-8 flex flex-wrap items-center gap-3 rounded-xl border border-border/60 bg-surface/50 px-5 py-4">
       <Share2 className="h-4 w-4 text-muted/70" />
       <span className="text-sm font-semibold text-foreground/70">Share:</span>
-      
+
       {canShare && (
         <button
           onClick={handleNativeShare}
-          className="flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-[0.97]"
+          className="flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-[0.97]"
         >
           Share Post
         </button>
@@ -63,7 +63,7 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
             href={`https://api.whatsapp.com/send?text=${text}%20${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-green-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-green-600 hover:shadow-md active:scale-[0.97]"
+            className="rounded-lg bg-whatsapp px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-whatsapp-hover hover:shadow-md active:scale-[0.97]"
           >
             WhatsApp
           </a>
@@ -71,7 +71,7 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
             href={`https://t.me/share/url?url=${encodedUrl}&text=${text}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-[#0088cc] px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-[#006fa8] hover:shadow-md active:scale-[0.97]"
+            className="rounded-lg bg-telegram px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-telegram-hover hover:shadow-md active:scale-[0.97]"
           >
             Telegram
           </a>
@@ -79,18 +79,22 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
             href={`https://twitter.com/intent/tweet?text=${text}&url=${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-gray-900 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-black hover:shadow-md dark:bg-gray-700 dark:hover:bg-gray-600 active:scale-[0.97]"
+            className="rounded-lg bg-x px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-90 hover:shadow-md active:scale-[0.97]"
           >
             X
           </a>
         </>
       )}
-      
+
       <button
         onClick={copyLink}
         className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground shadow-sm transition-all hover:border-primary/40 hover:text-primary active:scale-[0.97]"
       >
-        {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+        {copied ? (
+          <Check className="h-3 w-3 text-success-emphasis" />
+        ) : (
+          <Copy className="h-3 w-3" />
+        )}
         {copied ? "Copied!" : "Copy"}
       </button>
     </div>

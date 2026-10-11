@@ -21,10 +21,34 @@ type TrackedJob = {
 };
 
 const COLUMNS = [
-  { id: "interested", label: "Interested", icon: Clock, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
-  { id: "applied", label: "Applied", icon: CheckCircle2, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/20" },
-  { id: "admit_card", label: "Admit Card Out", icon: FileText, color: "text-violet-500", bg: "bg-violet-50 dark:bg-violet-900/20" },
-  { id: "result", label: "Result Declared", icon: Calendar, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-900/20" },
+  {
+    id: "interested",
+    label: "Interested",
+    icon: Clock,
+    color: "text-info-emphasis",
+    bg: "bg-info-subtle",
+  },
+  {
+    id: "applied",
+    label: "Applied",
+    icon: CheckCircle2,
+    color: "text-warning-emphasis",
+    bg: "bg-warning-subtle",
+  },
+  {
+    id: "admit_card",
+    label: "Admit Card Out",
+    icon: FileText,
+    color: "text-highlight-emphasis",
+    bg: "bg-highlight-subtle",
+  },
+  {
+    id: "result",
+    label: "Result Declared",
+    icon: Calendar,
+    color: "text-success-emphasis",
+    bg: "bg-success-subtle",
+  },
 ];
 
 export default function TrackerBoard({ initialData }: { initialData: TrackedJob[] }) {
@@ -71,7 +95,10 @@ export default function TrackerBoard({ initialData }: { initialData: TrackedJob[
         const columnJobs = data.filter((item) => item.status === col.id);
 
         return (
-          <div key={col.id} className="flex flex-col gap-3 rounded-xl border border-border bg-card/50 p-4">
+          <div
+            key={col.id}
+            className="flex flex-col gap-3 rounded-xl border border-border bg-card/50 p-4"
+          >
             <div className="flex items-center justify-between border-b border-border/50 pb-2">
               <h2 className="flex items-center gap-2 font-semibold text-foreground">
                 <col.icon className={`h-4 w-4 ${col.color}`} />
@@ -101,7 +128,7 @@ export default function TrackerBoard({ initialData }: { initialData: TrackedJob[
                     >
                       {item.post.titleEn}
                     </Link>
-                    
+
                     {item.post.organization && (
                       <p className="text-xs text-muted truncate">{item.post.organization}</p>
                     )}
@@ -137,7 +164,7 @@ export default function TrackerBoard({ initialData }: { initialData: TrackedJob[
 
                       <button
                         onClick={() => handleRemove(item.id)}
-                        className="rounded p-1 text-muted-foreground hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
+                        className="rounded p-1 text-muted-foreground hover:bg-danger-subtle hover:text-danger-emphasis"
                         title="Remove from tracker"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

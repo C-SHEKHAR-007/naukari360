@@ -184,7 +184,7 @@ export default async function PostDetailPage({ params }: Props) {
 
             {/* Quick Info Table */}
             <section className="my-8 overflow-hidden rounded-xl border border-border/60 shadow-[var(--shadow-card)]">
-              <div className="bg-primary/8 px-5 py-3 dark:bg-primary/15">
+              <div className="bg-primary-subtle px-5 py-3">
                 <h2 className="text-sm font-bold text-primary">Quick Information</h2>
               </div>
               <div className="divide-y divide-border/60">
@@ -397,7 +397,7 @@ export default async function PostDetailPage({ params }: Props) {
               <div className="my-8 text-center lg:hidden">
                 <Link
                   href={`/go/${post.slug}?type=apply`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-10 py-4 text-lg font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98]"
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-10 py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98]"
                 >
                   Apply Now →
                 </Link>
@@ -417,7 +417,7 @@ export default async function PostDetailPage({ params }: Props) {
               {post.applyLink && (
                 <Link
                   href={`/go/${post.slug}?type=apply`}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98]"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98]"
                 >
                   Apply Now →
                 </Link>
@@ -430,7 +430,7 @@ export default async function PostDetailPage({ params }: Props) {
                 post.answerKeyLink ||
                 post.syllabusLink) && (
                 <section className="overflow-hidden rounded-xl border border-border/60 bg-card shadow-[var(--shadow-card)]">
-                  <div className="bg-primary/8 px-4 py-3 dark:bg-primary/15">
+                  <div className="bg-primary-subtle px-4 py-3">
                     <h2 className="text-sm font-bold text-primary">Important Links</h2>
                   </div>
                   <div className="divide-y divide-border/60">
@@ -467,7 +467,7 @@ export default async function PostDetailPage({ params }: Props) {
 
             {/* Interactive Syllabus Link */}
             {post.syllabus && (
-              <section className="overflow-hidden rounded-xl border border-border/60 bg-primary/5 p-5 dark:bg-primary/10 shadow-[var(--shadow-card)]">
+              <section className="overflow-hidden rounded-xl border border-border/60 bg-primary-subtle p-5 shadow-[var(--shadow-card)]">
                 <div className="flex flex-col items-center text-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <BookOpen className="h-6 w-6" />
@@ -535,7 +535,7 @@ function InfoRow({
         {label}
       </span>
       <span
-        className={`text-sm font-semibold ${highlight ? "text-red-600 dark:text-red-400" : "text-foreground"}`}
+        className={`text-sm font-semibold ${highlight ? "text-danger-emphasis" : "text-foreground"}`}
       >
         {value}
       </span>
@@ -562,7 +562,7 @@ function LinkRow({
       <Comp
         href={href}
         {...extraProps}
-        className={`flex items-center gap-1 text-sm font-medium ${highlight ? "text-primary" : "text-blue-600 dark:text-blue-400"} hover:underline`}
+        className={`flex items-center gap-1 text-sm font-medium ${highlight ? "text-primary" : "text-info-emphasis"} hover:underline`}
       >
         {highlight ? "Apply Now" : "Click Here"} <ExternalLink className="h-3 w-3" />
       </Comp>

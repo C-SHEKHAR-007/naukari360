@@ -42,7 +42,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
               <span className="text-xl font-extrabold tracking-tight text-primary">
                 {siteName.replace(/360$/i, "") || "Naukari"}
               </span>
-              <span className="text-xl font-extrabold tracking-tight text-secondary dark:text-blue-400">
+              <span className="text-xl font-extrabold tracking-tight text-secondary">
                 {siteName.match(/360$/i) ? "360" : ""}
               </span>
             </Link>
@@ -56,7 +56,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
                 href={telegramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#0088cc] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#006fa8] hover:shadow-md active:scale-[0.98]"
+                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-telegram px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-telegram-hover hover:shadow-md active:scale-[0.98]"
               >
                 <Send className="h-4 w-4" />
                 Join Telegram Channel
@@ -126,7 +126,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-8 sm:flex-row">
           <p className="text-sm text-muted">{footerText}</p>
           <p className="flex items-center gap-1 text-xs text-muted">
-            Made with <Heart className="h-3 w-3 text-red-500" /> for Job Seekers
+            Made with <Heart className="h-3 w-3 text-danger" /> for Job Seekers
           </p>
         </div>
       </div>
