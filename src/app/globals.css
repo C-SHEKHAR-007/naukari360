@@ -2,6 +2,12 @@
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* Short viewports (e.g. 1366×768 laptops): tighten tall layouts so they fit */
+@custom-variant short {
+  @media (max-height: 860px) {
+    @slot;
+  }
+}
 
 @theme inline {
   /*
@@ -275,6 +281,16 @@ body::after {
     transition-property: background-color, border-color, box-shadow, color, opacity, transform;
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
+  }
+
+  /* Browser autofill: keep our field colours instead of the yellow/blue highlight */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--foreground);
+    -webkit-box-shadow: 0 0 0 1000px var(--card) inset;
+    caret-color: var(--foreground);
+    transition: background-color 9999s ease-out 0s;
   }
 
   /* Focus ring utility */

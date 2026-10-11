@@ -30,26 +30,58 @@ const FEATURES = [
   },
 ];
 
-function Logo() {
+function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-[18px]">
+    <div className={cn("flex items-center", compact ? "gap-3" : "gap-[18px]")}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/images/admin-login-logo.png" alt="" className="h-[62px] w-[62px] rounded-xl" />
-      <span className="text-[30px] font-bold tracking-tight text-ink-foreground">
+      <img
+        src="/images/admin-login-logo.png"
+        alt=""
+        className={cn("rounded-xl", compact ? "h-11 w-11" : "h-[62px] w-[62px]")}
+      />
+      <span
+        className={cn(
+          "font-bold tracking-tight text-ink-foreground",
+          compact ? "text-[22px]" : "text-[30px]"
+        )}
+      >
         Naukari<span className="text-brand">360</span>
       </span>
     </div>
   );
 }
 
+// Below lg the artwork panel becomes a hero banner that the login card overlaps
+function MobileHero() {
+  return (
+    <section className="relative overflow-hidden bg-ink bg-[url('/images/admin-login-panel.jpg')] bg-cover bg-[position:78%_center] shrink-0 px-5 pb-14 pt-5 text-ink-foreground sm:px-10 sm:pb-16 sm:pt-6 lg:hidden">
+      {/* Keep text readable over the photo while the desk/city stays visible on the right */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/75 to-ink/20"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/80 to-transparent"
+      />
+      <div className="relative mx-auto flex max-w-[546px] items-center justify-between gap-3">
+        <Logo compact />
+        <p className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-royal/45 px-3 text-xs font-semibold">
+          <ShieldCheck className="h-3.5 w-3.5 fill-ink-foreground text-royal" /> Admin Access Only
+        </p>
+      </div>
+    </section>
+  );
+}
+
 // Left half: night-office artwork (public/images/admin-login-panel.jpg) with copy on top
 function BrandPanel() {
   return (
-    <aside className="relative hidden overflow-hidden bg-ink bg-[url('/images/admin-login-panel.jpg')] bg-cover bg-center text-ink-foreground lg:flex lg:flex-col lg:justify-between lg:px-[82px] lg:pb-[66px] lg:pt-[80px]">
+    <aside className="relative hidden overflow-hidden bg-ink bg-[url('/images/admin-login-panel.jpg')] bg-cover bg-center text-ink-foreground lg:flex lg:flex-col lg:justify-between lg:px-[82px] lg:pb-[66px] lg:pt-[80px] lg:short:pb-10 lg:short:pt-12">
       <div className="relative">
         <Logo />
 
-        <div className="mt-[58px] max-w-[470px]">
+        <div className="mt-[58px] max-w-[470px] short:mt-8">
           <p className="inline-flex h-[34px] items-center gap-2 rounded-full bg-royal/45 px-3.5 text-sm font-semibold">
             <ShieldCheck className="h-4 w-4 fill-ink-foreground text-royal" /> Admin Access Only
           </p>
@@ -58,12 +90,12 @@ function BrandPanel() {
             <br />
             Build a <span className="text-brand">Better Platform.</span>
           </h2>
-          <p className="mt-4 max-w-[412px] text-base leading-7 text-ink-foreground/85">
+          <p className="mt-4 max-w-[412px] text-base leading-7 short:hidden text-ink-foreground/85">
             This is the admin panel for Naukari360. Here you can manage posts, ads, notifications
             and everything that keeps the platform running smoothly.
           </p>
 
-          <ul className="mt-10 space-y-[25px]">
+          <ul className="mt-10 space-y-[25px] short:mt-6 short:space-y-4">
             {FEATURES.map(({ icon: Icon, title, text }) => (
               <li key={title} className="flex items-center gap-[17px]">
                 <span className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-xl bg-royal/20 ring-1 ring-ink-foreground/10 backdrop-blur-sm">
@@ -88,7 +120,7 @@ function BrandPanel() {
 }
 
 const inputClass =
-  "h-[55px] w-full rounded-[10px] border border-border bg-surface/50 pl-14 pr-4 text-[15px] text-foreground shadow-none placeholder:text-muted-foreground/70 focus:border-royal focus:outline-none focus:ring-4 focus:ring-royal/10";
+  "h-[55px] w-full rounded-[10px] border border-border bg-surface/50 pl-14 pr-4 text-base lg:text-[15px] text-foreground shadow-none placeholder:text-muted-foreground/70 focus:border-royal focus:outline-none focus:ring-4 focus:ring-royal/10";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -123,25 +155,22 @@ export default function AdminLoginPage() {
   const trackCapsLock = (e: React.KeyboardEvent) => setCapsLock(e.getModifierState("CapsLock"));
 
   return (
-    <div className="grid min-h-screen bg-background lg:grid-cols-[846fr_740fr]">
+    <div className="grid min-h-dvh bg-background lg:min-h-screen lg:grid-cols-[846fr_740fr]">
       <BrandPanel />
 
-      <main className="relative flex items-center justify-center overflow-hidden px-5 py-10 sm:px-10 lg:pr-[84px]">
+      <main className="relative flex flex-col overflow-hidden lg:items-center lg:justify-center lg:py-10 lg:short:py-4 lg:pl-10 lg:pr-[84px]">
+        <MobileHero />
+
         {/* Soft decorative circles */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block">
           <div className="absolute -right-[160px] -top-[200px] h-[370px] w-[370px] rounded-full bg-royal/[0.05]" />
           <div className="absolute -bottom-[115px] -right-[115px] h-[240px] w-[240px] rounded-full bg-royal/[0.05]" />
         </div>
 
-        <div className="relative w-full max-w-[546px]">
-          {/* Mobile brand (the artwork panel is hidden below lg) */}
-          <div className="mb-6 flex justify-center rounded-2xl bg-ink px-6 py-5 lg:hidden">
-            <Logo />
-          </div>
-
-          <div className="rounded-3xl bg-card px-6 pb-[44px] pt-[38px] shadow-[0_18px_50px_-20px_rgb(30_50_120/0.18)] ring-1 ring-border/40 sm:px-8">
+        <div className="relative z-10 mx-auto -mt-10 w-full max-w-[546px] px-4 pb-6 sm:-mt-12 sm:px-6 lg:mt-0 lg:px-0 lg:pb-0">
+          <div className="rounded-3xl bg-card px-5 pb-9 pt-8 shadow-[0_18px_50px_-20px_rgb(30_50_120/0.25)] ring-1 ring-border/40 sm:px-8 lg:pb-[44px] lg:pt-[38px] lg:short:pb-7 lg:short:pt-7 lg:shadow-[0_18px_50px_-20px_rgb(30_50_120/0.18)]">
             <div className="text-center">
-              <span className="mx-auto flex h-[76px] w-[76px] items-center justify-center rounded-full bg-royal/[0.07]">
+              <span className="mx-auto flex h-[76px] w-[76px] items-center justify-center rounded-full bg-royal/[0.07] lg:short:hidden">
                 <span className="relative flex h-9 w-8 items-center justify-center">
                   <Shield
                     className="absolute inset-0 h-9 w-8 fill-royal text-royal"
@@ -150,7 +179,7 @@ export default function AdminLoginPage() {
                   <Lock className="relative mt-0.5 h-3.5 w-3.5 text-white" strokeWidth={2.75} />
                 </span>
               </span>
-              <h1 className="mt-[22px] text-[32px] font-bold leading-tight tracking-tight text-foreground">
+              <h1 className="mt-[22px] text-[32px] font-bold leading-tight tracking-tight text-foreground lg:short:mt-0">
                 Admin Login
               </h1>
               <p className="mx-auto mt-3 max-w-[300px] text-[15px] leading-[25px] text-muted-foreground">
@@ -242,13 +271,14 @@ export default function AdminLoginPage() {
               </button>
             </form>
 
-            <div className="mt-10 flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="mt-10 flex items-center gap-4 text-sm text-muted-foreground lg:short:mt-6">
               <span className="h-px flex-1 bg-border" />
               Authorized Personnel Only
               <span className="h-px flex-1 bg-border" />
             </div>
-            <p className="mt-[42px] flex items-center justify-center gap-2.5 text-xs text-muted-foreground">
-              <ShieldCheck className="h-5 w-5" /> This area is restricted to authorized admins only.
+            <p className="mt-8 flex items-center justify-center gap-2.5 text-center text-xs text-muted-foreground lg:mt-[42px] lg:short:mt-5">
+              <ShieldCheck className="h-5 w-5 shrink-0" /> This area is restricted to authorized
+              admins only.
             </p>
           </div>
         </div>

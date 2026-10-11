@@ -67,7 +67,8 @@ describe("Admin login page", () => {
   it("shows the brand panel copy and the restricted-area notice", () => {
     render(<AdminLoginPage />);
     expect(screen.getByRole("heading", { level: 1, name: "Admin Login" })).toBeInTheDocument();
-    expect(screen.getByText("Admin Access Only")).toBeInTheDocument();
+    // Shown in the desktop brand panel and in the mobile hero (CSS picks one)
+    expect(screen.getAllByText("Admin Access Only")).toHaveLength(2);
     expect(screen.getByText("Create & Manage Content")).toBeInTheDocument();
     expect(
       screen.getByText("This area is restricted to authorized admins only.")
