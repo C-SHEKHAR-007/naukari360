@@ -9,6 +9,7 @@ import {
   MapPin,
   Megaphone,
   Settings,
+  Palette,
   Mail,
   Users,
   LogOut,
@@ -48,6 +49,7 @@ const navItems = [
   { href: "/admin/subscribers", label: "Subscribers", icon: Users },
   { href: "/admin/contact-inbox", label: "Contact Inbox", icon: Mail },
   { href: "/admin/site-settings", label: "Settings", icon: Settings },
+  { href: "/admin/styleguide", label: "Style Guide", icon: Palette },
 ];
 
 interface AdminSidebarProps {
@@ -69,7 +71,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         {!collapsed && (
           <Link href="/admin" className="flex items-baseline">
             <span className="text-lg font-bold text-primary">Naukari</span>
-            <span className="text-lg font-bold text-secondary dark:text-blue-400">360</span>
+            <span className="text-lg font-bold text-secondary">360</span>
             <span className="ml-1.5 text-[10px] font-semibold text-muted">Admin</span>
           </Link>
         )}
@@ -116,7 +118,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         <ThemeToggle className="mb-1 w-full flex justify-center" />
         <button
           onClick={() => signOut({ callbackUrl: "/admin/login" })}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-danger-emphasis transition-colors hover:bg-danger-subtle"
           title={collapsed ? "Logout" : undefined}
         >
           <LogOut className="h-5 w-5 shrink-0" />
