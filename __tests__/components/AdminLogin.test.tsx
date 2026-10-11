@@ -64,6 +64,12 @@ describe("Admin login page", () => {
     expect(screen.queryByText("Caps Lock is on")).not.toBeInTheDocument();
   });
 
+  it("has icon-only View site and theme buttons with accessible names", () => {
+    render(<AdminLoginPage />);
+    expect(screen.getByRole("link", { name: "View site" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("button", { name: /theme/i })).toBeInTheDocument();
+  });
+
   it("shows the brand panel copy and the restricted-area notice", () => {
     render(<AdminLoginPage />);
     expect(screen.getByRole("heading", { level: 1, name: "Admin Login" })).toBeInTheDocument();

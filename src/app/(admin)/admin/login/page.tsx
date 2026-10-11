@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
@@ -8,6 +9,7 @@ import {
   Bell,
   Eye,
   EyeOff,
+  Globe,
   Loader2,
   Lock,
   Mail,
@@ -16,7 +18,8 @@ import {
   ShieldCheck,
   SquarePen,
 } from "lucide-react";
-import { Alert } from "@/components/ui";
+import { Alert, HoverHint } from "@/components/ui";
+import ThemeToggle from "@/components/public/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const FEATURES = [
@@ -66,11 +69,29 @@ function MobileHero() {
       />
       <div className="relative mx-auto flex max-w-[546px] items-center justify-between gap-3">
         <Logo compact />
-        <p className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-royal/45 px-3 text-xs font-semibold">
+        <p className="hidden h-7 shrink-0 items-center gap-1.5 rounded-full bg-royal/45 px-3 text-xs font-semibold md:inline-flex">
           <ShieldCheck className="h-3.5 w-3.5 fill-ink-foreground text-royal" /> Admin Access Only
         </p>
       </div>
     </section>
+  );
+}
+
+// Icon-only buttons; text appears on hover/focus. Light on the dark mobile banner,
+// card-coloured on the light desktop side.
+const cornerButton =
+  "flex h-10 w-10 items-center justify-center rounded-full p-0 ring-1 backdrop-blur-sm transition-colors bg-ink-foreground/10 text-ink-foreground ring-ink-foreground/20 hover:bg-ink-foreground/20 hover:text-ink-foreground lg:bg-card lg:text-muted-foreground lg:shadow-sm lg:ring-border lg:hover:bg-accent lg:hover:text-foreground";
+
+function CornerActions() {
+  return (
+    <div className="absolute right-4 top-[22px] z-20 flex items-center gap-2 sm:right-6 lg:top-6">
+      <HoverHint label="View site">
+        <Link href="/" aria-label="View site" className={cornerButton}>
+          <Globe className="h-[18px] w-[18px]" />
+        </Link>
+      </HoverHint>
+      <ThemeToggle hint className={cornerButton} />
+    </div>
   );
 }
 
@@ -160,6 +181,7 @@ export default function AdminLoginPage() {
 
       <main className="relative flex flex-col overflow-hidden lg:items-center lg:justify-center lg:py-10 lg:short:py-4 lg:pl-10 lg:pr-[84px]">
         <MobileHero />
+        <CornerActions />
 
         {/* Soft decorative circles */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block">

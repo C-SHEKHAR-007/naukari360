@@ -2,6 +2,8 @@
 
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme, type ThemePreference } from "@/components/providers/ThemeProvider";
+import { HoverHint } from "@/components/ui/HoverHint";
+import { cn } from "@/lib/utils";
 
 const ORDER: ThemePreference[] = ["system", "light", "dark"];
 const LABELS: Record<ThemePreference, string> = {
@@ -12,7 +14,14 @@ const LABELS: Record<ThemePreference, string> = {
 const ICONS = { system: Monitor, light: Sun, dark: Moon };
 
 // Cycles device → light → dark. The icon shows the current choice.
-export default function ThemeToggle({ className = "" }: { className?: string }) {
+// `hint` shows a styled text label on hover instead of the native title tooltip.
+export default function ThemeToggle({
+  className = "",
+  hint = false,
+}: {
+  className?: string;
+  hint?: boolean;
+}) {
   const { preference, setTheme, mounted } = useTheme();
   const next = ORDER[(ORDER.indexOf(preference) + 1) % ORDER.length];
   const Icon = ICONS[preference];
@@ -23,13 +32,16 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
     ? `${LABELS[preference]}. Switch to ${LABELS[next].toLowerCase()}`
     : "Change theme";
 
-  return (
+  const button = (
     <button
       type="button"
       onClick={() => setTheme(next)}
-      className={`rounded-lg p-2.5 text-muted transition-all hover:bg-surface hover:text-primary ${className}`}
+      className={cn(
+        "rounded-lg p-2.5 text-muted transition-all hover:bg-surface hover:text-primary",
+        className
+      )}
       aria-label={label}
-      title={label}
+      title={hint ? undefined : label}
     >
       {mounted ? (
         <Icon className="h-[18px] w-[18px]" />
@@ -37,5 +49,11 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
         <span className="inline-block h-[18px] w-[18px]" />
       )}
     </button>
+  );
+
+  return hint ? (
+    <HoverHint label={mounted ? LABELS[preference] : "Theme"}>{button}</HoverHint>
+  ) : (
+    button
   );
 }
