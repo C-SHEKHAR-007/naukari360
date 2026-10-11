@@ -86,7 +86,7 @@ export default function ApplicationTracker() {
               >
                 {job.title}
               </Link>
-              <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary capitalize">
+              <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary capitalize">
                 {job.status}
               </span>
               <button

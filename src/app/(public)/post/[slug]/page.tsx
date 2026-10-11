@@ -135,10 +135,13 @@ export default async function PostDetailPage({ params }: Props) {
           <article className="lg:col-span-8">
             {/* Breadcrumbs */}
             <nav
-              className="mb-6 flex items-center gap-1.5 text-xs text-muted"
+              className="mb-6 flex min-w-0 items-center gap-1.5 text-xs text-muted"
               aria-label="Breadcrumb"
             >
-              <Link href="/" className="transition-colors hover:text-primary">
+              <Link
+                href="/"
+                className="shrink-0 whitespace-nowrap transition-colors hover:text-primary"
+              >
                 Home
               </Link>
               {post.category && (
@@ -146,14 +149,16 @@ export default async function PostDetailPage({ params }: Props) {
                   <span className="text-border">/</span>
                   <Link
                     href={`/${post.category.slug}`}
-                    className="transition-colors hover:text-primary"
+                    className="shrink-0 whitespace-nowrap transition-colors hover:text-primary"
                   >
                     {post.category.name}
                   </Link>
                 </>
               )}
               <span className="text-border">/</span>
-              <span className="font-medium text-foreground/80 line-clamp-1">{post.titleEn}</span>
+              <span className="min-w-0 truncate font-medium text-foreground/80">
+                {post.titleEn}
+              </span>
             </nav>
 
             {/* Title */}

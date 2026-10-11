@@ -50,19 +50,19 @@ export default function InlineNewsletterForm() {
       <p className="mt-1 text-xs text-muted-foreground">
         Never miss a government job notification. Subscribe now!
       </p>
-      <form onSubmit={handleSubmit} className="mt-3 flex gap-2">
+      <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2 sm:flex-row">
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
           required
-          className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-2.5 text-base sm:py-1.5 sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+          className="rounded-md bg-primary px-4 py-2.5 text-sm font-medium sm:py-1.5 text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
         >
           {status === "loading" ? "..." : "Subscribe"}
         </button>

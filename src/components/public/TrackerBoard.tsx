@@ -133,7 +133,7 @@ export default function TrackerBoard({ initialData }: { initialData: TrackedJob[
                       <p className="text-xs text-muted truncate">{item.post.organization}</p>
                     )}
 
-                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                       {item.post.state && (
                         <span className="flex items-center gap-0.5">
                           <MapPin className="h-3 w-3" /> {item.post.state.name}
@@ -151,7 +151,7 @@ export default function TrackerBoard({ initialData }: { initialData: TrackedJob[
                         <select
                           value={item.status}
                           onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                          className={`w-full appearance-none rounded border border-border bg-surface px-2 py-1 text-[11px] font-medium text-foreground outline-none transition-colors hover:border-primary focus:border-primary focus:ring-1 focus:ring-primary`}
+                          className={`w-full appearance-none rounded border border-border bg-surface px-2 py-1.5 text-xs font-medium text-foreground outline-none transition-colors hover:border-primary focus:border-primary focus:ring-1 focus:ring-primary`}
                         >
                           {COLUMNS.map((c) => (
                             <option key={c.id} value={c.id}>

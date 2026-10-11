@@ -29,15 +29,18 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
   const siteName = settings.site_name || "Naukari360";
   const tagline = settings.tagline || "सरकारी नौकरी अपडेट 360° — Your 360° Government Jobs Portal";
   const telegramUrl = settings.telegram_url || "";
-  const footerText =
-    settings.footer_text || `© ${new Date().getFullYear()} ${siteName}. All rights reserved.`;
+  const year = new Date().getFullYear();
+  // Keep the copyright year current even if the saved text has an old one ("© 2025 …")
+  const footerText = (
+    settings.footer_text || `© ${year} ${siteName}. All rights reserved.`
+  ).replace(/©\s*\d{4}/, `© ${year}`);
 
   return (
     <footer className="border-t border-border bg-card">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 lg:py-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-10 lg:grid-cols-4">
           {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="inline-flex items-baseline">
               <span className="text-xl font-extrabold tracking-tight text-primary">
                 {siteName.replace(/360$/i, "") || "Naukari"}
@@ -69,12 +72,12 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
             <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-foreground/70">
               Categories
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-1">
               {footerLinks.categories.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted transition-colors hover:text-primary hover:underline underline-offset-2"
+                    className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-primary hover:underline underline-offset-2"
                   >
                     {link.label}
                   </Link>
@@ -88,12 +91,12 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
             <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-foreground/70">
               By Qualification
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-1">
               {footerLinks.qualification.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted transition-colors hover:text-primary hover:underline underline-offset-2"
+                    className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-primary hover:underline underline-offset-2"
                   >
                     {link.label}
                   </Link>
@@ -107,12 +110,12 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
             <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-foreground/70">
               Quick Links
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-1">
               {footerLinks.pages.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted transition-colors hover:text-primary hover:underline underline-offset-2"
+                    className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-primary hover:underline underline-offset-2"
                   >
                     {link.label}
                   </Link>

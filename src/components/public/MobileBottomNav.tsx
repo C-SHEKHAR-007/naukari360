@@ -31,7 +31,7 @@ export default function MobileBottomNav() {
             >
               {isActive && <div className="absolute top-0 w-8 h-1 bg-primary rounded-b-full" />}
               <item.icon className={`h-5 w-5 ${isActive ? "fill-primary/20" : ""}`} />
-              <span className="text-[10px] font-medium tracking-wide">
+              <span className="text-[11px] font-medium tracking-wide">
                 {t(item.labelEn, item.labelHi)}
               </span>
             </Link>

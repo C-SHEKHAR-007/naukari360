@@ -132,7 +132,7 @@ export default function PostCard({ post }: { post: PostCardData }) {
               <PostBadge key={b} type={b} />
             ))}
             {post.category && (
-              <span className="rounded-md bg-primary-subtle px-2 py-0.5 text-[10px] font-semibold text-primary ring-1 ring-primary/20">
+              <span className="rounded-md bg-primary-subtle px-2 py-0.5 text-[11px] font-semibold text-primary ring-1 ring-primary/20">
                 {post.category.name}
               </span>
             )}
@@ -181,7 +181,7 @@ export default function PostCard({ post }: { post: PostCardData }) {
         {/* Footer */}
         {(post.lastDate || post.readingTime) && (
           <div className="mt-auto flex items-center justify-between border-t border-border pt-2.5">
-            <div className="flex items-center gap-3 text-[11px] text-muted">
+            <div className="flex items-center gap-3 text-xs text-muted">
               {post.lastDate && (
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />

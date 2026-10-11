@@ -9,24 +9,23 @@ export default function FloatingTelegramCTA({ telegramUrl }: { telegramUrl?: str
   if (!telegramUrl || dismissed) return null;
 
   return (
-    <div className="fixed bottom-20 right-6 z-30 flex items-center gap-2 print:hidden">
-      <div className="animate-bounce rounded-full bg-telegram p-3 shadow-lg">
-        <a
-          href={telegramUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-white"
-          aria-label="Join our Telegram channel"
-        >
-          <MessageCircle className="h-5 w-5" />
-        </a>
-      </div>
+    <div className="fixed bottom-20 right-4 z-30 sm:right-6 lg:bottom-6 flex items-center gap-2 print:hidden">
+      {/* The whole bubble is the link (48px), not just the icon */}
+      <a
+        href={telegramUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex h-12 w-12 animate-bounce items-center justify-center rounded-full bg-telegram text-white shadow-lg"
+        aria-label="Join our Telegram channel"
+      >
+        <MessageCircle className="h-5 w-5" />
+      </a>
       <button
         onClick={() => setDismissed(true)}
-        className="rounded-full bg-background p-1 shadow-sm border border-border text-muted-foreground hover:text-foreground"
+        className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-sm hover:text-foreground"
         aria-label="Dismiss Telegram button"
       >
-        <X className="h-3 w-3" />
+        <X className="h-3.5 w-3.5" />
       </button>
     </div>
   );
