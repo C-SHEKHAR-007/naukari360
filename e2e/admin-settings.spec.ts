@@ -18,39 +18,42 @@ test.describe("Admin Settings", () => {
 
   test("site settings form loads with values", async ({ page }) => {
     await page.goto("/admin/site-settings");
-    // Should have input fields with site settings
-    const siteNameInput = page.locator(
-      'input[name="site_name"], input[placeholder*="site name" i]'
-    );
+    const siteNameInput = page.getByLabel("Site Name", { exact: true });
     await expect(siteNameInput).toBeVisible();
-    const value = await siteNameInput.inputValue();
-    expect(value).toBeTruthy();
+    expect(await siteNameInput.inputValue()).toBeTruthy();
   });
 
-  test("can update site name and save", async ({ page }) => {
+  test("can update site name and it shows on the public site", async ({ page }, testInfo) => {
+    // Changes a global setting; running it in parallel projects would race
+    test.skip(testInfo.project.name !== "chromium", "Runs once, on desktop");
+
+    const siteNameInput = page.getByLabel("Site Name", { exact: true });
+    const save = async () => {
+      await page.getByRole("button", { name: "Save Settings" }).click();
+      await expect(page.getByText("Settings saved!")).toBeVisible();
+    };
+
     await page.goto("/admin/site-settings");
-    const siteNameInput = page.locator(
-      'input[name="site_name"], input[placeholder*="site name" i]'
-    );
-    await siteNameInput.clear();
-    await siteNameInput.fill("Naukari360 Test");
+    const original = await siteNameInput.inputValue();
+    await siteNameInput.fill("Naukari360 E2E");
+    await save();
 
-    const saveBtn = page.locator('button[type="submit"], button:has-text("Save")');
-    await saveBtn.click();
-
-    // Wait for success indication
-    await page.waitForTimeout(1000);
-
-    // Verify on public site
-    await page.goto("/");
-    const headerText = await page.locator("header").textContent();
-    expect(headerText).toContain("Naukari");
-
-    // Restore original
-    await page.goto("/admin/site-settings");
-    const nameInput = page.locator('input[name="site_name"], input[placeholder*="site name" i]');
-    await nameInput.clear();
-    await nameInput.fill("Naukari360");
-    await page.locator('button[type="submit"], button:has-text("Save")').click();
+    try {
+      // Admin saves invalidate the cached public pages. Reload until the new name shows,
+      // since other tests' requests can have a page regeneration already in flight.
+      await expect
+        .poll(
+          async () => {
+            await page.goto("/");
+            return page.locator("header").textContent();
+          },
+          { timeout: 15000 }
+        )
+        .toContain("Naukari360 E2E");
+    } finally {
+      await page.goto("/admin/site-settings");
+      await siteNameInput.fill(original);
+      await save();
+    }
   });
 });
