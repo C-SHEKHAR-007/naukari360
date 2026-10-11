@@ -4,26 +4,51 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  /* Brand Colors */
+  /*
+   * Design tokens. Components use these (bg-card, text-muted-foreground,
+   * bg-danger-subtle …) instead of raw palette classes, so the whole look can be
+   * changed here. Values that differ between light and dark point at CSS
+   * variables defined in :root / .dark below.
+   */
+
+  /* Brand */
   --color-primary: #ff6b00;
   --color-primary-light: #ff8c33;
   --color-primary-dark: #cc5500;
+  --color-primary-foreground: #ffffff;
   --color-secondary: #1a237e;
   --color-secondary-light: #5c6bc0;
   --color-secondary-dark: #0d1442;
-  --color-accent: #f5f5f5;
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
+  --color-secondary-foreground: #ffffff;
 
-  /* Semantic colors — reference CSS vars so dark mode works */
+  /* Surfaces & text */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
+  --color-surface: var(--surface);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Status: base (fills/icons), subtle (tinted backgrounds), emphasis (text on subtle) */
+  --color-success: #22c55e;
+  --color-success-subtle: var(--success-subtle);
+  --color-success-emphasis: var(--success-emphasis);
+  --color-warning: #f59e0b;
+  --color-warning-subtle: var(--warning-subtle);
+  --color-warning-emphasis: var(--warning-emphasis);
+  --color-danger: #ef4444;
+  --color-danger-subtle: var(--danger-subtle);
+  --color-danger-emphasis: var(--danger-emphasis);
+  --color-info: #3b82f6;
+  --color-info-subtle: var(--info-subtle);
+  --color-info-emphasis: var(--info-emphasis);
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
 
   /* Fonts */
   --font-sans: "Inter", "Noto Sans Devanagari", sans-serif;
@@ -43,25 +68,49 @@
 }
 
 :root {
+  color-scheme: light;
   --background: #f8fafc;
   --foreground: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
+  --surface: #f1f5f9;
   --card: #ffffff;
   --card-foreground: #0f172a;
-  --surface: #f1f5f9;
+  --accent: #f1f5f9;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
   --ring: #ff6b00;
+
+  --success-subtle: #ecfdf5;
+  --success-emphasis: #047857;
+  --warning-subtle: #fffbeb;
+  --warning-emphasis: #b45309;
+  --danger-subtle: #fef2f2;
+  --danger-emphasis: #b91c1c;
+  --info-subtle: #eff6ff;
+  --info-emphasis: #1d4ed8;
 }
 
 .dark {
+  color-scheme: dark;
   --background: #0f1629;
   --foreground: #f1f5f9;
-  --muted: #94a3b8;
-  --border: #2d3b4f;
+  --surface: #1c2b3d;
   --card: #182033;
   --card-foreground: #f1f5f9;
-  --surface: #1c2b3d;
+  --accent: #1c2b3d;
+  --muted: #94a3b8;
+  --border: #2d3b4f;
+  --input: #2d3b4f;
   --ring: #ff8c33;
+
+  --success-subtle: rgb(6 78 59 / 0.3);
+  --success-emphasis: #34d399;
+  --warning-subtle: rgb(120 53 15 / 0.3);
+  --warning-emphasis: #fbbf24;
+  --danger-subtle: rgb(127 29 29 / 0.3);
+  --danger-emphasis: #f87171;
+  --info-subtle: rgb(30 58 138 / 0.3);
+  --info-emphasis: #60a5fa;
 }
 
 body {
@@ -76,13 +125,7 @@ body {
 
 /* Light theme subtle gradient background */
 html:not(.dark) body {
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-  background-attachment: fixed;
-}
-
-/* Dark theme solid/gradient background */
-html.dark body {
-  background: #0f1629;
+  background: linear-gradient(180deg, var(--background) 0%, var(--surface) 100%);
   background-attachment: fixed;
 }
 
@@ -129,11 +172,11 @@ textarea {
 
 /* Selection */
 ::selection {
-  background: rgb(255 107 0 / 0.2);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
   color: var(--foreground);
 }
 .dark ::selection {
-  background: rgb(255 107 0 / 0.3);
+  background: color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 /* Card hover animation */
@@ -157,7 +200,7 @@ textarea {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #ff6b00, #ff8c33);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

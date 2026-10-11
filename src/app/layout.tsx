@@ -102,15 +102,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body
-        className="flex min-h-screen flex-col bg-background text-foreground dark:bg-[#0f1629] dark:text-[#f1f5f9]"
+        className="flex min-h-screen flex-col bg-background text-foreground"
         suppressHydrationWarning
       >
-        <script
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}})()`,
-          }}
-        />
         <AuthProvider>
           <ThemeProvider>
             <LanguageProvider>{children}</LanguageProvider>

@@ -1,75 +1,59 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
-test.describe("Dark Mode", () => {
-  test("page defaults to light mode or system preference", async ({ page }) => {
+const toggle = (page: Page) =>
+  page.locator("header").getByRole("button", { name: /theme\. switch to/i });
+const htmlIsDark = (page: Page) =>
+  page.locator("html").evaluate((el) => el.classList.contains("dark"));
+
+test.describe("Theme", () => {
+  test("follows the device theme by default", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
     await page.goto("/");
-    const html = page.locator("html");
-    // Should have either light class, dark class, or rely on system
-    const className = await html.getAttribute("class");
-    expect(className !== undefined).toBeTruthy();
+    expect(await htmlIsDark(page)).toBe(true);
+
+    await page.emulateMedia({ colorScheme: "light" });
+    await expect.poll(() => htmlIsDark(page)).toBe(false);
   });
 
-  test("dark mode toggle switches theme", async ({ page }) => {
+  test("toggle cycles device → light → dark → device", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
-    const toggleBtn = page.locator('[aria-label="Toggle dark mode"]');
-    
-    if (await toggleBtn.isVisible()) {
-      // Click to switch theme
-      await toggleBtn.click();
-      await page.waitForTimeout(300);
-      
-      const html = page.locator("html");
-      const classAfterClick = await html.getAttribute("class");
-      
-      // Click again to switch back
-      await toggleBtn.click();
-      await page.waitForTimeout(300);
-      
-      const classAfterSecondClick = await html.getAttribute("class");
-      
-      // Classes should differ between toggles
-      expect(classAfterClick).not.toBe(classAfterSecondClick);
-    }
+    await expect(toggle(page)).toHaveAccessibleName(/^Device theme/);
+
+    await toggle(page).click();
+    await expect(toggle(page)).toHaveAccessibleName(/^Light theme/);
+    expect(await htmlIsDark(page)).toBe(false);
+
+    await toggle(page).click();
+    await expect(toggle(page)).toHaveAccessibleName(/^Dark theme/);
+    expect(await htmlIsDark(page)).toBe(true);
+
+    await toggle(page).click();
+    await expect(toggle(page)).toHaveAccessibleName(/^Device theme/);
+    expect(await htmlIsDark(page)).toBe(false);
   });
 
-  test("dark mode persists on navigation", async ({ page }) => {
+  test("an explicit choice overrides the device theme and persists", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
-    const toggleBtn = page.locator('[aria-label="Toggle dark mode"]');
-    
-    if (await toggleBtn.isVisible()) {
-      await toggleBtn.click();
-      await page.waitForTimeout(300);
-      
-      const htmlBefore = await page.locator("html").getAttribute("class");
-      
-      // Navigate to another page
-      await page.goto("/contact");
-      await page.waitForTimeout(300);
-      
-      const htmlAfter = await page.locator("html").getAttribute("class");
-      
-      // Theme should be preserved
-      expect(htmlAfter).toBe(htmlBefore);
-    }
+    await toggle(page).click(); // light
+    await toggle(page).click(); // dark
+    expect(await htmlIsDark(page)).toBe(true);
+
+    await page.goto("/contact");
+    expect(await htmlIsDark(page)).toBe(true);
+
+    await page.reload();
+    expect(await htmlIsDark(page)).toBe(true);
+    await expect(toggle(page)).toHaveAccessibleName(/^Dark theme/);
   });
 
-  test("dark mode persists on page refresh", async ({ page }) => {
-    await page.goto("/");
-    const toggleBtn = page.locator('[aria-label="Toggle dark mode"]');
-    
-    if (await toggleBtn.isVisible()) {
-      await toggleBtn.click();
-      await page.waitForTimeout(300);
-      
-      const htmlBefore = await page.locator("html").getAttribute("class");
-      
-      // Refresh page
-      await page.reload();
-      await page.waitForTimeout(500);
-      
-      const htmlAfter = await page.locator("html").getAttribute("class");
-      
-      expect(htmlAfter).toBe(htmlBefore);
-    }
+  test("no flash of the wrong theme: the dark class is set before first paint", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.goto("/", { waitUntil: "commit" });
+    await page.waitForSelector("body");
+    expect(await htmlIsDark(page)).toBe(true);
   });
 });

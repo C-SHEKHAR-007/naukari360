@@ -4,7 +4,7 @@ import Header from "@/components/public/Header";
 
 // Mock theme provider
 vi.mock("@/components/providers/ThemeProvider", () => ({
-  useTheme: () => ({ theme: "light", setTheme: vi.fn(), mounted: true }),
+  useTheme: () => ({ theme: "light", preference: "system", setTheme: vi.fn(), mounted: true }),
 }));
 
 // Mock language provider
@@ -75,10 +75,11 @@ describe("Header", () => {
     expect(searchLinks.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders dark mode toggle", () => {
-    const { container } = render(<Header settings={mockSettings} />);
-    const toggles = container.querySelectorAll('[aria-label="Toggle dark mode"]');
-    expect(toggles.length).toBeGreaterThanOrEqual(1);
+  it("renders the theme toggle", () => {
+    render(<Header settings={mockSettings} />);
+    expect(
+      screen.getAllByRole("button", { name: "Device theme. Switch to light theme" }).length
+    ).toBeGreaterThanOrEqual(1);
   });
 
   it("renders language toggle", () => {

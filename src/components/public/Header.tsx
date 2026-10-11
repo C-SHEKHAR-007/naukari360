@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Moon, Sun, Search } from "lucide-react";
-import { useTheme } from "@/components/providers/ThemeProvider";
+import { Menu, X, Search } from "lucide-react";
 import LanguageToggle from "./LanguageToggle";
+import ThemeToggle from "./ThemeToggle";
 import UserNav from "./UserNav";
 import type { SiteSettings } from "@/lib/settings";
 
@@ -20,7 +20,6 @@ const navLinks = [
 
 export default function Header({ settings }: { settings: SiteSettings }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, setTheme, mounted } = useTheme();
 
   const siteName = settings.site_name || "Naukari360";
   const announcementActive = settings.announcement_active === "true";
@@ -78,21 +77,7 @@ export default function Header({ settings }: { settings: SiteSettings }) {
 
             <LanguageToggle />
 
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-lg p-2.5 text-muted transition-all hover:bg-surface hover:text-primary"
-              aria-label="Toggle dark mode"
-            >
-              {mounted ? (
-                theme === "dark" ? (
-                  <Sun className="h-[18px] w-[18px]" />
-                ) : (
-                  <Moon className="h-[18px] w-[18px]" />
-                )
-              ) : (
-                <span className="inline-block h-[18px] w-[18px]" />
-              )}
-            </button>
+            <ThemeToggle />
 
             <UserNav />
 
