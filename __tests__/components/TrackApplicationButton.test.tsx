@@ -1,13 +1,14 @@
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import TrackApplicationButton from "@/components/public/TrackApplicationButton";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addJobToTracker } from "@/app/(public)/tracker/actions";
 
 // Mock next-auth
 vi.mock("next-auth/react", () => ({
   useSession: vi.fn(),
+  signIn: vi.fn(),
 }));
 
 // Mock next/navigation
@@ -60,12 +61,13 @@ describe("TrackApplicationButton", () => {
     expect(global.fetch).toHaveBeenCalledWith("/api/post-user-state?postId=post-1");
   });
 
-  it("redirects to login if user is not authenticated", () => {
+  it("starts Google sign-in (not the admin login) if user is not authenticated", () => {
     (useSession as any).mockReturnValue({ data: null, status: "unauthenticated" });
     render(<TrackApplicationButton postId="post-1" />);
 
     fireEvent.click(screen.getByRole("button"));
-    expect(mockRouter.push).toHaveBeenCalledWith("/admin/login?callbackUrl=/tracker");
+    expect(signIn).toHaveBeenCalledWith("google", { callbackUrl: window.location.href });
+    expect(mockRouter.push).not.toHaveBeenCalled();
     expect(addJobToTracker).not.toHaveBeenCalled();
   });
 

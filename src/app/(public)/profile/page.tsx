@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Save, User, Loader2 } from "lucide-react";
 import Image from "next/image";
+import SignInButton from "@/components/public/SignInButton";
 
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
@@ -16,14 +17,12 @@ export default function ProfilePage() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/admin/login?callbackUrl=/profile");
-    } else if (session?.user) {
+    if (session?.user) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setQualification(session.user.qualification || "");
       setState(session.user.state || "");
     }
-  }, [session, status, router]);
+  }, [session]);
 
   if (status === "loading") {
     return (
@@ -33,7 +32,25 @@ export default function ProfilePage() {
     );
   }
 
-  if (!session?.user) return null;
+  // Site users sign in with Google; /admin/login is only for the admin panel
+  if (!session?.user) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-24 text-center">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary-subtle">
+          <User className="h-10 w-10 text-primary" />
+        </div>
+        <h1 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+          Your profile
+        </h1>
+        <p className="mt-2 text-muted-foreground">
+          Sign in to save your qualification and state and get job recommendations made for you.
+        </p>
+        <div className="mt-8 flex justify-center">
+          <SignInButton />
+        </div>
+      </div>
+    );
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();

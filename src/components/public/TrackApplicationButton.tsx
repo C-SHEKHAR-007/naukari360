@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { LayoutDashboard, Loader2, Check } from "lucide-react";
 import { addJobToTracker } from "@/app/(public)/tracker/actions";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function TrackApplicationButton({ postId }: { postId: string }) {
@@ -30,7 +30,8 @@ export default function TrackApplicationButton({ postId }: { postId: string }) {
 
   async function handleTrack() {
     if (!session?.user) {
-      router.push("/admin/login?callbackUrl=/tracker");
+      // Site users sign in with Google and come back to this job
+      signIn("google", { callbackUrl: window.location.href });
       return;
     }
 

@@ -17,11 +17,13 @@ test.describe("Public User Features (V2)", () => {
     await expect(personalizedHeader).not.toBeVisible();
   });
 
-  test("redirects to login when accessing /profile without auth", async ({ page }) => {
+  test("shows a sign-in prompt on /profile without auth (not the admin login)", async ({
+    page,
+  }) => {
     await page.goto("/profile");
-    // NextAuth's auth() guard redirects to the configured signIn page (/admin/login)
-    await page.waitForURL(/\/admin\/login/);
-    expect(page.url()).toContain("/admin/login");
+    await expect(page.getByRole("heading", { name: "Your profile" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign in with Google" })).toBeVisible();
+    expect(page.url()).not.toContain("/admin/login");
   });
 
   test("shows a sign-in prompt on /bookmarks without auth", async ({ page }) => {
