@@ -141,7 +141,7 @@ function BrandPanel() {
 }
 
 const inputClass =
-  "h-[55px] w-full rounded-[10px] border border-border bg-surface/50 pl-14 pr-4 text-base lg:text-[15px] text-foreground shadow-none placeholder:text-muted-foreground/70 focus:border-royal focus:outline-none focus:ring-4 focus:ring-royal/10";
+  "h-[55px] w-full rounded-[10px] border border-border/80 bg-card/60 pl-14 pr-4 text-base lg:text-[15px] text-foreground shadow-[inset_0_1px_2px_rgb(15_23_42/0.04)] backdrop-blur-sm placeholder:text-muted-foreground/70 focus:border-royal focus:outline-none focus:ring-4 focus:ring-royal/10";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -190,118 +190,138 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="relative z-10 mx-auto -mt-10 w-full max-w-[546px] px-4 pb-6 sm:-mt-12 sm:px-6 lg:mt-0 lg:px-0 lg:pb-0">
-          <div className="rounded-3xl bg-card px-5 pb-9 pt-8 shadow-[0_18px_50px_-20px_rgb(30_50_120/0.25)] ring-1 ring-border/40 sm:px-8 lg:pb-[44px] lg:pt-[38px] lg:short:pb-7 lg:short:pt-7 lg:shadow-[0_18px_50px_-20px_rgb(30_50_120/0.18)]">
-            <div className="text-center">
-              <span className="mx-auto flex h-[76px] w-[76px] items-center justify-center rounded-full bg-royal/[0.07] lg:short:hidden">
-                <span className="relative flex h-9 w-8 items-center justify-center">
-                  <Shield
-                    className="absolute inset-0 h-9 w-8 fill-royal text-royal"
-                    strokeWidth={1.5}
-                  />
-                  <Lock className="relative mt-0.5 h-3.5 w-3.5 text-white" strokeWidth={2.75} />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+            <div className="absolute -left-16 top-4 h-72 w-72 rounded-full bg-royal/35 blur-3xl dark:bg-royal/35" />
+            <div className="absolute -bottom-6 -right-14 h-72 w-72 rounded-full bg-brand/30 blur-3xl dark:bg-brand/25" />
+            <div className="absolute -right-10 top-16 h-48 w-48 rounded-full bg-highlight/25 blur-3xl" />
+          </div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/80 bg-card/45 px-5 pb-9 pt-8 shadow-[0_30px_70px_-30px_rgb(30_50_140/0.45),inset_0_1px_0_rgb(255_255_255/0.9)] backdrop-blur-2xl backdrop-saturate-150 sm:px-8 lg:pb-[44px] lg:pt-[38px] lg:short:pb-7 lg:short:pt-7 dark:border-white/10 dark:bg-card/55 dark:shadow-[0_30px_70px_-30px_rgb(0_0_0/0.7),inset_0_1px_0_rgb(255_255_255/0.08)]">
+            {/* Gloss: diagonal sheen and a bright top edge */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/70 via-white/15 to-transparent dark:from-white/10 dark:via-white/[0.02]"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent dark:via-white/40"
+            />
+            <div className="relative">
+              <div className="text-center">
+                <span className="mx-auto flex h-[76px] w-[76px] items-center justify-center rounded-full bg-gradient-to-b from-white to-royal/10 shadow-[0_8px_20px_-8px_rgb(43_70_240/0.45),inset_0_1px_0_rgb(255_255_255)] ring-1 ring-royal/10 lg:short:hidden dark:from-white/10 dark:to-royal/20">
+                  <span className="relative flex h-9 w-8 items-center justify-center">
+                    <Shield
+                      className="absolute inset-0 h-9 w-8 fill-royal text-royal"
+                      strokeWidth={1.5}
+                    />
+                    <Lock className="relative mt-0.5 h-3.5 w-3.5 text-white" strokeWidth={2.75} />
+                  </span>
                 </span>
-              </span>
-              <h1 className="mt-[22px] text-[32px] font-bold leading-tight tracking-tight text-foreground lg:short:mt-0">
-                Admin Login
-              </h1>
-              <p className="mx-auto mt-3 max-w-[300px] text-[15px] leading-[25px] text-muted-foreground">
-                Sign in to access your admin dashboard to manage the platform.
+                <h1 className="mt-[22px] text-[32px] font-bold leading-tight tracking-tight text-foreground lg:short:mt-0">
+                  Admin Login
+                </h1>
+                <p className="mx-auto mt-3 max-w-[300px] text-[15px] leading-[25px] text-muted-foreground">
+                  Sign in to access your admin dashboard to manage the platform.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-7">
+                {error && (
+                  <Alert tone="danger" className="mb-5">
+                    {error}
+                  </Alert>
+                )}
+
+                <label htmlFor="email" className="mb-3 block text-sm font-semibold text-foreground">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="pointer-events-none absolute z-10 left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="username"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoFocus
+                    className={inputClass}
+                    placeholder="admin@naukari360.in"
+                  />
+                </div>
+
+                <label
+                  htmlFor="password"
+                  className="mb-3 mt-[26px] block text-sm font-semibold text-foreground"
+                >
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="pointer-events-none absolute z-10 left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={trackCapsLock}
+                    onKeyUp={trackCapsLock}
+                    required
+                    aria-describedby={capsLock ? "caps-lock-warning" : undefined}
+                    className={cn(inputClass, "pr-12")}
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+                  </button>
+                </div>
+                {capsLock && (
+                  <p
+                    id="caps-lock-warning"
+                    className="mt-2 text-xs font-medium text-warning-emphasis"
+                  >
+                    Caps Lock is on
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="group relative mt-[26px] flex h-[57px] w-full items-center justify-center gap-2 overflow-hidden rounded-[10px] bg-gradient-to-b from-royal to-royal-hover text-base font-semibold text-white shadow-[0_12px_28px_-10px_rgb(43_70_240/0.7),inset_0_1px_0_rgb(255_255_255/0.3)] transition-all hover:brightness-110 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-60"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-[400%]"
+                  />
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Signing in…
+                    </>
+                  ) : (
+                    <>
+                      Sign In
+                      <ArrowRight className="h-[18px] w-[18px] transition-transform group-hover:translate-x-0.5" />
+                    </>
+                  )}
+                </button>
+              </form>
+
+              <div className="mt-10 flex items-center gap-4 text-sm text-muted-foreground lg:short:mt-6">
+                <span className="h-px flex-1 bg-border" />
+                Authorized Personnel Only
+                <span className="h-px flex-1 bg-border" />
+              </div>
+              <p className="mt-8 flex items-center justify-center gap-2.5 text-center text-xs text-muted-foreground lg:mt-[42px] lg:short:mt-5">
+                <ShieldCheck className="h-5 w-5 shrink-0" /> This area is restricted to authorized
+                admins only.
               </p>
             </div>
-
-            <form onSubmit={handleSubmit} className="mt-7">
-              {error && (
-                <Alert tone="danger" className="mb-5">
-                  {error}
-                </Alert>
-              )}
-
-              <label htmlFor="email" className="mb-3 block text-sm font-semibold text-foreground">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="username"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoFocus
-                  className={inputClass}
-                  placeholder="admin@naukari360.in"
-                />
-              </div>
-
-              <label
-                htmlFor="password"
-                className="mb-3 mt-[26px] block text-sm font-semibold text-foreground"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={trackCapsLock}
-                  onKeyUp={trackCapsLock}
-                  required
-                  aria-describedby={capsLock ? "caps-lock-warning" : undefined}
-                  className={cn(inputClass, "pr-12")}
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
-                </button>
-              </div>
-              {capsLock && (
-                <p
-                  id="caps-lock-warning"
-                  className="mt-2 text-xs font-medium text-warning-emphasis"
-                >
-                  Caps Lock is on
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="group mt-[26px] flex h-[57px] w-full items-center justify-center gap-2 rounded-[10px] bg-royal text-base font-semibold text-white shadow-[0_10px_24px_-10px] shadow-royal/60 transition-all hover:bg-royal-hover active:scale-[0.99] disabled:pointer-events-none disabled:opacity-60"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" /> Signing in…
-                  </>
-                ) : (
-                  <>
-                    Sign In
-                    <ArrowRight className="h-[18px] w-[18px] transition-transform group-hover:translate-x-0.5" />
-                  </>
-                )}
-              </button>
-            </form>
-
-            <div className="mt-10 flex items-center gap-4 text-sm text-muted-foreground lg:short:mt-6">
-              <span className="h-px flex-1 bg-border" />
-              Authorized Personnel Only
-              <span className="h-px flex-1 bg-border" />
-            </div>
-            <p className="mt-8 flex items-center justify-center gap-2.5 text-center text-xs text-muted-foreground lg:mt-[42px] lg:short:mt-5">
-              <ShieldCheck className="h-5 w-5 shrink-0" /> This area is restricted to authorized
-              admins only.
-            </p>
           </div>
         </div>
       </main>
