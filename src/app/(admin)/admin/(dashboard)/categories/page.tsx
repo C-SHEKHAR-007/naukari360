@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import CategoriesManager from "@/components/admin/CategoriesManager";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function AdminCategoriesPage() {
   const categories = await prisma.category.findMany({
@@ -9,10 +10,7 @@ export default async function AdminCategoriesPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Categories</h1>
-        <p className="mt-1 text-sm text-muted">Manage post categories</p>
-      </div>
+      <PageHeader title="Categories" description="Manage post categories" />
       <CategoriesManager categories={categories} />
     </>
   );

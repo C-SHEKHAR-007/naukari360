@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import SyllabusForm from "@/components/admin/SyllabusForm";
+import PageHeader from "@/components/admin/PageHeader";
 import { notFound } from "next/navigation";
 
 export const metadata = {
@@ -14,7 +15,7 @@ interface Props {
 
 export default async function EditSyllabusPage({ params }: Props) {
   const resolvedParams = await params;
-  
+
   const [syllabus, posts] = await Promise.all([
     prisma.syllabus.findUnique({
       where: { id: resolvedParams.id },
@@ -31,10 +32,10 @@ export default async function EditSyllabusPage({ params }: Props) {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Edit Syllabus</h1>
-        <p className="mt-1 text-sm text-muted">Update the syllabus document and interactive progress tracker.</p>
-      </div>
+      <PageHeader
+        title="Edit Syllabus"
+        description="Update the syllabus document and interactive progress tracker."
+      />
 
       <SyllabusForm initialData={syllabus} posts={posts} />
     </>

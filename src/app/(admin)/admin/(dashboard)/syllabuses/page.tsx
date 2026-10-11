@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BookOpen, Plus, Edit } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import DeleteSyllabusButton from "@/components/admin/DeleteSyllabusButton";
+import PageHeader from "@/components/admin/PageHeader";
 import AdminSearch from "@/components/admin/AdminSearch";
 
 export const metadata = {
@@ -43,19 +44,19 @@ export default async function AdminSyllabusesPage({ searchParams }: Props) {
   return (
     <>
       {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Syllabuses</h1>
-          <p className="mt-1 text-sm text-muted">{total} total syllabuses</p>
-        </div>
-        <Link
-          href="/admin/syllabuses/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark"
-        >
-          <Plus className="h-4 w-4" />
-          Add Syllabus
-        </Link>
-      </div>
+      <PageHeader
+        title="Syllabuses"
+        description={`${total} total syllabuses`}
+        actions={
+          <Link
+            href="/admin/syllabuses/new"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark"
+          >
+            <Plus className="h-4 w-4" />
+            Add Syllabus
+          </Link>
+        }
+      />
 
       {/* Filters */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">

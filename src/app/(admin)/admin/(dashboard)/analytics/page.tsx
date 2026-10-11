@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { Eye, TrendingUp, Users, MousePointerClick } from "lucide-react";
 import Link from "next/link";
 import AnalyticsChart from "@/components/admin/AnalyticsChart";
+import PageHeader from "@/components/admin/PageHeader";
 
 async function getAnalyticsData() {
   const now = new Date();
@@ -53,10 +54,7 @@ export default async function AnalyticsPage() {
 
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Analytics</h1>
-        <p className="mt-1 text-sm text-muted">Site performance overview (last 30 days)</p>
-      </div>
+      <PageHeader title="Analytics" description="Site performance overview (last 30 days)" />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

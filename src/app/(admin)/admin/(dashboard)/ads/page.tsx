@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import AdSlotsManager from "@/components/admin/AdSlotsManager";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function AdminAdSlotsPage() {
   const adSlots = await prisma.adSlot.findMany({
@@ -8,10 +9,7 @@ export default async function AdminAdSlotsPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Ad Slots</h1>
-        <p className="mt-1 text-sm text-muted">Manage advertisement placements</p>
-      </div>
+      <PageHeader title="Ad Slots" description="Manage advertisement placements" />
       <AdSlotsManager adSlots={adSlots} />
     </>
   );

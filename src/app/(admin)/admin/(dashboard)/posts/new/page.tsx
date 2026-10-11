@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import PostForm from "@/components/admin/PostForm";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function NewPostPage() {
   const [categories, states] = await Promise.all([
@@ -9,10 +10,7 @@ export default async function NewPostPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">New Post</h1>
-        <p className="mt-1 text-sm text-muted">Create a new post</p>
-      </div>
+      <PageHeader title="New Post" description="Create a new post" />
       <PostForm post={null} categories={categories} states={states} />
     </>
   );

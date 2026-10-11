@@ -14,6 +14,7 @@ import {
   type Tone,
 } from "@/components/ui";
 import ThemeToggle from "@/components/public/ThemeToggle";
+import PageHeader from "@/components/admin/PageHeader";
 
 export const metadata: Metadata = { title: "Style guide" };
 
@@ -67,15 +68,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function StyleGuidePage() {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Style guide</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Design tokens and shared components. Switch theme to check both modes.
-          </p>
-        </div>
-        <ThemeToggle className="border border-border" />
-      </div>
+      <PageHeader
+        title="Style guide"
+        description="Design tokens and shared components. Switch theme to check both modes."
+        actions={<ThemeToggle className="border border-border" />}
+      />
 
       <Section title="Surfaces">
         <div className="grid grid-cols-3 gap-4 sm:grid-cols-6">

@@ -1,4 +1,5 @@
 import { CheckCircle2, Circle, ExternalLink, AlertTriangle } from "lucide-react";
+import PageHeader from "@/components/admin/PageHeader";
 
 const propellerSteps = [
   {
@@ -58,12 +59,10 @@ const adsenseChecklist = [
 export default function MonetizationPage() {
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Monetization Guide</h1>
-        <p className="mt-1 text-sm text-muted">
-          Step-by-step guides for PropellerAds and Google AdSense
-        </p>
-      </div>
+      <PageHeader
+        title="Monetization Guide"
+        description="Step-by-step guides for PropellerAds and Google AdSense"
+      />
 
       {/* PropellerAds Section */}
       <div className="rounded-xl border border-border bg-card p-6">
