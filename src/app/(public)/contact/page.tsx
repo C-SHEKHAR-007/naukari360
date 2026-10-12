@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPageBySlug } from "@/lib/db";
+import { prepareCmsHtml } from "@/lib/cms";
 import ContactForm from "@/components/public/ContactForm";
 
 export const metadata: Metadata = { title: "Contact Us" };
@@ -15,7 +16,7 @@ export default async function ContactPage() {
       {page?.contentEn && (
         <div
           className="prose prose-sm max-w-none dark:prose-invert mt-4"
-          dangerouslySetInnerHTML={{ __html: page.contentEn }}
+          dangerouslySetInnerHTML={{ __html: prepareCmsHtml(page.contentEn, "Contact Us") }}
         />
       )}
 

@@ -136,7 +136,7 @@ export default function CategoriesManager({
                     <button
                       onClick={() => handleUpdate(cat.id)}
                       disabled={saving}
-                      className="rounded p-1 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                      className="rounded p-1 text-success-emphasis hover:bg-success-subtle"
                     >
                       <Check className="h-4 w-4" />
                     </button>
@@ -164,7 +164,7 @@ export default function CategoriesManager({
                     {isSuperAdmin && (
                       <button
                         onClick={() => handleDelete(cat.id)}
-                        className="rounded p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        className="rounded p-1 text-danger-emphasis hover:bg-danger-subtle"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -212,7 +212,7 @@ export default function CategoriesManager({
                 <button
                   onClick={handleAdd}
                   disabled={saving}
-                  className="rounded p-1 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                  className="rounded p-1 text-success-emphasis hover:bg-success-subtle"
                 >
                   <Check className="h-4 w-4" />
                 </button>

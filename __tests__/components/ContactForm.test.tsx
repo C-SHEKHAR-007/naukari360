@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import ContactForm from "@/components/public/ContactForm";
 
 const mockFetch = vi.fn();
@@ -20,6 +20,15 @@ describe("ContactForm", () => {
     expect(container.querySelector("input[type='email']")).toBeTruthy();
     expect(container.querySelector("textarea")).toBeTruthy();
     expect(container.querySelector("select")).toBeTruthy();
+  });
+
+  it("links every label to its field and names the fields", () => {
+    render(<ContactForm />);
+    expect(screen.getByLabelText("Name *")).toHaveAttribute("name", "name");
+    expect(screen.getByLabelText("Email *")).toHaveAttribute("name", "email");
+    expect(screen.getByLabelText("Type")).toHaveAttribute("name", "type");
+    expect(screen.getByLabelText("Subject *")).toHaveAttribute("name", "subject");
+    expect(screen.getByLabelText("Message *")).toHaveAttribute("name", "message");
   });
 
   it("renders submit button", () => {
@@ -43,9 +52,12 @@ describe("ContactForm", () => {
     fireEvent.submit(form);
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith("/api/contact", expect.objectContaining({
-        method: "POST",
-      }));
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/api/contact",
+        expect.objectContaining({
+          method: "POST",
+        })
+      );
     });
 
     await waitFor(() => {

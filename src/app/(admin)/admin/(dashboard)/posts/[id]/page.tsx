@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import PostForm from "@/components/admin/PostForm";
+import PageHeader from "@/components/admin/PageHeader";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -26,10 +27,7 @@ export default async function EditPostPage({ params }: Props) {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Edit Post</h1>
-        <p className="mt-1 text-sm text-muted">Update post details</p>
-      </div>
+      <PageHeader title="Edit Post" description="Update post details" />
       <PostForm post={post} categories={categories} states={states} />
     </>
   );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, GripVertical, Pencil, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
+import { Badge } from "@/components/ui";
 
 interface NavMenuItem {
   id: string;
@@ -145,7 +146,7 @@ export default function MenuManager({ initialMenus }: { initialMenus: NavMenuIte
               resetForm();
               setShowForm(true);
             }}
-            className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/90"
+            className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-3.5 w-3.5" /> Add Item
           </button>
@@ -174,11 +175,7 @@ export default function MenuManager({ initialMenus }: { initialMenus: NavMenuIte
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-foreground">{item.label}</span>
                       {item.labelHi && <span className="text-xs text-muted">({item.labelHi})</span>}
-                      {!item.isActive && (
-                        <span className="rounded bg-yellow-100 px-1.5 py-0.5 text-[10px] font-medium text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
-                          Hidden
-                        </span>
-                      )}
+                      {!item.isActive && <Badge tone="warning">Hidden</Badge>}
                     </div>
                     <span className="text-xs text-muted">{item.url}</span>
                   </div>
@@ -191,7 +188,7 @@ export default function MenuManager({ initialMenus }: { initialMenus: NavMenuIte
                   {isSuperAdmin && (
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="rounded p-1.5 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
+                      className="rounded p-1.5 text-muted hover:bg-danger-subtle hover:text-danger-emphasis"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -219,7 +216,7 @@ export default function MenuManager({ initialMenus }: { initialMenus: NavMenuIte
                         {isSuperAdmin && (
                           <button
                             onClick={() => handleDelete(child.id)}
-                            className="rounded p-1 text-muted hover:text-red-600"
+                            className="rounded p-1 text-muted hover:text-danger-emphasis"
                           >
                             <Trash2 className="h-3 w-3" />
                           </button>
@@ -304,7 +301,7 @@ export default function MenuManager({ initialMenus }: { initialMenus: NavMenuIte
             <button
               onClick={handleSave}
               disabled={saving || !label.trim() || !url.trim()}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 disabled:opacity-50"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
               {saving ? "Saving..." : editing ? "Update" : "Add"}
             </button>

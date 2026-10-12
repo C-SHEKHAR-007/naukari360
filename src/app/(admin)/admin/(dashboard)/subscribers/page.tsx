@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Download } from "lucide-react";
+import { Badge } from "@/components/ui";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function AdminSubscribersPage() {
   const subscribers = await prisma.emailSubscriber.findMany({
@@ -10,21 +12,23 @@ export default async function AdminSubscribersPage() {
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Subscribers</h1>
-          <p className="mt-1 text-sm text-muted">
+      <PageHeader
+        title="Subscribers"
+        description={
+          <>
             {subscribers.length} total • {active} active
-          </p>
-        </div>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a
-          href="/api/admin/subscribers/export"
-          className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-surface"
-        >
-          <Download className="h-4 w-4" /> Export CSV
-        </a>
-      </div>
+          </>
+        }
+        actions={
+          // eslint-disable-next-line @next/next/no-html-link-for-pages
+          <a
+            href="/api/admin/subscribers/export"
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-surface"
+          >
+            <Download className="h-4 w-4" /> Export CSV
+          </a>
+        }
+      />
 
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-sm">
@@ -54,11 +58,9 @@ export default async function AdminSubscribersPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${sub.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400" : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"}`}
-                  >
+                  <Badge tone={sub.isActive ? "success" : "neutral"}>
                     {sub.isActive ? "Active" : "Unsubscribed"}
-                  </span>
+                  </Badge>
                 </td>
                 <td className="hidden px-4 py-3 text-xs text-muted lg:table-cell">
                   {new Date(sub.subscribedAt).toLocaleDateString("en-IN", {

@@ -1,4 +1,5 @@
 import { CheckCircle2, Circle, ExternalLink, AlertTriangle } from "lucide-react";
+import PageHeader from "@/components/admin/PageHeader";
 
 const propellerSteps = [
   {
@@ -58,12 +59,10 @@ const adsenseChecklist = [
 export default function MonetizationPage() {
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Monetization Guide</h1>
-        <p className="mt-1 text-sm text-muted">
-          Step-by-step guides for PropellerAds and Google AdSense
-        </p>
-      </div>
+      <PageHeader
+        title="Monetization Guide"
+        description="Step-by-step guides for PropellerAds and Google AdSense"
+      />
 
       {/* PropellerAds Section */}
       <div className="rounded-xl border border-border bg-card p-6">
@@ -87,7 +86,7 @@ export default function MonetizationPage() {
                     href={step.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                    className="-ml-2 mt-0.5 inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-xs text-primary hover:bg-primary/10 hover:underline"
                   >
                     <ExternalLink className="h-3 w-3" /> Visit Site
                   </a>
@@ -116,7 +115,7 @@ export default function MonetizationPage() {
               <span className="text-sm text-foreground">
                 {item.text}
                 {item.critical && (
-                  <span className="ml-2 inline-flex items-center gap-0.5 text-xs text-red-500">
+                  <span className="ml-2 inline-flex items-center gap-0.5 text-xs text-danger-emphasis">
                     <AlertTriangle className="h-3 w-3" /> Required
                   </span>
                 )}
@@ -125,10 +124,10 @@ export default function MonetizationPage() {
           ))}
         </div>
 
-        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-900/20">
+        <div className="mt-6 rounded-lg border border-warning-emphasis/25 bg-warning-subtle p-4">
           <div className="flex items-start gap-2">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-            <div className="text-sm text-amber-800 dark:text-amber-300">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-warning-emphasis" />
+            <div className="text-sm text-warning-emphasis">
               <p className="font-medium">After AdSense Approval:</p>
               <ul className="mt-1 list-disc pl-4 text-xs">
                 <li>Add Publisher ID to Site Settings → SEO → AdSense Publisher ID</li>

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { invalidatePublicContent } from "@/lib/cache";
 import { z } from "zod";
 
 const SyllabusSchema = z.object({
@@ -16,7 +16,7 @@ const SyllabusSchema = z.object({
 
 export async function createSyllabus(formData: z.infer<typeof SyllabusSchema>) {
   const result = SyllabusSchema.safeParse(formData);
-  
+
   if (!result.success) {
     return { error: "Validation failed" };
   }
@@ -43,7 +43,8 @@ export async function createSyllabus(formData: z.infer<typeof SyllabusSchema>) {
 
     revalidatePath("/admin/syllabuses");
     revalidatePath("/syllabus");
-    
+    invalidatePublicContent();
+
     return { success: true };
   } catch (error) {
     console.error("Failed to create syllabus:", error);
@@ -53,7 +54,7 @@ export async function createSyllabus(formData: z.infer<typeof SyllabusSchema>) {
 
 export async function updateSyllabus(id: string, formData: z.infer<typeof SyllabusSchema>) {
   const result = SyllabusSchema.safeParse(formData);
-  
+
   if (!result.success) {
     return { error: "Validation failed" };
   }
@@ -82,7 +83,8 @@ export async function updateSyllabus(id: string, formData: z.infer<typeof Syllab
     revalidatePath("/admin/syllabuses");
     revalidatePath(`/syllabus/${result.data.slug}`);
     revalidatePath("/syllabus");
-    
+    invalidatePublicContent();
+
     return { success: true };
   } catch (error) {
     console.error("Failed to update syllabus:", error);
@@ -97,6 +99,7 @@ export async function deleteSyllabus(id: string) {
     });
     revalidatePath("/admin/syllabuses");
     revalidatePath("/syllabus");
+    invalidatePublicContent();
     return { success: true };
   } catch (error) {
     console.error("Failed to delete syllabus:", error);

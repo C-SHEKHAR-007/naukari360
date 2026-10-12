@@ -45,7 +45,7 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
 
   const basicPay = PAY_LEVELS[level] || 18000;
   const da = basicPay * DA_RATE;
-  
+
   // HRA calculation based on city class
   let hra = basicPay * HRA_RATES[cityClass];
   // Minimum HRA limits (e.g., if DA >= 50%)
@@ -58,12 +58,12 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
   if (level >= 9) ta = 7200;
   else if (level >= 3) ta = 3600;
   else ta = 1350;
-  
+
   // DA on TA
   const daOnTa = ta * DA_RATE;
 
   const grossSalary = basicPay + da + hra + ta + daOnTa;
-  
+
   // Standard Deductions (NPS 10% of Basic+DA, CGHS, CGEGIS)
   const nps = (basicPay + da) * 0.1;
   const cghs = level >= 6 ? 650 : 250;
@@ -77,7 +77,7 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
       <div className="overflow-hidden rounded-xl border border-border/60 shadow-[var(--shadow-card)]">
         <button
           onClick={() => setIsOpen(true)}
-          className="flex w-full items-center justify-between bg-primary/8 px-5 py-3 transition-colors hover:bg-primary/15 dark:bg-primary/15 dark:hover:bg-primary/25"
+          className="flex w-full items-center justify-between bg-primary-subtle px-5 py-3 transition-colors hover:bg-primary/15"
         >
           <h2 className="flex items-center gap-2 text-sm font-bold text-primary">
             <Calculator className="h-4 w-4" />
@@ -93,7 +93,7 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
     <div className="overflow-hidden rounded-xl border border-border/60 bg-card shadow-[var(--shadow-card)]">
       <button
         onClick={() => setIsOpen(false)}
-        className="flex w-full items-center justify-between border-b border-border/60 bg-primary/8 px-5 py-3 transition-colors hover:bg-primary/15 dark:bg-primary/15 dark:hover:bg-primary/25"
+        className="flex w-full items-center justify-between border-b border-border/60 bg-primary-subtle px-5 py-3 transition-colors hover:bg-primary/15"
       >
         <h2 className="flex items-center gap-2 text-sm font-bold text-primary">
           <Calculator className="h-4 w-4" />
@@ -128,7 +128,9 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
               onChange={(e) => setCityClass(e.target.value as "X" | "Y" | "Z")}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             >
-              <option value="X">X City (Tier 1 - Delhi, Mumbai, etc.) - {HRA_RATES.X * 100}%</option>
+              <option value="X">
+                X City (Tier 1 - Delhi, Mumbai, etc.) - {HRA_RATES.X * 100}%
+              </option>
               <option value="Y">Y City (Tier 2 - State Capitals) - {HRA_RATES.Y * 100}%</option>
               <option value="Z">Z City (Tier 3 - Other Places) - {HRA_RATES.Z * 100}%</option>
             </select>
@@ -145,7 +147,9 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
                 <span className="font-medium text-foreground">{formatCurrency(basicPay)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">DA (Dearness Allowance - {DA_RATE * 100}%)</span>
+                <span className="text-muted-foreground">
+                  DA (Dearness Allowance - {DA_RATE * 100}%)
+                </span>
                 <span className="font-medium text-foreground">{formatCurrency(da)}</span>
               </div>
               <div className="flex justify-between">
@@ -181,7 +185,7 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
               </div>
               <div className="mt-2 flex justify-between border-t border-border pt-2 font-semibold">
                 <span className="text-foreground">Total Deductions</span>
-                <span className="text-red-500">{formatCurrency(totalDeductions)}</span>
+                <span className="text-danger-emphasis">{formatCurrency(totalDeductions)}</span>
               </div>
             </div>
           </div>
@@ -190,13 +194,15 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
         {/* Final Result */}
         <div className="mt-6 flex items-center justify-between rounded-lg bg-primary p-5 text-primary-foreground shadow-lg">
           <div>
-            <h3 className="text-sm font-medium text-primary-foreground/80">Estimated In-Hand Salary / Month</h3>
+            <h3 className="text-sm font-medium text-primary-foreground/80">
+              Estimated In-Hand Salary / Month
+            </h3>
             <div className="mt-1 flex items-center gap-1 text-2xl font-bold md:text-3xl">
               <IndianRupee className="h-6 w-6 md:h-8 md:w-8" />
               {inHandSalary.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
             </div>
           </div>
-          <div className="hidden rounded-full bg-white/20 p-3 sm:block">
+          <div className="hidden rounded-full bg-primary-foreground/20 p-3 sm:block">
             <Calculator className="h-8 w-8" />
           </div>
         </div>
@@ -204,7 +210,9 @@ export default function SalaryCalculator({ initialLevel = 1 }: { initialLevel?: 
         <p className="mt-4 flex items-start gap-1.5 text-xs text-muted-foreground">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>
-            <strong>Disclaimer:</strong> This is an approximate calculation based on standard 7th CPC rules. Actual salary may vary depending on specific state rules, allowances, professional taxes, and other deductions.
+            <strong>Disclaimer:</strong> This is an approximate calculation based on standard 7th
+            CPC rules. Actual salary may vary depending on specific state rules, allowances,
+            professional taxes, and other deductions.
           </span>
         </p>
       </div>

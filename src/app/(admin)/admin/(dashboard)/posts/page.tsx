@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import PostsTable from "@/components/admin/PostsTable";
+import PageHeader from "@/components/admin/PageHeader";
 import AdminSearch from "@/components/admin/AdminSearch";
 
 interface Props {
@@ -51,18 +52,18 @@ export default async function AdminPostsPage({ searchParams }: Props) {
   return (
     <>
       {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Posts</h1>
-          <p className="mt-1 text-sm text-muted">{total} total posts</p>
-        </div>
-        <Link
-          href="/admin/posts/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark"
-        >
-          <Plus className="h-4 w-4" /> New Post
-        </Link>
-      </div>
+      <PageHeader
+        title="Posts"
+        description={`${total} total posts`}
+        actions={
+          <Link
+            href="/admin/posts/new"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark"
+          >
+            <Plus className="h-4 w-4" /> New Post
+          </Link>
+        }
+      />
 
       {/* Filters */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">

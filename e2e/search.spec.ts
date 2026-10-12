@@ -1,18 +1,19 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Search functionality", () => {
-  test("search input is visible on homepage", async ({ page }) => {
+  test("header search link opens the search page", async ({ page }) => {
     await page.goto("/");
-    const searchInput = page.locator("input[type='search'], input[placeholder*='search' i], input[name='q']");
-    await expect(searchInput.first()).toBeVisible();
+    await page.locator("header").getByRole("link", { name: "Search" }).click();
+    await page.waitForURL(/\/search/);
+    await expect(page.getByRole("textbox", { name: "Search jobs" })).toBeVisible();
   });
 
   test("can type in search box and submit", async ({ page }) => {
-    await page.goto("/");
-    const searchInput = page.locator("input[type='search'], input[placeholder*='search' i], input[name='q']").first();
+    await page.goto("/search");
+    const searchInput = page.getByRole("textbox", { name: "Search jobs" });
     await searchInput.fill("SSC CGL");
     await searchInput.press("Enter");
-    await page.waitForURL(/\/search/);
+    await page.waitForURL(/\/search\?q=SSC/);
     expect(page.url()).toContain("/search");
     expect(page.url()).toContain("SSC");
   });

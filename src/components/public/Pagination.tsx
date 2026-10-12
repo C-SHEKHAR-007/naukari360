@@ -47,7 +47,7 @@ export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps
             href={`${baseUrl}?page=${p}`}
             className={`rounded-lg border px-3.5 py-2 text-sm font-medium shadow-sm transition-all ${
               p === currentPage
-                ? "border-primary bg-primary text-white shadow-primary/20"
+                ? "border-primary bg-primary text-primary-foreground shadow-primary/20"
                 : "border-border bg-card text-foreground hover:border-primary/40 hover:text-primary"
             }`}
           >

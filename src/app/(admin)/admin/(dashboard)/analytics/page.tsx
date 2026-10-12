@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { BarChart3, Eye, TrendingUp, Users, MousePointerClick } from "lucide-react";
+import { Eye, TrendingUp, Users, MousePointerClick } from "lucide-react";
 import Link from "next/link";
 import AnalyticsChart from "@/components/admin/AnalyticsChart";
+import PageHeader from "@/components/admin/PageHeader";
 
 async function getAnalyticsData() {
   const now = new Date();
@@ -53,13 +54,10 @@ export default async function AnalyticsPage() {
 
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Analytics</h1>
-        <p className="mt-1 text-sm text-muted">Site performance overview (last 30 days)</p>
-      </div>
+      <PageHeader title="Analytics" description="Site performance overview (last 30 days)" />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard label="Total Views" value={data.totalViews.toLocaleString()} icon={Eye} />
         <StatCard
           label="Subscribers"
@@ -136,7 +134,10 @@ export default async function AnalyticsPage() {
         <div className="border-b border-border px-6 py-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-foreground">Top Affiliate Links</h2>
-            <Link href="/admin/affiliate-links" className="text-sm text-primary hover:underline">
+            <Link
+              href="/admin/affiliate-links"
+              className="-mr-2 inline-flex min-h-8 items-center rounded-md px-2 py-1.5 text-sm text-primary hover:bg-primary/10 hover:underline"
+            >
               View all
             </Link>
           </div>
@@ -173,12 +174,12 @@ function StatCard({
   subtitle?: string;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-muted">{label}</p>
-        <Icon className="h-5 w-5 text-muted" />
+    <div className="min-w-0 rounded-xl border border-border bg-card p-3.5 sm:p-5">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-medium text-muted sm:text-sm">{label}</p>
+        <Icon className="h-4 w-4 shrink-0 text-muted sm:h-5 sm:w-5" />
       </div>
-      <p className="mt-2 text-3xl font-bold text-foreground">{value}</p>
+      <p className="mt-2 break-words text-2xl font-bold text-foreground sm:text-3xl">{value}</p>
       {subtitle && <p className="mt-1 text-xs text-muted">{subtitle}</p>}
     </div>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPageBySlug } from "@/lib/db";
+import { prepareCmsHtml } from "@/lib/cms";
 
 export const metadata: Metadata = { title: "Privacy Policy" };
 
@@ -15,7 +16,7 @@ export default async function PrivacyPolicyPage() {
       {page.contentEn && (
         <div
           className="prose prose-sm max-w-none dark:prose-invert mt-6"
-          dangerouslySetInnerHTML={{ __html: page.contentEn }}
+          dangerouslySetInnerHTML={{ __html: prepareCmsHtml(page.contentEn, page.titleEn) }}
         />
       )}
     </div>

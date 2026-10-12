@@ -230,10 +230,12 @@ describe("db.ts — getStates", () => {
 });
 
 describe("db.ts — getAdSlot", () => {
-  it("queries by slotKey", async () => {
-    (prisma.adSlot.findUnique as any).mockResolvedValue(null);
-    await getAdSlot("header_banner");
-    expect(prisma.adSlot.findUnique).toHaveBeenCalledWith({ where: { slotKey: "header_banner" } });
+  it("picks the slot by key from the active slots list", async () => {
+    const slot = { slotKey: "header_banner", isActive: true, adCode: "<div/>" };
+    (prisma.adSlot.findMany as any).mockResolvedValue([slot, { slotKey: "other" }]);
+    expect(await getAdSlot("header_banner")).toEqual(slot);
+    expect(await getAdSlot("missing")).toBeNull();
+    expect(prisma.adSlot.findMany).toHaveBeenCalledWith({ where: { isActive: true } });
   });
 });
 

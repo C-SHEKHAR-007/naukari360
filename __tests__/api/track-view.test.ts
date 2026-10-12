@@ -9,6 +9,7 @@ vi.mock("@/lib/prisma", () => ({
     post: {
       update: vi.fn().mockResolvedValue({ id: "post-1", views: 2 }),
     },
+    $transaction: vi.fn((ops: Promise<unknown>[]) => Promise.all(ops)),
   },
 }));
 

@@ -9,15 +9,15 @@ import GoogleAnalytics from "@/components/public/GoogleAnalytics";
 import OfflineIndicator from "@/components/public/OfflineIndicator";
 import QuickCompare from "@/components/public/QuickCompare";
 import MobileBottomNav from "@/components/public/MobileBottomNav";
+import NavigationProgress from "@/components/public/NavigationProgress";
 import { getSiteSettings } from "@/lib/settings";
-
-export const dynamic = "force-dynamic";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
 
   return (
     <div className="pb-16 lg:pb-0 flex min-h-screen flex-col">
+      <NavigationProgress />
       {settings?.google_analytics_id && <GoogleAnalytics gaId={settings.google_analytics_id} />}
       <Header settings={settings} />
       <main className="flex-1">{children}</main>

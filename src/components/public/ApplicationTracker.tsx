@@ -65,7 +65,7 @@ export default function ApplicationTracker() {
             onClick={() => setFilter(s)}
             className={`rounded-md px-2 py-1 text-xs capitalize transition-colors ${
               filter === s
-                ? "bg-primary text-white"
+                ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -86,12 +86,12 @@ export default function ApplicationTracker() {
               >
                 {job.title}
               </Link>
-              <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary capitalize">
+              <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary capitalize">
                 {job.status}
               </span>
               <button
                 onClick={() => handleRemove(job.slug)}
-                className="shrink-0 text-muted-foreground hover:text-red-500"
+                className="shrink-0 text-muted-foreground hover:text-danger-emphasis"
                 aria-label={`Remove ${job.title} from tracker`}
               >
                 <Trash2 className="h-3.5 w-3.5" />

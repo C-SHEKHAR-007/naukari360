@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { adminNavLink } from "./helpers/admin";
 
 test.describe("Admin Posts Management", () => {
   test.beforeEach(async ({ page }) => {
@@ -11,7 +12,7 @@ test.describe("Admin Posts Management", () => {
   });
 
   test("can navigate to posts page", async ({ page }) => {
-    await page.locator('aside a[href="/admin/posts"]').click();
+    await (await adminNavLink(page, "/admin/posts")).click();
     await page.waitForURL(/\/admin\/posts/);
     await expect(page.locator("h1, h2")).toContainText(/posts/i);
   });
@@ -41,7 +42,7 @@ test.describe("Admin Posts Management", () => {
   });
 
   test("can navigate to categories page", async ({ page }) => {
-    await page.locator('aside a[href="/admin/categories"]').click();
+    await (await adminNavLink(page, "/admin/categories")).click();
     await page.waitForURL(/\/admin\/categories/);
     await expect(page.locator("body")).toContainText(/categor/i);
   });

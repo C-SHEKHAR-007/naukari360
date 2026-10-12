@@ -23,17 +23,18 @@ test.describe("Admin Affiliate Links", () => {
     await expect(page.locator('input[placeholder*="Original URL"]')).toBeVisible();
   });
 
-  test("can create an affiliate link", async ({ page }) => {
+  test("can create an affiliate link", async ({ page }, testInfo) => {
     await page.goto("/admin/affiliate-links");
     await page.locator("button:has-text('Add Link')").click();
 
     const slug = `test-link-${Date.now()}`;
-    await page.fill('input[placeholder="Link name"]', "E2E Test Link");
+    const name = `E2E Test Link ${testInfo.project.name} ${Date.now()}`;
+    await page.fill('input[placeholder="Link name"]', name);
     await page.fill('input[placeholder*="Original URL"]', "https://example.com/affiliate");
     await page.fill('input[placeholder*="Slug"]', slug);
     await page.click("button:has-text('Save')");
 
-    await expect(page.locator("text=E2E Test Link")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(name)).toBeVisible({ timeout: 5000 });
   });
 });
 
@@ -52,9 +53,10 @@ test.describe("Admin Notifications", () => {
     await expect(page.locator("h2, h3").filter({ hasText: "Compose Notification" })).toBeVisible();
   });
 
-  test("can send a notification", async ({ page }) => {
+  test("can send a notification", async ({ page }, testInfo) => {
+    const title = `E2E Test Notification ${testInfo.project.name} ${Date.now()}`;
     await page.goto("/admin/notifications");
-    await page.fill('input[placeholder*="SSC CGL"]', "E2E Test Notification");
+    await page.fill('input[placeholder*="SSC CGL"]', title);
     await page.fill(
       'textarea[placeholder*="Brief notification"]',
       "This is a test notification from E2E"
@@ -62,7 +64,7 @@ test.describe("Admin Notifications", () => {
     await page.click("button:has-text('Send Notification')");
 
     await expect(page.locator("text=Notification sent!")).toBeVisible({ timeout: 5000 });
-    await expect(page.locator("text=E2E Test Notification")).toBeVisible();
+    await expect(page.getByText(title)).toBeVisible();
   });
 });
 
@@ -81,14 +83,15 @@ test.describe("Admin Interstitial Settings", () => {
     await expect(page.locator("button:has-text('Add Config')")).toBeVisible();
   });
 
-  test("can create an interstitial config", async ({ page }) => {
+  test("can create an interstitial config", async ({ page }, testInfo) => {
+    const title = `E2E Test Config ${testInfo.project.name} ${Date.now()}`;
     await page.goto("/admin/interstitial");
     await page.locator("button:has-text('Add Config')").click();
 
-    await page.fill('input[placeholder*="Title"]', "E2E Test Config");
+    await page.fill('input[placeholder*="Title"]', title);
     await page.fill('input[placeholder*="Ad Slot Key"]', "e2e_test_slot");
     await page.click("button:has-text('Save')");
 
-    await expect(page.locator("text=E2E Test Config")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(title)).toBeVisible({ timeout: 5000 });
   });
 });

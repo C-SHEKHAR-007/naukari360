@@ -1,20 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LayoutDashboard, Loader2, Check } from "lucide-react";
 import { addJobToTracker } from "@/app/(public)/tracker/actions";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export default function TrackApplicationButton({ postId, initialTracked }: { postId: string; initialTracked: boolean }) {
+export default function TrackApplicationButton({ postId }: { postId: string }) {
   const [loading, setLoading] = useState(false);
-  const [isCurrentlyTracked, setIsCurrentlyTracked] = useState(initialTracked);
+  const [isCurrentlyTracked, setIsCurrentlyTracked] = useState(false);
   const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  // Tracked status is per-user, so it's loaded client-side to keep the post page cacheable
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    fetch(`/api/post-user-state?postId=${postId}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.isTracked) setIsCurrentlyTracked(true);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, postId]);
   const router = useRouter();
 
   async function handleTrack() {
     if (!session?.user) {
-      router.push("/admin/login?callbackUrl=/tracker");
+      // Site users sign in with Google and come back to this job
+      signIn("google", { callbackUrl: window.location.href });
       return;
     }
 
@@ -40,7 +57,7 @@ export default function TrackApplicationButton({ postId, initialTracked }: { pos
       disabled={loading}
       className={`flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-semibold shadow-sm transition-all active:scale-[0.97] ${
         isCurrentlyTracked
-          ? "border-emerald-500/40 bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400"
+          ? "border-success-emphasis/40 bg-success-subtle text-success-emphasis"
           : "border-border bg-card text-foreground hover:border-primary/40 hover:text-primary"
       }`}
     >

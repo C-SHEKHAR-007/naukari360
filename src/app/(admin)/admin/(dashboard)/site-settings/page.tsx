@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import SiteSettingsForm from "@/components/admin/SiteSettingsForm";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function AdminSiteSettingsPage() {
   const settings = await prisma.siteSetting.findMany();
@@ -10,10 +11,7 @@ export default async function AdminSiteSettingsPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Site Settings</h1>
-        <p className="mt-1 text-sm text-muted">Configure global site settings</p>
-      </div>
+      <PageHeader title="Site Settings" description="Configure global site settings" />
       <SiteSettingsForm settings={settingsMap} />
     </>
   );

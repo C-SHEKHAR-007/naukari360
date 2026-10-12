@@ -7,9 +7,10 @@ test.describe("Contact form", () => {
 
   test("contact page loads with form", async ({ page }) => {
     await expect(page.locator("form")).toBeVisible();
-    await expect(page.locator("input[name='name'], label:has-text('Name')")).toBeVisible();
-    await expect(page.locator("input[name='email'], label:has-text('Email')")).toBeVisible();
-    await expect(page.locator("textarea[name='message'], label:has-text('Message')")).toBeVisible();
+    await expect(page.getByLabel("Name *")).toBeVisible();
+    await expect(page.getByLabel("Email *")).toBeVisible();
+    await expect(page.getByLabel("Subject *")).toBeVisible();
+    await expect(page.getByLabel("Message *")).toBeVisible();
   });
 
   test("form shows validation on empty submit", async ({ page }) => {
@@ -24,13 +25,9 @@ test.describe("Contact form", () => {
   test("form submits successfully with valid data", async ({ page }) => {
     await page.locator("input[name='name']").fill("Test User");
     await page.locator("input[name='email']").fill("test@example.com");
+    await page.locator("select[name='type']").selectOption("general");
+    await page.locator("input[name='subject']").fill("Playwright test");
     await page.locator("textarea[name='message']").fill("This is a test message from Playwright");
-
-    // Select subject if available
-    const subjectSelect = page.locator("select[name='subject']");
-    if (await subjectSelect.isVisible()) {
-      await subjectSelect.selectOption({ index: 1 });
-    }
 
     await page.locator("button[type='submit']").click();
 

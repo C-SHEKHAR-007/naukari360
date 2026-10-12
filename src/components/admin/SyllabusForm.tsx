@@ -4,7 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { slugify } from "@/lib/utils";
 import { createSyllabus, updateSyllabus } from "@/app/(admin)/admin/(dashboard)/syllabuses/actions";
-import { Plus, Trash2, GripVertical, AlertCircle, Eye, Edit3, ChevronDown, BookOpen } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  GripVertical,
+  AlertCircle,
+  Eye,
+  Edit3,
+  ChevronDown,
+  BookOpen,
+} from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -117,12 +126,16 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
       <div className="space-y-5">
         <div>
           <h2 className="text-xl font-semibold text-foreground tracking-tight">Basic Details</h2>
-          <p className="text-sm text-muted-foreground mt-1">Provide the primary information for this syllabus.</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Provide the primary information for this syllabus.
+          </p>
         </div>
-        
+
         <div className="grid gap-6 md:grid-cols-2 p-6 bg-card rounded-2xl border border-border shadow-sm">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Title (English) <span className="text-destructive">*</span></label>
+            <label className="text-sm font-medium text-foreground">
+              Title (English) <span className="text-destructive">*</span>
+            </label>
             <input
               required
               type="text"
@@ -132,7 +145,7 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
               placeholder="e.g. SSC CGL Tier 1 Complete Syllabus"
             />
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Title (Hindi)</label>
             <input
@@ -145,7 +158,9 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">URL Slug <span className="text-destructive">*</span></label>
+            <label className="text-sm font-medium text-foreground">
+              URL Slug <span className="text-destructive">*</span>
+            </label>
             <div className="flex rounded-xl shadow-sm">
               <span className="inline-flex items-center rounded-l-xl border border-r-0 border-border/60 bg-muted/30 px-3 text-sm text-muted-foreground font-medium">
                 /syllabus/
@@ -179,7 +194,9 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
                 <ChevronDown className="h-4 w-4" />
               </div>
             </div>
-            <p className="text-[11px] text-muted-foreground mt-1">If linked, a button to this syllabus will appear on the job page.</p>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              If linked, a button to this syllabus will appear on the job page.
+            </p>
           </div>
         </div>
       </div>
@@ -187,10 +204,14 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
       {/* Markdown Content Section */}
       <div className="space-y-5">
         <div>
-          <h2 className="text-xl font-semibold text-foreground tracking-tight">Syllabus Markdown Document</h2>
-          <p className="text-sm text-muted-foreground mt-1">This rich-text content is displayed on the left pane of the syllabus page.</p>
+          <h2 className="text-xl font-semibold text-foreground tracking-tight">
+            Syllabus Markdown Document
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            This rich-text content is displayed on the left pane of the syllabus page.
+          </p>
         </div>
-        
+
         <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden flex flex-col">
           <div className="flex items-center justify-between bg-muted/10 px-4 py-3 border-b border-border/60">
             <div className="flex bg-muted/30 p-1 rounded-lg border border-border/60">
@@ -217,7 +238,11 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
                 <Eye className="h-4 w-4" /> Live Preview
               </button>
             </div>
-            {!isPreviewMode && <span className="text-xs text-muted-foreground hidden sm:inline-block">Supports GitHub Flavored Markdown</span>}
+            {!isPreviewMode && (
+              <span className="text-xs text-muted-foreground hidden sm:inline-block">
+                Supports GitHub Flavored Markdown
+              </span>
+            )}
           </div>
 
           {!isPreviewMode ? (
@@ -231,7 +256,8 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
           ) : (
             <div className="p-8 bg-background min-h-[400px] overflow-y-auto max-h-[600px]">
               {markdownContent ? (
-                <div className="text-foreground max-w-none 
+                <div
+                  className="text-foreground max-w-none 
                   [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:border-b [&_h2]:border-border [&_h2]:pb-2 [&_h2]:mt-8 [&_h2]:mb-4 [&_h2:first-child]:mt-0
                   [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-3
                   [&_p]:my-4 [&_p]:leading-relaxed [&_p]:text-muted-foreground
@@ -241,9 +267,7 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
                   [&_a]:text-primary [&_a]:underline [&_a]:hover:text-primary/80
                   [&_strong]:font-bold [&_strong]:text-foreground"
                 >
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {markdownContent}
-                  </ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownContent}</ReactMarkdown>
                 </div>
               ) : (
                 <div className="flex h-full items-center justify-center flex-col text-muted-foreground gap-3 opacity-50 py-20">
@@ -260,8 +284,12 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-foreground tracking-tight">Interactive Progress Tracker</h2>
-            <p className="text-sm text-muted-foreground mt-1">Build the step-by-step checklist pinned to the right side of the syllabus.</p>
+            <h2 className="text-xl font-semibold text-foreground tracking-tight">
+              Interactive Progress Tracker
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Build the step-by-step checklist pinned to the right side of the syllabus.
+            </p>
           </div>
           <button
             type="button"
@@ -275,18 +303,23 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
 
         <div className="space-y-6">
           {sections.map((section, sIdx) => (
-            <div key={sIdx} className="rounded-2xl border border-border bg-card p-6 shadow-sm relative group transition-all hover:border-primary/40">
+            <div
+              key={sIdx}
+              className="rounded-2xl border border-border bg-card p-6 shadow-sm relative group transition-all hover:border-primary/40"
+            >
               <button
                 type="button"
                 onClick={() => removeSection(sIdx)}
-                className="absolute top-4 right-4 p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                className="absolute top-4 right-4 p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-lg transition-colors sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
                 title="Remove Subject"
               >
                 <Trash2 className="h-5 w-5" />
               </button>
-              
+
               <div className="space-y-2 mb-6 pr-12">
-                <label className="text-xs font-semibold tracking-wider uppercase text-primary">Subject {sIdx + 1}</label>
+                <label className="text-xs font-semibold tracking-wider uppercase text-primary">
+                  Subject {sIdx + 1}
+                </label>
                 <input
                   type="text"
                   value={section.title}
@@ -299,20 +332,26 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
               <div className="space-y-3 bg-muted/10 rounded-xl p-5 border border-border/40">
                 <div className="flex items-center justify-between mb-4">
                   <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs font-semibold">{section.topics.length}</span> Topics
+                    <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs font-semibold">
+                      {section.topics.length}
+                    </span>{" "}
+                    Topics
                   </label>
                   <button
                     type="button"
                     onClick={() => addTopic(sIdx)}
-                    className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg"
+                    className="flex min-h-8 items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg"
                   >
                     <Plus className="h-3 w-3" /> Add Topic
                   </button>
                 </div>
-                
+
                 <div className="space-y-2">
                   {section.topics.map((topic, tIdx) => (
-                    <div key={tIdx} className="flex items-center gap-3 bg-background rounded-lg p-2 border border-border/50 shadow-sm transition-all focus-within:ring-1 focus-within:ring-primary/30 focus-within:border-primary">
+                    <div
+                      key={tIdx}
+                      className="flex items-center gap-3 bg-background rounded-lg p-2 border border-border/50 shadow-sm transition-all focus-within:ring-1 focus-within:ring-primary/30 focus-within:border-primary"
+                    >
                       <GripVertical className="h-4 w-4 text-muted-foreground/40 cursor-grab hover:text-foreground shrink-0" />
                       <input
                         type="text"
@@ -339,14 +378,17 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
               </div>
             </div>
           ))}
-          
+
           {sections.length === 0 && (
             <div className="rounded-2xl border border-dashed border-border/80 p-12 text-center bg-muted/5 transition-all hover:bg-muted/10">
               <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <BookOpen className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-1">No Tracker Sections</h3>
-              <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Create subjects and nested topics to build a beautiful interactive checklist for your students.</p>
+              <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
+                Create subjects and nested topics to build a beautiful interactive checklist for
+                your students.
+              </p>
               <button
                 type="button"
                 onClick={addSection}
@@ -365,7 +407,7 @@ export default function SyllabusForm({ initialData, posts }: SyllabusFormProps) 
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark disabled:opacity-50"
         >
           {loading ? "Saving..." : initialData ? "Update Syllabus" : "Publish Syllabus"}
         </button>

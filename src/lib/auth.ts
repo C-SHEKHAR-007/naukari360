@@ -49,11 +49,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/admin/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.role = (user as { role?: string }).role || "user";
       }
-      if (token.sub) {
+      // Only hit the DB on sign-in or explicit session update(), not on every request
+      if (token.sub && (user || trigger === "update")) {
         const dbUser = await prisma.user.findUnique({ where: { id: token.sub } });
         if (dbUser) {
           token.qualification = dbUser.qualification;

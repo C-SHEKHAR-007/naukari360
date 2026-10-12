@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import ContactInboxList from "@/components/admin/ContactInboxList";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function AdminContactInboxPage() {
   const submissions = await prisma.contactSubmission.findMany({
@@ -10,12 +11,14 @@ export default async function AdminContactInboxPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Contact Inbox</h1>
-        <p className="mt-1 text-sm text-muted">
-          {submissions.length} messages • {unread} unread
-        </p>
-      </div>
+      <PageHeader
+        title="Contact Inbox"
+        description={
+          <>
+            {submissions.length} messages • {unread} unread
+          </>
+        }
+      />
       <ContactInboxList submissions={submissions} />
     </>
   );

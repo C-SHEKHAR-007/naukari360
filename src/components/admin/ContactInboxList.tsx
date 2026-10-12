@@ -110,7 +110,7 @@ export default function ContactInboxList({ submissions: initial }: { submissions
               {isSuperAdmin && (
                 <button
                   onClick={() => handleDelete(selectedMsg.id)}
-                  className="rounded p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="rounded p-1.5 text-danger-emphasis hover:bg-danger-subtle"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

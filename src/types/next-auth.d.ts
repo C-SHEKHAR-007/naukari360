@@ -1,5 +1,8 @@
+// These imports make TypeScript treat this file as a module augmentation of next-auth
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import NextAuth, { DefaultSession } from "next-auth";
 import { JWT } from "next-auth/jwt";
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 declare module "next-auth" {
   /**

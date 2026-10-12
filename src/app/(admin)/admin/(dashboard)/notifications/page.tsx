@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import NotificationComposer from "@/components/admin/NotificationComposer";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function AdminNotificationsPage() {
   const notifications = await prisma.notification.findMany({
@@ -9,12 +10,10 @@ export default async function AdminNotificationsPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Push Notifications</h1>
-        <p className="mt-1 text-sm text-muted">
-          Compose and send push notifications to subscribers
-        </p>
-      </div>
+      <PageHeader
+        title="Push Notifications"
+        description="Compose and send push notifications to subscribers"
+      />
       <NotificationComposer notifications={JSON.parse(JSON.stringify(notifications))} />
     </>
   );

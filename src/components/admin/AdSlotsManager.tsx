@@ -140,7 +140,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                 <button
                   onClick={() => handleUpdate(slot.id)}
                   disabled={saving}
-                  className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-dark"
+                  className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary-dark"
                 >
                   <Check className="mr-1 inline h-3 w-3" />
                   Save
@@ -155,11 +155,14 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-medium text-foreground">{slot.name}</h3>
-                  <span className="rounded bg-surface px-2 py-0.5 font-mono text-xs text-muted">
+            <div className="flex items-start justify-between gap-3 sm:items-center">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Phones: name gets its own line; key + device wrap underneath */}
+                  <h3 className="basis-full break-words font-medium text-foreground sm:basis-auto">
+                    {slot.name}
+                  </h3>
+                  <span className="max-w-full break-all rounded bg-surface px-2 py-0.5 font-mono text-xs text-muted">
                     {slot.slotKey}
                   </span>
                   <span className="rounded bg-surface px-2 py-0.5 text-xs text-muted">
@@ -170,15 +173,15 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                   {slot.adCode ? `${slot.adCode.length} chars of ad code` : "No ad code set"}
                 </p>
                 {slot.notes && (
-                  <p className="mt-0.5 text-xs italic text-amber-600 dark:text-amber-400">
+                  <p className="mt-0.5 break-words text-xs italic text-warning-emphasis">
                     📝 {slot.notes}
                   </p>
                 )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-1 sm:gap-2">
                 <button
                   onClick={() => toggleActive(slot.id, slot.isActive)}
-                  className={slot.isActive ? "text-emerald-500" : "text-muted"}
+                  className={slot.isActive ? "text-success" : "text-muted"}
                 >
                   {slot.isActive ? (
                     <ToggleRight className="h-6 w-6" />
@@ -195,7 +198,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
                 {isSuperAdmin && (
                   <button
                     onClick={() => handleDelete(slot.id)}
-                    className="rounded p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="rounded p-1.5 text-danger-emphasis hover:bg-danger-subtle"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -251,7 +254,7 @@ export default function AdSlotsManager({ adSlots: initialSlots }: { adSlots: AdS
             <button
               onClick={handleAdd}
               disabled={saving}
-              className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-dark"
+              className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary-dark"
             >
               <Check className="mr-1 inline h-3 w-3" />
               Create

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Save, User, Loader2 } from "lucide-react";
 import Image from "next/image";
+import SignInButton from "@/components/public/SignInButton";
 
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
@@ -16,14 +17,12 @@ export default function ProfilePage() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/admin/login?callbackUrl=/profile");
-    } else if (session?.user) {
+    if (session?.user) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setQualification(session.user.qualification || "");
       setState(session.user.state || "");
     }
-  }, [session, status, router]);
+  }, [session]);
 
   if (status === "loading") {
     return (
@@ -33,7 +32,25 @@ export default function ProfilePage() {
     );
   }
 
-  if (!session?.user) return null;
+  // Site users sign in with Google; /admin/login is only for the admin panel
+  if (!session?.user) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-24 text-center">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary-subtle">
+          <User className="h-10 w-10 text-primary" />
+        </div>
+        <h1 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+          Your profile
+        </h1>
+        <p className="mt-2 text-muted-foreground">
+          Sign in to save your qualification and state and get job recommendations made for you.
+        </p>
+        <div className="mt-8 flex justify-center">
+          <SignInButton />
+        </div>
+      </div>
+    );
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +72,7 @@ export default function ProfilePage() {
         const data = await res.json();
         setMessage(data.error || "Failed to update profile.");
       }
-    } catch (error) {
+    } catch {
       setMessage("An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -67,12 +84,12 @@ export default function ProfilePage() {
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4 mb-8">
           {session.user.image ? (
-            <Image 
-              src={session.user.image} 
-              alt="Avatar" 
+            <Image
+              src={session.user.image}
+              alt="Avatar"
               width={64}
               height={64}
-              className="h-16 w-16 rounded-full border border-border object-cover" 
+              className="h-16 w-16 rounded-full border border-border object-cover"
               referrerPolicy="no-referrer"
               unoptimized
             />
@@ -91,11 +108,14 @@ export default function ProfilePage() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Personalize Your Job Feed</h2>
             <p className="text-sm text-muted">
-              Select your qualification and state below. Your homepage feed will automatically prioritize jobs that match your profile!
+              Select your qualification and state below. Your homepage feed will automatically
+              prioritize jobs that match your profile!
             </p>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">Highest Qualification</label>
+              <label className="mb-2 block text-sm font-medium text-foreground">
+                Highest Qualification
+              </label>
               <select
                 value={qualification}
                 onChange={(e) => setQualification(e.target.value)}
@@ -111,7 +131,9 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">Preferred State</label>
+              <label className="mb-2 block text-sm font-medium text-foreground">
+                Preferred State
+              </label>
               <select
                 value={state}
                 onChange={(e) => setState(e.target.value)}
@@ -129,7 +151,9 @@ export default function ProfilePage() {
           </div>
 
           {message && (
-            <div className={`rounded-lg p-3 text-sm ${message.includes("success") ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"}`}>
+            <div
+              className={`rounded-lg p-3 text-sm ${message.includes("success") ? "bg-success-subtle text-success-emphasis" : "bg-danger-subtle text-danger-emphasis"}`}
+            >
               {message}
             </div>
           )}

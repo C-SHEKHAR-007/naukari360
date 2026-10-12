@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import AffiliateLinksManager from "@/components/admin/AffiliateLinksManager";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default async function AdminAffiliateLinksPage() {
   const [links, categories] = await Promise.all([
@@ -12,10 +13,10 @@ export default async function AdminAffiliateLinksPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Affiliate Links</h1>
-        <p className="mt-1 text-sm text-muted">Manage affiliate/referral links for monetization</p>
-      </div>
+      <PageHeader
+        title="Affiliate Links"
+        description="Manage affiliate/referral links for monetization"
+      />
       <AffiliateLinksManager
         links={JSON.parse(JSON.stringify(links))}
         categories={JSON.parse(JSON.stringify(categories))}

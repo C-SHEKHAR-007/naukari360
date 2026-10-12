@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MoreHorizontal, Edit, Trash2, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { useIsSuperAdmin } from "@/components/admin/AdminRoleProvider";
+import { Badge, type Tone } from "@/components/ui";
 
 interface Post {
   id: string;
@@ -23,7 +24,7 @@ export default function PostsTable({ posts }: { posts: Post[] }) {
       <table className="w-full text-sm">
         <thead className="border-b border-border bg-surface">
           <tr>
-            <th className="px-4 py-3 text-left font-medium text-muted">Title</th>
+            <th className="px-3 py-3 text-left font-medium text-muted sm:px-4">Title</th>
             <th className="hidden px-4 py-3 text-left font-medium text-muted sm:table-cell">
               Category
             </th>
@@ -33,8 +34,12 @@ export default function PostsTable({ posts }: { posts: Post[] }) {
             <th className="hidden px-4 py-3 text-left font-medium text-muted lg:table-cell">
               Views
             </th>
-            <th className="px-4 py-3 text-left font-medium text-muted">Date</th>
-            <th className="px-4 py-3 text-right font-medium text-muted">Actions</th>
+            <th className="hidden px-4 py-3 text-left font-medium text-muted sm:table-cell">
+              Date
+            </th>
+            <th className="px-3 py-3 text-right font-medium text-muted sm:px-4">
+              <span className="sr-only sm:not-sr-only">Actions</span>
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -58,21 +63,33 @@ function PostRow({ post }: { post: Post }) {
   const isSuperAdmin = useIsSuperAdmin();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const statusStyles: Record<string, string> = {
-    published: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400",
-    draft: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
-    archived: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+  const statusTones: Record<string, Tone> = {
+    published: "success",
+    draft: "warning",
+    archived: "neutral",
   };
+
+  const status = <Badge tone={statusTones[post.status] ?? statusTones.draft}>{post.status}</Badge>;
+  const date = new Date(post.createdAt).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "2-digit",
+  });
 
   return (
     <tr className="hover:bg-surface/50">
-      <td className="px-4 py-3">
+      <td className="px-3 py-3 sm:px-4">
         <Link
           href={`/admin/posts/${post.id}`}
-          className="font-medium text-foreground hover:text-primary line-clamp-1"
+          className="font-medium text-foreground hover:text-primary line-clamp-2 break-words sm:line-clamp-1"
         >
           {post.titleEn}
         </Link>
+        {/* Phones: status + date sit under the title instead of in their own columns */}
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 sm:hidden">
+          {status}
+          <span className="whitespace-nowrap text-xs text-muted">{date}</span>
+        </div>
       </td>
       <td className="hidden px-4 py-3 sm:table-cell">
         {post.category ? (
@@ -81,22 +98,10 @@ function PostRow({ post }: { post: Post }) {
           <span className="text-xs text-muted/50">—</span>
         )}
       </td>
-      <td className="hidden px-4 py-3 md:table-cell">
-        <span
-          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[post.status] || statusStyles.draft}`}
-        >
-          {post.status}
-        </span>
-      </td>
+      <td className="hidden px-4 py-3 md:table-cell">{status}</td>
       <td className="hidden px-4 py-3 text-muted lg:table-cell">{post.views}</td>
-      <td className="px-4 py-3 text-muted">
-        {new Date(post.createdAt).toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "2-digit",
-        })}
-      </td>
-      <td className="px-4 py-3 text-right">
+      <td className="hidden whitespace-nowrap px-4 py-3 text-muted sm:table-cell">{date}</td>
+      <td className="w-px px-2 py-3 text-right align-top sm:w-auto sm:px-4 sm:align-middle">
         <div className="relative inline-block">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -130,7 +135,7 @@ function PostRow({ post }: { post: Post }) {
                       await fetch(`/api/admin/posts/${post.id}`, { method: "DELETE" });
                       window.location.reload();
                     }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-danger-emphasis hover:bg-danger-subtle"
                   >
                     <Trash2 className="h-3.5 w-3.5" /> Delete
                   </button>

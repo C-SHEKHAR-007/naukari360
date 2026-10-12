@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Bookmark, Search, User } from "lucide-react";
-import { motion } from "framer-motion";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const navItems = [
@@ -19,7 +18,7 @@ export default function MobileBottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 block lg:hidden pb-[env(safe-area-inset-bottom)] bg-background/80 backdrop-blur-md border-t border-border/40 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
-      <nav className="flex justify-around items-center h-16">
+      <nav aria-label="Quick links" className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -30,15 +29,9 @@ export default function MobileBottomNav() {
                 isActive ? "text-primary" : "text-muted hover:text-foreground"
               }`}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="bottom-nav-indicator"
-                  className="absolute top-0 w-8 h-1 bg-primary rounded-b-full"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
+              {isActive && <div className="absolute top-0 w-8 h-1 bg-primary rounded-b-full" />}
               <item.icon className={`h-5 w-5 ${isActive ? "fill-primary/20" : ""}`} />
-              <span className="text-[10px] font-medium tracking-wide">
+              <span className="text-[11px] font-medium tracking-wide">
                 {t(item.labelEn, item.labelHi)}
               </span>
             </Link>

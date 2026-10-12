@@ -191,7 +191,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
+        <div className="rounded-lg border border-danger-emphasis/25 bg-danger-subtle p-4 text-sm text-danger-emphasis">
           {error}
         </div>
       )}
@@ -427,7 +427,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
             <button
               type="button"
               onClick={() => setImportantDates([...importantDates, { labelEn: "", date: "" }])}
-              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+              className="-mr-2 inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 hover:underline"
             >
               <Plus className="h-3 w-3" /> Add Date
             </button>
@@ -458,7 +458,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
               <button
                 type="button"
                 onClick={() => setImportantDates(importantDates.filter((_, idx) => idx !== i))}
-                className="rounded-md p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="rounded-md p-2 text-danger-emphasis hover:bg-danger-subtle"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -528,7 +528,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
           <button
             type="button"
             onClick={() => setFaqs([...faqs, { questionEn: "", answerEn: "" }])}
-            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            className="-mr-2 inline-flex min-h-8 items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 hover:underline"
           >
             <Plus className="h-3 w-3" /> Add FAQ
           </button>
@@ -563,7 +563,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
               <button
                 type="button"
                 onClick={() => setFaqs(faqs.filter((_, idx) => idx !== i))}
-                className="rounded-md p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="rounded-md p-1.5 text-danger-emphasis hover:bg-danger-subtle"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -647,7 +647,7 @@ export default function PostForm({ post, categories, states }: PostFormProps) {
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary-dark disabled:opacity-50"
         >
           <Save className="h-4 w-4" />
           {saving ? "Saving..." : post ? "Update Post" : "Create Post"}

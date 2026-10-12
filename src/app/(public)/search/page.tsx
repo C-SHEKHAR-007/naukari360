@@ -33,9 +33,9 @@ export default async function SearchPage({ searchParams }: Props) {
 
       {query && (
         <p className="mb-6 text-sm text-muted">
-          Found <strong className="text-foreground">{results.length}</strong> result
-          {results.length !== 1 ? "s" : ""} for &ldquo;
-          <span className="font-medium text-foreground">{query}</span>&rdquo;
+          Found <strong className="text-foreground">{results.length}</strong>
+          {` ${results.length === 1 ? "result" : "results"} for `}
+          &ldquo;<span className="font-medium text-foreground">{query}</span>&rdquo;
         </p>
       )}
 

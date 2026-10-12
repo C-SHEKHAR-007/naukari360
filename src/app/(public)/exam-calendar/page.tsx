@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Calendar } from "lucide-react";
 import { getExamCalendarPosts } from "@/lib/db";
 import BilingualText from "@/components/public/BilingualText";
 
@@ -65,7 +64,7 @@ export default async function ExamCalendarPage() {
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <BilingualText 
+                      <BilingualText
                         en={post.titleEn}
                         hi={post.titleHi || undefined}
                         as="p"

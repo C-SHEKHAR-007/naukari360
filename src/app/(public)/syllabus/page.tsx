@@ -5,7 +5,7 @@ import { formatDate } from "@/lib/utils";
 import BilingualText from "@/components/public/BilingualText";
 
 export const metadata = {
-  title: "All Syllabuses | Sarkari Duniya",
+  title: "All Syllabuses",
   description: "Browse detailed subject-wise syllabuses for all government exams.",
 };
 
@@ -14,9 +14,9 @@ export default async function SyllabusListingPage() {
     orderBy: { createdAt: "desc" },
     include: {
       post: {
-        select: { titleEn: true, slug: true }
-      }
-    }
+        select: { titleEn: true, slug: true },
+      },
+    },
   });
 
   return (
@@ -49,13 +49,13 @@ export default async function SyllabusListingPage() {
               )}
             </div>
 
-            <BilingualText 
-              en={syl.titleEn} 
+            <BilingualText
+              en={syl.titleEn}
               hi={syl.titleHi || undefined}
               as="h2"
               className="mt-1 text-[15px] font-semibold leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2"
             />
-            
+
             <div className="mt-auto flex items-center justify-between border-t border-border pt-2.5 mt-4">
               <div className="flex items-center gap-3 text-[11px] text-muted">
                 <span className="flex items-center gap-1">

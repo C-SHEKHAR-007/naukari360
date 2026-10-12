@@ -5,7 +5,9 @@ import Footer from "@/components/public/Footer";
 // Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
@@ -29,9 +31,10 @@ describe("Footer", () => {
     expect(taglines.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders footer text from settings", () => {
+  it("renders footer text from settings with the copyright year kept current", () => {
     const { container } = render(<Footer settings={mockSettings} />);
-    expect(container.textContent).toContain("© 2025 Naukari360. All rights reserved.");
+    const year = new Date().getFullYear();
+    expect(container.textContent).toContain(`© ${year} Naukari360. All rights reserved.`);
   });
 
   it("renders telegram link when provided", () => {
@@ -71,9 +74,7 @@ describe("Footer", () => {
   });
 
   it("renders custom footer text", () => {
-    render(
-      <Footer settings={{ ...mockSettings, footer_text: "Custom Copyright 2026" }} />
-    );
+    render(<Footer settings={{ ...mockSettings, footer_text: "Custom Copyright 2026" }} />);
     expect(screen.getByText("Custom Copyright 2026")).toBeInTheDocument();
   });
 });

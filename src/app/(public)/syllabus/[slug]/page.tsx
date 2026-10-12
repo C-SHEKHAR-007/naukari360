@@ -1,53 +1,44 @@
-import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getSyllabusBySlug } from "@/lib/db";
 import Link from "next/link";
 import { Briefcase, ArrowRight } from "lucide-react";
 import SyllabusDetailedView from "@/components/public/SyllabusDetailedView";
-import InteractiveSyllabus, { SyllabusSection } from "@/components/public/InteractiveSyllabus";
+import type { SyllabusSection } from "@/components/public/InteractiveSyllabus";
+import SyllabusTracker from "@/components/public/SyllabusTracker";
 import BilingualText from "@/components/public/BilingualText";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const syl = await prisma.syllabus.findUnique({ where: { slug } });
+  const syl = await getSyllabusBySlug(slug);
   if (!syl) return { title: "Not Found" };
   return {
-    title: `${syl.titleEn} | Sarkari Duniya`,
+    title: syl.titleEn,
   };
+}
+
+export const revalidate = 300;
+
+// Empty list = render each syllabus on first visit, then serve it from the ISR cache
+export async function generateStaticParams() {
+  return [];
 }
 
 export default async function SyllabusViewPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const session = await auth();
 
-  const syllabus = await prisma.syllabus.findUnique({
-    where: { slug },
-    include: { post: true }
-  });
+  const syllabus = await getSyllabusBySlug(slug);
 
   if (!syllabus) {
     notFound();
   }
 
-  let initialCompletedTopics: string[] = [];
-  if (session?.user?.id) {
-    const progress = await prisma.syllabusProgress.findUnique({
-      where: {
-        userId_syllabusId: {
-          userId: session.user.id,
-          syllabusId: syllabus.id,
-        },
-      },
-    });
-    if (progress && Array.isArray(progress.completedTopics)) {
-      initialCompletedTopics = progress.completedTopics as string[];
-    }
-  }
-
   const breadcrumbs = [
     { name: <BilingualText en="Home" hi="होम" />, url: "/" },
     { name: <BilingualText en="Syllabuses" hi="पाठ्यक्रम" />, url: "/syllabus" },
-    { name: <BilingualText en={syllabus.titleEn} hi={syllabus.titleHi || undefined} />, url: `/syllabus/${syllabus.slug}` },
+    {
+      name: <BilingualText en={syllabus.titleEn} hi={syllabus.titleHi || undefined} />,
+      url: `/syllabus/${syllabus.slug}`,
+    },
   ];
 
   return (
@@ -57,7 +48,10 @@ export default async function SyllabusViewPage({ params }: { params: Promise<{ s
           {breadcrumbs.map((crumb, idx) => (
             <li key={idx} className="flex items-center">
               {idx > 0 && <span className="mx-2">/</span>}
-              <Link href={crumb.url} className="hover:text-primary transition-colors line-clamp-1 max-w-[200px]">
+              <Link
+                href={crumb.url}
+                className="hover:text-primary transition-colors line-clamp-1 max-w-[200px]"
+              >
                 {crumb.name}
               </Link>
             </li>
@@ -77,8 +71,8 @@ export default async function SyllabusViewPage({ params }: { params: Promise<{ s
       <div className="grid gap-8 lg:grid-cols-12">
         {/* Left Column: Detailed Syllabus Reader */}
         <div className="lg:col-span-8">
-          <SyllabusDetailedView 
-            syllabus={syllabus.content as unknown as SyllabusSection[]} 
+          <SyllabusDetailedView
+            syllabus={syllabus.content as unknown as SyllabusSection[]}
             markdownContent={syllabus.markdownContent}
           />
         </div>
@@ -86,11 +80,10 @@ export default async function SyllabusViewPage({ params }: { params: Promise<{ s
         {/* Right Column: Interactive Tracker */}
         <div className="lg:col-span-4">
           <div className="sticky top-24 space-y-6">
-            <InteractiveSyllabus
+            <SyllabusTracker
               postId={syllabus.postId || ""}
               syllabusId={syllabus.id}
               syllabus={syllabus.content as unknown as SyllabusSection[]}
-              initialCompletedTopics={initialCompletedTopics}
             />
 
             {/* Connected Job Card */}
@@ -105,7 +98,7 @@ export default async function SyllabusViewPage({ params }: { params: Promise<{ s
                     <p className="text-xs text-muted-foreground mt-0.5">Apply for this post</p>
                   </div>
                 </div>
-                <BilingualText 
+                <BilingualText
                   en={syllabus.post.titleEn}
                   hi={syllabus.post.titleHi || undefined}
                   as="h4"

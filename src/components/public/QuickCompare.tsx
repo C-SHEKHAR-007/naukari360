@@ -68,7 +68,7 @@ export default function QuickCompare() {
           {posts.length >= 2 && (
             <button
               onClick={() => setShowTable(true)}
-              className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white hover:bg-primary-dark"
+              className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground hover:bg-primary-dark"
             >
               Compare
             </button>
@@ -81,7 +81,7 @@ export default function QuickCompare() {
 
       {/* Comparison modal */}
       {showTable && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-overlay p-4">
           <div className="max-h-[80vh] w-full max-w-4xl overflow-auto rounded-2xl bg-card p-6 shadow-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-foreground">Job Comparison</h2>
@@ -103,7 +103,7 @@ export default function QuickCompare() {
                           <span className="line-clamp-2">{p.titleEn}</span>
                           <button
                             onClick={() => removePost(p.id)}
-                            className="ml-1 shrink-0 text-red-400 hover:text-red-600"
+                            className="ml-1 shrink-0 text-danger-emphasis/70 hover:text-danger-emphasis"
                           >
                             <X className="h-3 w-3" />
                           </button>
