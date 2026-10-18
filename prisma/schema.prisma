@@ -81,6 +81,8 @@ model Post {
   admitCardLink      String?             @map("admit_card_link")
   answerKeyLink      String?             @map("answer_key_link")
   syllabusLink       String?             @map("syllabus_link")
+  sourceUrl          String?             @map("source_url")
+  ingestSource       String?             @map("ingest_source")
   syllabus           Syllabus?
   isTrending         Boolean             @default(false) @map("is_trending")
   isHot              Boolean             @default(false) @map("is_hot")

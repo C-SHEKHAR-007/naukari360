@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
 import { withInvalidation } from "@/lib/cache";
+import { cleanPostData } from "@/lib/post-input";
 
 async function postHandler(request: NextRequest) {
   const authResult = await requireAdmin();
@@ -11,17 +12,7 @@ async function postHandler(request: NextRequest) {
     const body = await request.json();
     const { importantDates, faqs, tags, ...data } = body;
 
-    // Clean empty strings to null
-    const cleaned: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(data)) {
-      if (value === "") cleaned[key] = null;
-      else cleaned[key] = value;
-    }
-
-    // Parse dates
-    if (cleaned.lastDate) cleaned.lastDate = new Date(cleaned.lastDate as string);
-    if (cleaned.examDate) cleaned.examDate = new Date(cleaned.examDate as string);
-    if (cleaned.resultDate) cleaned.resultDate = new Date(cleaned.resultDate as string);
+    const cleaned = cleanPostData(data);
 
     const post = await prisma.post.create({
       data: {
