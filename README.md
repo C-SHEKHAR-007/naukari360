@@ -57,16 +57,18 @@ Copy the `.env.example` file to `.env` and fill in the required variables.
     pnpm install
     ```
 
-3.  **Start Local Database (PostgreSQL)**
-    ```bash
-    # Starts PostgreSQL on port 5434
-    docker compose up -d db
-    ```
+3.  **Local Database (PostgreSQL)**
+
+    PostgreSQL runs natively on the host (port 5432), not in Docker. Create a
+    `sarkari` role and a `naukari360` database owned by it. For the compose
+    `app` container to reach it, PostgreSQL must also listen on `172.17.0.1`
+    (docker0) and allow `172.16.0.0/12` in `pg_hba.conf`.
 
 4.  **Configure Environment Variables**
     ```bash
     cp .env.example .env
-    # Update DATABASE_URL in .env to: postgresql://postgres:postgres@localhost:5434/naukari360?schema=public
+    # Host-side tools:     DATABASE_URL=postgresql://sarkari:<password>@localhost:5432/naukari360?schema=public
+    # Compose containers:  DOCKER_DATABASE_URL=postgresql://sarkari:<password>@host.docker.internal:5432/naukari360?schema=public
     ```
 
 5.  **Run Database Migrations & Seed Data**
