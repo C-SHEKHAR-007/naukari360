@@ -80,7 +80,8 @@ describe("AdminShell", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("collapses the desktop sidebar to icons", () => {
+  it("collapses the desktop sidebar to icons and remembers it", () => {
+    const setCookie = vi.spyOn(document, "cookie", "set");
     render(
       <AdminShell user={user} role="super_admin">
         <p />
@@ -89,7 +90,39 @@ describe("AdminShell", () => {
     fireEvent.click(screen.getByRole("button", { name: "Collapse sidebar" }));
     const sidebar = screen.getByRole("navigation", { name: "Admin" });
     expect(within(sidebar).queryByText("Posts")).not.toBeInTheDocument();
-    expect(within(sidebar).getAllByRole("link")[0]).toHaveAttribute("title", "Dashboard");
+    expect(within(sidebar).getAllByRole("link")[0]).toHaveAccessibleName("Dashboard");
+    expect(setCookie).toHaveBeenCalledWith(
+      expect.stringContaining("admin-sidebar-collapsed=true; path=/admin")
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Expand sidebar" }));
+    expect(within(sidebar).getByText("Posts")).toBeInTheDocument();
+    expect(setCookie).toHaveBeenLastCalledWith(expect.stringContaining("admin-sidebar-width=248"));
+    setCookie.mockRestore();
+  });
+
+  it("starts collapsed at the saved state and shows tooltips on hover", () => {
+    render(
+      <AdminShell user={user} role="super_admin" sidebar={{ collapsed: true, width: 300 }}>
+        <p />
+      </AdminShell>
+    );
+    const sidebar = screen.getByRole("navigation", { name: "Admin" });
+    expect(sidebar.closest("aside")).toHaveStyle({ width: "64px" });
+    fireEvent.mouseEnter(within(sidebar).getByRole("link", { name: "Analytics" }).parentElement!);
+    expect(screen.getByRole("tooltip", { hidden: true })).toHaveTextContent("Analytics");
+  });
+
+  it("resets to the default width on double-clicking the edge", () => {
+    const { container } = render(
+      <AdminShell user={user} role="super_admin" sidebar={{ collapsed: false, width: 320 }}>
+        <p />
+      </AdminShell>
+    );
+    const aside = container.querySelector("aside")!;
+    expect(aside).toHaveStyle({ width: "320px" });
+    fireEvent.doubleClick(aside.querySelector("[title^='Drag to resize']")!);
+    expect(aside).toHaveStyle({ width: "248px" });
   });
 
   it("signs out from the account menu", () => {
