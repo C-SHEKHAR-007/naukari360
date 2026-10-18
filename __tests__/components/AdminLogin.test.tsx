@@ -16,7 +16,7 @@ import { signIn } from "next-auth/react";
 import AdminLoginPage from "@/app/(admin)/admin/login/page";
 
 function fill(email: string, password: string) {
-  fireEvent.change(screen.getByLabelText("Email Address"), { target: { value: email } });
+  fireEvent.change(screen.getByLabelText("Email"), { target: { value: email } });
   fireEvent.change(screen.getByLabelText("Password"), { target: { value: password } });
 }
 
@@ -73,9 +73,8 @@ describe("Admin login page", () => {
   it("shows the brand panel copy and the restricted-area notice", () => {
     render(<AdminLoginPage />);
     expect(screen.getByRole("heading", { level: 1, name: "Admin Login" })).toBeInTheDocument();
-    // Shown in the desktop brand panel and in the mobile hero (CSS picks one)
-    expect(screen.getAllByText("Admin Access Only")).toHaveLength(2);
-    expect(screen.getByText("Create & Manage Content")).toBeInTheDocument();
+    expect(screen.getByText("Admin Access Only")).toBeInTheDocument();
+    expect(screen.getByText("Reach every aspirant")).toBeInTheDocument();
     expect(
       screen.getByText("This area is restricted to authorized admins only.")
     ).toBeInTheDocument();

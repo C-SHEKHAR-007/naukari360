@@ -458,3 +458,164 @@ body::after {
 .animate-float-slow {
   animation: float 20s ease-in-out infinite reverse;
 }
+
+/*
+ * Admin backdrop (login + shell): two slow-drifting brand glows and a faint grid
+ * that fades out from the top. Fixed behind the page; content sits at z-10.
+ */
+.admin-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--background);
+}
+.admin-backdrop::before,
+.admin-backdrop::after {
+  content: "";
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 9999px;
+  filter: blur(90px);
+  animation: aurora-drift 26s ease-in-out infinite;
+  will-change: transform;
+}
+.admin-backdrop::before {
+  top: -38vmax;
+  left: -22vmax;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-brand) 12%, transparent),
+    transparent
+  );
+}
+.admin-backdrop::after {
+  bottom: -42vmax;
+  right: -26vmax;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-info) 9%, transparent),
+    transparent
+  );
+  animation-delay: -13s;
+}
+.dark .admin-backdrop::before {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-brand) 18%, transparent),
+    transparent
+  );
+}
+.dark .admin-backdrop::after {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-info) 14%, transparent),
+    transparent
+  );
+}
+.admin-backdrop > .grid-layer {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--foreground) 4%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+}
+@keyframes aurora-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.06);
+  }
+}
+
+/* 1px gradient border (saffron → blue) for featured surfaces like the login card */
+.glow-border {
+  position: relative;
+  isolation: isolate;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-brand) 60%, transparent),
+    color-mix(in srgb, var(--border) 30%, transparent) 40%,
+    color-mix(in srgb, var(--border) 30%, transparent) 60%,
+    color-mix(in srgb, var(--color-info) 50%, transparent)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.glow-border:hover::before {
+  opacity: 1;
+}
+
+/* Login hub: dashes flowing along the spokes, and a soft pulse on the core */
+@keyframes hub-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+.hub-flow {
+  stroke-dasharray: 4 6;
+  animation: hub-flow 1.2s linear infinite;
+}
+@keyframes hub-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+.hub-pulse {
+  animation: hub-pulse 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Admin mobile drawer */
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.animate-drawer-in {
+  animation: drawer-in 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+    scale: 0.95;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+.animate-tooltip-in {
+  animation: tooltip-in 0.1s ease-out;
+}
